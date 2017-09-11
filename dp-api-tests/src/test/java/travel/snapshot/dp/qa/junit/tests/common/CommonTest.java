@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import qa.tools.ikeeper.test.IKeeperJUnitConnector;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
-import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
@@ -112,7 +112,7 @@ public abstract class CommonTest {
     protected static final int CC_INVALID_ETAG = 41202;
 
     //    Basic test entities
-    protected static EntityNonNullMap<String, CustomerCreateDto> customerDtos;
+    protected static EntityNonNullMap<String, CustomerDto> customerDtos;
     protected static EntityNonNullMap<String, UserCreateDto> userDtos;
     protected static EntityNonNullMap<String, PropertyDto> propertyDtos;
     protected static EntityNonNullMap<String, PropertySetDto> propertySetDtos;
@@ -123,10 +123,10 @@ public abstract class CommonTest {
     protected static UserCreateDto testUser2;
     protected static UserCreateDto testUser3;
     protected static UserCreateDto testSnapshotUser1;
-    protected static CustomerCreateDto testCustomer1;
-    protected static CustomerCreateDto testCustomer2;
-    protected static CustomerCreateDto testCustomer3;
-    protected static CustomerCreateDto testCustomer4;
+    protected static CustomerDto testCustomer1;
+    protected static CustomerDto testCustomer2;
+    protected static CustomerDto testCustomer3;
+    protected static CustomerDto testCustomer4;
     protected static PropertyDto testProperty1;
     protected static PropertyDto testProperty2;
     protected static PropertyDto testProperty3;

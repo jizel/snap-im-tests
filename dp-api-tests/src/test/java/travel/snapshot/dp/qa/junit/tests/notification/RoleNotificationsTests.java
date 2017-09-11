@@ -12,7 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
@@ -50,7 +50,7 @@ public class RoleNotificationsTests extends CommonTest{
     @Test
     public void updateRoleNotificationTest() throws Exception {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "updateRoleNotificationTest");
-        RoleDto createdRole = roleHelpers.roleIsCreated(testCustomerRole1, CUSTOMER);
+        RoleBaseDto createdRole = roleHelpers.roleIsCreated(testCustomerRole1, CUSTOMER);
         RoleUpdateDto roleUpdate = getRoleBaseType().getDtoClassType().newInstance();
         roleUpdate.setName("Updated Role Name");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
@@ -62,7 +62,7 @@ public class RoleNotificationsTests extends CommonTest{
     @Test
     public void deleteRoleNotificationTest() throws Exception {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "deleteRoleNotificationTest");
-        RoleDto createdRole = roleHelpers.roleIsCreated(testCustomerRole1, CUSTOMER);
+        RoleBaseDto createdRole = roleHelpers.roleIsCreated(testCustomerRole1, CUSTOMER);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         roleHelpers.deleteRole(createdRole.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);

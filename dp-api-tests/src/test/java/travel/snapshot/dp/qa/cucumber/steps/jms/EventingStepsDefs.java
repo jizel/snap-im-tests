@@ -11,6 +11,7 @@ import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
@@ -145,7 +146,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for role with name \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_with_name_for_application_id(String roleName) throws Throwable {
-        RoleDto role = roleBaseSteps.getRoleByNameUsingCustomerRole(roleName);
+        RoleBaseDto role = roleBaseSteps.getRoleByNameUsingCustomerRole(roleName);
         steps.notificationContainsId(role.getId());
     }
 

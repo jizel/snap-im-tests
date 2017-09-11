@@ -27,10 +27,10 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PA
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_ROLES_PATH;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.transformNull;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMap.endpointEntityMap;
+import static travel.snapshot.dp.qa.junit.utils.EntityEndpointMap.entityEndpointMap;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.response.Response;
@@ -58,7 +58,6 @@ public class CommonHelpers extends BasicSteps {
             APPLICATION_VERSIONS_PATH,
             USER_CUSTOMER_ROLES_PATH,
             USER_PROPERTY_ROLES_PATH,
-            USER_PROPERTY_SET_ROLES_PATH,
             PROPERTIES_PATH,
             CUSTOMERS_PATH,
             USERS_PATH,
@@ -206,6 +205,11 @@ public class CommonHelpers extends BasicSteps {
     }
 
     public Response createEntity(String basePath, Object entity) {
+        return createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entity);
+    }
+
+    public Response createEntity(Object entity) {
+        String basePath = entityEndpointMap.get(entity.getClass());
         return createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entity);
     }
 
@@ -387,7 +391,7 @@ public class CommonHelpers extends BasicSteps {
 
 //    Help methods
 
-    private EntityDto getDtoFromResponse(Response response, String basePath) {
+    EntityDto getDtoFromResponse(Response response, String basePath) {
         if (endpointEntityMap.get(basePath) == null) {
             throw new NoSuchElementException("There is no key " + basePath + " in " + EndpointEntityMap.class.getCanonicalName() + ". It should probably be added.");
         }

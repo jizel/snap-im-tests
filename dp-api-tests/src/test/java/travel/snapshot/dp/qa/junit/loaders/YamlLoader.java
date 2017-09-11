@@ -11,13 +11,12 @@ import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.Tag;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
-import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 
@@ -106,7 +105,7 @@ public class YamlLoader {
         public YamlConstructor() {
             this.yamlConstructors.put(new Tag("!localDate"), new LocalDateConstructor());
 
-            addTypeDescription(new TypeDescription(CustomerCreateDto.class, "!customer"));
+            addTypeDescription(new TypeDescription(CustomerDto.class, "!customer"));
             addTypeDescription(new TypeDescription(ApplicationDto.class, "!application"));
             addTypeDescription(new TypeDescription(ApplicationVersionDto.class, "!applicationVersion"));
             addTypeDescription(new TypeDescription(UserCreateDto.class, "!user"));
@@ -114,7 +113,6 @@ public class YamlLoader {
             addTypeDescription(new TypeDescription(PropertySetDto.class, "!propertySet"));
             addTypeDescription(new TypeDescription(CustomerRoleDto.class, "!customerRole"));
             addTypeDescription(new TypeDescription(PropertyRoleDto.class, "!propertyRole"));
-            addTypeDescription(new TypeDescription(PropertySetRoleDto.class, "!propertySetRole"));
             addTypeDescription(new TypeDescription(PartnerDto.class, "!partner"));
             addTypeDescription(new TypeDescription(UserGroupDto.class, "!user_group"));
             addTypeDescription(new TypeDescription(ApplicationDto.class, "!application"));
