@@ -8,7 +8,11 @@ import net.serenitybdd.core.Serenity;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
+import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
+import travel.snapshot.dp.qa.junit.tests.Categories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +25,10 @@ import java.util.Map;
  * performed on various environments without deleting whole DB.
  */
 @RunWith(SerenityRunner.class)
+@Category(Categories.Authorization.class)
 public class CommonSmokeTest extends CommonTest {
+
+    protected DbUtilsSteps dbSteps = new DbUtilsSteps();
 
 
     @Before
@@ -29,7 +36,9 @@ public class CommonSmokeTest extends CommonTest {
         // To clean after normal tests we first remove all test entities
         dbStepDefs.defaultEntitiesAreDeleted();
         dbStepDefs.defaultEntitiesAreCreated();
-        Map<String, Object> testClient1 = entitiesLoader.getClients().get("client1");
+        EntitiesLoader loader = entitiesLoader.getInstance();
+        loadDefaultTestEntities();
+        Map<String, Object> testClient1 = loader.getClients().get("client1");
         keycloakHelpers.createClient(testClient1);
         String clientId = (String) testClient1.get("clientId");
         String clientSecret = (String) testClient1.get("secret");

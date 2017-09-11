@@ -83,15 +83,15 @@ public class CommonHelpers extends BasicSteps {
         spec.baseUri(getBaseUriForModule("identity"));
     }
 
-    public void updateRegistryOfDeletables(String entityType, UUID id) {
+    public void updateRegistryOfDeletables(String basePath, UUID id) {
         // Retrieve the map from serenity session variable
         Map<String, ArrayList<UUID>> registry = Serenity.sessionVariableCalled(ENTITIES_TO_DELETE);
         // Retrieve the array of ids of the certain enity type
-        ArrayList<UUID> listIds = getArrayFromMap(entityType, registry);
+        ArrayList<UUID> listIds = getArrayFromMap(basePath, registry);
         // Update this list
         listIds.add(id);
         // Put it back to the map and map to session variable
-        registry.put(entityType, listIds);
+        registry.put(basePath, listIds);
         Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(registry);
     }
 
@@ -387,7 +387,7 @@ public class CommonHelpers extends BasicSteps {
 
 //    Help methods
 
-    private VersionedEntityDto getDtoFromResponse(Response response, String basePath) {
+    public static VersionedEntityDto getDtoFromResponse(Response response, String basePath) {
         if (endpointEntityMap.get(basePath) == null) {
             throw new NoSuchElementException("There is no key " + basePath + " in " + EndpointEntityMap.class.getCanonicalName() + ". It should probably be added.");
         }

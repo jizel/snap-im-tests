@@ -4,6 +4,7 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -34,21 +35,13 @@ public class UserHelpers extends UsersSteps {
         return response.as(UserDto.class);
     }
 
-    public void createUserWithAuth(UserCreateDto userObject) {
-        authorizationHelpers.createEntity(USERS_PATH, userObject);
-    }
 
-    public UUID userIsCreatedWithAuth(UserCreateDto userObject) throws Throwable {
-        createUserWithAuth(userObject);
-        responseCodeIs(SC_CREATED);
-        UUID userId = getSessionResponse().as(UserDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(USERS, userId);
-
+    public UUID userIsCreatedWithAuth(UserCreateDto userObject) {
+        UUID userId = authorizationHelpers.entityIsCreated(USERS_PATH, userObject);
         // now we need to mark default user_customer relationship for deletion
         UserCustomerRelationshipDto relation = relationshipHelpers.getUserCustomerRelationsForUserWithAuth(userId).get(0);
-        commonHelpers.updateRegistryOfDeletables(CUSTOMER_USERS, relation.getId());
-
-        return getSessionResponse().as(UserDto.class).getId();
+        commonHelpers.updateRegistryOfDeletables(USER_CUSTOMER_RELATIONSHIPS_PATH, relation.getId());
+        return userId;
     }
 
     public UserDto userWithCustomerIsCreated(UserCreateDto createdUser, UUID customerId) {

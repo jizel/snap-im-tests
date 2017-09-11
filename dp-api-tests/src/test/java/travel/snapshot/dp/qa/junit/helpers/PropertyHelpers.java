@@ -36,17 +36,4 @@ public class PropertyHelpers extends PropertySteps{
         setSessionResponse(response);
         return response;
     }
-
-    public UUID propertyIsCreatedWithAuth(PropertyDto property) {
-        createPropertyWithAuth(property);
-        responseCodeIs(SC_CREATED);
-        UUID propertyId = getSessionResponse().as(PropertyDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(PROPERTIES_RESOURCE, propertyId);
-        return propertyId;
-
-    }
-
-    public void createPropertyWithAuth(PropertyDto property) {
-        authorizationHelpers.createEntity(PROPERTIES_PATH, property);
-    }
 }

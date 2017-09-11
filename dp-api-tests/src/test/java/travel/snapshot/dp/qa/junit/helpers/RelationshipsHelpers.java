@@ -1,13 +1,6 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLE_RELATIONSHIPS_RESOURCE;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
@@ -16,7 +9,6 @@ import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipDto;
@@ -51,129 +43,10 @@ public class RelationshipsHelpers extends BasicSteps {
 
     //    User Customer Relationships
 
-    public UUID userCustomerRelationIsCreatedWithAuth(UUID userId, UUID customerId, Boolean isActive, Boolean isPrimary) {
-        createUserCustomerRelationshipWithAuth(userId, customerId, isActive, isPrimary);
-        responseCodeIs(SC_CREATED);
-        UUID relationId = getSessionResponse().as(UserCustomerRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(CUSTOMER_USERS, relationId);
-        return relationId;
-    }
-
-    public void createUserCustomerRelationshipWithAuth(UUID userId, UUID customerId, Boolean isActive, Boolean isPrimary) {
-        UserCustomerRelationshipDto userCustomerRelationship = constructUserCustomerRelationshipDto(userId, customerId, isActive, isPrimary);
-        authorizationHelpers.createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationship);
-    }
-
-    public List<UserCustomerRelationshipDto> getUserCustomerRelationsForUserWithAuth(UUID userId) throws Throwable {
+    public List<UserCustomerRelationshipDto> getUserCustomerRelationsForUserWithAuth(UUID userId) {
         Map<String, String> queryParams = buildQueryParamMapForPaging(null, null, String.format("user_id==%s", userId), null, null, null);
-        return authorizationHelpers.getEntities(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, queryParams);
+        return authorizationHelpers.getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, queryParams);
     }
-
-    //    User Property Relationships
-
-    public void createUserPropertyRelationWithAuth(UUID userId, UUID propertyId, Boolean isActive) {
-        UserPropertyRelationshipDto relation = new UserPropertyRelationshipDto();
-        relation.setUserId(userId);
-        relation.setPropertyId(propertyId);
-        relation.setIsActive(isActive);
-        authorizationHelpers.createEntity(USER_PROPERTY_RELATIONSHIPS_PATH, relation);
-    }
-
-    public UUID userPropertyRelationIsCreatedWithAuth(UUID userId, UUID propertyId, Boolean isActive) {
-        createUserPropertyRelationWithAuth(userId, propertyId, isActive);
-        responseCodeIs(SC_CREATED);
-        UUID relationId = getSessionResponse().as(UserPropertyRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(USER_PROPERTIES, relationId);
-        return relationId;
-    }
-
-    //    User Property Set Relationships
-
-    public void createUserPropertySetRelationWithAuth(UUID userId, UUID propertySetId, Boolean isActive) {
-        UserPropertySetRelationshipDto relation = new UserPropertySetRelationshipDto();
-        relation.setUserId(userId);
-        relation.setPropertySetId(propertySetId);
-        relation.setIsActive(isActive);
-        authorizationHelpers.createEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relation);
-    }
-
-    public UUID userPropertySetRelationIsCreatedWithAuth(UUID userId, UUID propertySetId, Boolean isActive) {
-        createUserPropertySetRelationWithAuth(userId, propertySetId, isActive);
-        responseCodeIs(SC_CREATED);
-        UUID relationId = getSessionResponse().as(UserPropertySetRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(USER_PROPERTYSETS, relationId);
-        return relationId;
-    }
-
-    //    Customer Property Relationships
-
-    public void createCustomerPropertyRelationshipWithAuth(UUID customerId, UUID propertyId, Boolean isActive,
-                                                           CustomerPropertyRelationshipType type,
-                                                           LocalDate validFrom,
-                                                           LocalDate validTo) {
-        CustomerPropertyRelationshipDto CustomerPropertyRelationship = constructCustomerPropertyRelationshipDto(customerId, propertyId, isActive, type, validFrom, validTo);
-        authorizationHelpers.createEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, CustomerPropertyRelationship).as(CustomerPropertyRelationshipDto.class);
-    }
-
-    public UUID customerPropertyRelationIsCreatedWithAuth(UUID customerId, UUID propertyId, Boolean isActive,
-                                                          CustomerPropertyRelationshipType type,
-                                                          LocalDate validFrom,
-                                                          LocalDate validTo) {
-        createCustomerPropertyRelationshipWithAuth(customerId, propertyId, isActive, type, validFrom, validTo);
-        responseCodeIs(SC_CREATED);
-        UUID relationId = getSessionResponse().as(CustomerPropertyRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(CUSTOMER_PROPERTIES, relationId);
-        return relationId;
-    }
-
-    public void updateCustomerPropertyRelationshipWithAuth(UUID relationshipId, Boolean isActive, CustomerPropertyRelationshipType type,
-                                                           LocalDate validFrom,
-                                                           LocalDate validTo) {
-        CustomerPropertyRelationshipUpdateDto customerPropertyRelationshipUpdate = new CustomerPropertyRelationshipUpdateDto();
-        customerPropertyRelationshipUpdate.setIsActive(isActive);
-        customerPropertyRelationshipUpdate.setType(type);
-        customerPropertyRelationshipUpdate.setValidFrom(validFrom);
-        customerPropertyRelationshipUpdate.setValidTo(validTo);
-        authorizationHelpers.updateEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationshipId, customerPropertyRelationshipUpdate);
-    }
-
-    //    Property Set Property Relationships
-
-    public UUID propertySetPropertyIsCreatedWithAuth(UUID propertySetId, UUID propertyId, Boolean isActive) {
-        createPropertySetPropertyWithAuth(propertySetId, propertyId, isActive);
-        responseCodeIs(SC_CREATED);
-        UUID relationId = getSessionResponse().as(PropertySetPropertyRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(PROPERTYSET_PROPERTIES, relationId);
-        return relationId;
-    }
-
-    public void createPropertySetPropertyWithAuth(UUID propertySetId, UUID propertyId, Boolean isActive) {
-        PropertySetPropertyRelationshipDto relation = new PropertySetPropertyRelationshipDto();
-        relation.setPropertySetId(propertySetId);
-        relation.setPropertyId(propertyId);
-        relation.setIsActive(isActive);
-        authorizationHelpers.createEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relation);
-    }
-
-    // roles
-
-    public void createUserCustomerRoleRelationWithAuth(UUID userCustomerRelationId, UUID roleId) {
-        // Uses the new endpoint /identity/user_customer_role_relationships
-        UserCustomerRoleRelationshipDto relation = new UserCustomerRoleRelationshipDto();
-        relation.setUserCustomerId(userCustomerRelationId);
-        relation.setRoleId(roleId);
-        authorizationHelpers.createEntity(USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH, relation);
-    }
-
-    public UUID userCustomerRoleRelationIsCreatedWithAuth(UUID userCustomerRelationId, UUID roleId) {
-        // Uses the new endpoint /identity/user_customer_role_relationships
-        createUserCustomerRoleRelationWithAuth(userCustomerRelationId, roleId);
-        responseCodeIs(SC_CREATED);
-        UUID relationId = getSessionResponse().as(UserCustomerRoleRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(USER_CUSTOMER_ROLE_RELATIONSHIPS_RESOURCE, relationId);
-        return relationId;
-    }
-
 
     //    Help methods for relationship objects construction.
 
@@ -321,5 +194,4 @@ public class RelationshipsHelpers extends BasicSteps {
         userGroupPropertySetRelationshipUpdate.setIsActive(isActive);
         return userGroupPropertySetRelationshipUpdate;
     }
-
 }
