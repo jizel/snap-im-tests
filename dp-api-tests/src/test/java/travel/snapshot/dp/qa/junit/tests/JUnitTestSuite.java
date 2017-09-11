@@ -15,11 +15,6 @@ import org.junit.runner.RunWith;
  *
  * This class has to be located in a super package of all the classes it runs.
  */
-
-
-// TODO: multithreading, investigate how it affects test run. Can the annotation be moved to property file?
-// @Concurrent(threads="4x") -- Serenity mechanism
-// @RunWith(ParallelSuite.class) -- subclass of WildcardPatternSuite
 @RunWith(WildcardPatternSuite.class)
 @SuiteClasses("*/*.class")
 @ExcludeCategories({Categories.SlowTests.class, Categories.Authorization.class})

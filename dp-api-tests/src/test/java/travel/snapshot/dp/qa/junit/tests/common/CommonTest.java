@@ -35,6 +35,7 @@ import travel.snapshot.dp.qa.junit.helpers.ConfigurationHelpers;
 import travel.snapshot.dp.qa.junit.helpers.CustomerHelpers;
 import travel.snapshot.dp.qa.junit.helpers.KeycloakHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PartnerHelpers;
+import travel.snapshot.dp.qa.junit.helpers.PermissionHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PlatformOperationHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PropertyHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PropertySetHelpers;
@@ -66,6 +67,7 @@ public abstract class CommonTest {
     public static final String YAML_DATA_PATH = "src/test/resources/yaml/%s";
     public static final String NOTIFICATION_CRUD_TOPIC = "Notifications.crud";
     public static final String JMS_SUBSCRIPTION_NAME = "Test";
+    public static final String TOTAL_COUNT_HEADER = "X-Total-Count";
 
     protected static EntitiesLoader entitiesLoader;
 
@@ -92,6 +94,7 @@ public abstract class CommonTest {
     protected static final KeycloakHelpers keycloakHelpers = new KeycloakHelpers();
     protected static final CommonHelpers commonHelpers = new CommonHelpers();
     protected static final PlatformOperationHelpers platformOperationHelpers = new PlatformOperationHelpers();
+    protected static final PermissionHelpers permissionHelpers= new PermissionHelpers();
 
 
     //    Custom codes

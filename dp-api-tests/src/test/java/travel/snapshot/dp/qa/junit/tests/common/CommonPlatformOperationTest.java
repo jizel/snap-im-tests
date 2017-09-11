@@ -1,7 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests.common;
 
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PLATFORM_OPERATIONS_PATH;
 
@@ -40,7 +39,6 @@ public class CommonPlatformOperationTest extends CommonTest{
         Response getResponse = commonHelpers.getEntity(PLATFORM_OPERATIONS_PATH, platformOperationId);
         if (getResponse.getStatusCode() == SC_OK) {
             commonHelpers.entityIsDeleted(PLATFORM_OPERATIONS_PATH, platformOperationId);
-            responseCodeIs(SC_NO_CONTENT);
             commonHelpers.getEntity(PLATFORM_OPERATIONS_PATH, platformOperationId);
             responseCodeIs(SC_NOT_FOUND);
         }
