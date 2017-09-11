@@ -1,7 +1,7 @@
 SET SESSION SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 LOAD DATA LOCAL INFILE 'common/dp.Dim_property.tsv' INTO TABLE dp.Dim_property FIELDS TERMINATED BY '\t';
-LOAD DATA LOCAL INFILE 'facebook/dp.FactFacebookPageStats.tsv' INTO TABLE dp.FactFacebookPageStats FIELDS TERMINATED BY '\t';
-LOAD DATA LOCAL INFILE 'facebook/dp.Fact_fb_post_stats.tsv' INTO TABLE dp.Fact_fb_post_stats FIELDS TERMINATED BY '\t' SET post_date_time_added = DATE_ADD(NOW(), INTERVAL - 1 DAY );
+LOAD DATA LOCAL INFILE 'facebook/dp.FactFacebookPageStats.tsv' INTO TABLE dp.Fact_facebook_cumulative FIELDS TERMINATED BY '\t';
+LOAD DATA LOCAL INFILE 'facebook/dp.Fact_fb_post_stats.tsv' INTO TABLE dp.Fact_facebook_post FIELDS TERMINATED BY '\t' SET post_date_time_added = DATE_ADD(NOW(), INTERVAL - 1 DAY );
 LOAD DATA LOCAL INFILE 'instagram/dp.Fact_instagram_daily.tsv' INTO TABLE dp.Fact_instagram_daily FIELDS TERMINATED BY '\t';
 LOAD DATA LOCAL INFILE 'twitter/dp.Fact_twitter_daily.tsv' INTO TABLE dp.Fact_twitter_daily FIELDS TERMINATED BY '\t';
 LOAD DATA LOCAL INFILE 'twitter/dp.Fact_twitter_tweets.tsv' INTO TABLE dp.Fact_twitter_tweets FIELDS TERMINATED BY '\t';
