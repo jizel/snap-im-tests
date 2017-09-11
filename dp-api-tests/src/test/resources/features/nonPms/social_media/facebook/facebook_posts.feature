@@ -66,7 +66,7 @@ Feature: facebook posts
     And List of facebook items "<url>" for property id "<property>" is got with limit "1" and cursor "/null"
     Then Response code is 200
     And Facebook posts contains datetime "<datetime>" engagement "<engagement>" content "<content>" and reach "<reach>"
-
+#    This test expects the sql data from load.sql script to be loaded on the same day when it is run
     Examples:
       | url                       | datetime      | engagement | content       | reach | property                             |
       | /analytics/facebook/posts | 2017-07-17    | 4168       | Post 10 - 500 | 11553 | 99001099-9999-4999-a999-999999999999 |
