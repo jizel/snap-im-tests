@@ -4,8 +4,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.model.ApplicationVersionStatus.CERTIFIED;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.*;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.*;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_COMMERCIAL_SUBSCRIPTION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_VAT_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_SALESFORCE_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_TIMEZONE;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_NAME;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SNAPSHOT_WEBSITE;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -23,9 +34,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
-import travel.snapshot.dp.qa.junit.helpers.CommonHelpers;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -37,8 +46,6 @@ public class DbStepDefs {
     private CustomerSteps customerSteps;
     @Steps
     private PropertySteps propertySteps;
-
-    protected static final CommonHelpers commonHelpers = new CommonHelpers();
 
 
     //    @Steps annotation does not work with JUnit
@@ -202,71 +209,5 @@ public class DbStepDefs {
     public void applicationPermissionPopulated(String applicationName) {
         UUID applicationId = applicationsSteps.resolveApplicationId(applicationName);
         dbSteps.populateApplicationPermissionsTableForApplication(applicationId);
-    }
-
-    public void removeCreatedEntities(Map<String, ArrayList<UUID>> registry) {
-
-        ArrayList<UUID> commercialSubscriptionIds = commonHelpers.getArrayFromMap(COMMERCIAL_SUBSCRIPTIONS_PATH, registry);
-        ArrayList<UUID> customerRoleIds = commonHelpers.getArrayFromMap(USER_CUSTOMER_ROLES_PATH, registry);
-        ArrayList<UUID> propertyRoleIds = commonHelpers.getArrayFromMap(USER_PROPERTY_ROLES_PATH, registry);
-        ArrayList<UUID> userGroupIds = commonHelpers.getArrayFromMap(USER_GROUPS_PATH, registry);
-        ArrayList<UUID> userPropertySetIds = commonHelpers.getArrayFromMap(USER_PROPERTY_SET_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> userPropertyIds = commonHelpers.getArrayFromMap(USER_PROPERTY_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> propertySetPropertyIds = commonHelpers.getArrayFromMap(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> propertyIds = commonHelpers.getArrayFromMap(PROPERTIES_PATH, registry);
-        ArrayList<UUID> propertySetIds = commonHelpers.getArrayFromMap(PROPERTY_SETS_PATH, registry);
-        ArrayList<UUID> customerPropertyIds = commonHelpers.getArrayFromMap(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> customerUserIds = commonHelpers.getArrayFromMap(USER_CUSTOMER_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> customerIds = commonHelpers.getArrayFromMap(CUSTOMERS_PATH, registry);
-        ArrayList<UUID> userIds = commonHelpers.getArrayFromMap(USERS_PATH, registry);
-        ArrayList<UUID> applicationIds = commonHelpers.getArrayFromMap(APPLICATIONS_PATH, registry);
-        ArrayList<UUID> appVersionIds = commonHelpers.getArrayFromMap(APPLICATION_VERSIONS_PATH, registry);
-
-        customerRoleIds.forEach(roleId -> {
-            dbSteps.deleteRole(roleId);
-        });
-        propertyRoleIds.forEach(roleId -> {
-            dbSteps.deleteRole(roleId);
-        });
-        commercialSubscriptionIds.forEach(commercialSubscriptionId -> {
-            dbSteps.deleteCommercialSubscription(commercialSubscriptionId);
-        });
-        appVersionIds.forEach(appVersionId -> {
-            dbSteps.deleteAppVersion(appVersionId);
-        });
-        applicationIds.forEach(applicationId -> {
-            dbSteps.deleteApplication(applicationId);
-        });
-        userGroupIds.forEach(userGroupId -> {
-            dbSteps.deleteUserPropertySet(userGroupId);
-        });
-        userPropertySetIds.forEach(userPropertySetId -> {
-            dbSteps.deleteUserPropertySet(userPropertySetId);
-        });
-        userPropertyIds.forEach(userPropertyId -> {
-            dbSteps.deleteUserProperty(userPropertyId);
-        });
-        propertySetPropertyIds.forEach(propertySetPropertyId -> {
-            dbSteps.deletePropertySetProperty(propertySetPropertyId);
-        });
-        propertySetIds.forEach(propertySetId -> {
-            dbSteps.deletePropertySet(propertySetId);
-        });
-        customerPropertyIds.forEach(customerPropertyId -> {
-            dbSteps.deleteCustomerProperty(customerPropertyId);
-        });
-        propertyIds.forEach(propertyId -> {
-            dbSteps.deleteProperty(propertyId);
-        });
-        customerUserIds.forEach(customerUserId -> {
-            dbSteps.deleteCustomerUser(customerUserId);
-        });
-        customerIds.forEach(customerId -> {
-            dbSteps.deleteCustomer(customerId);
-        });
-        userIds.forEach(userId -> {
-            dbSteps.deleteUser(userId);
-        });
-        dbSteps.deleteAddress();
     }
 }

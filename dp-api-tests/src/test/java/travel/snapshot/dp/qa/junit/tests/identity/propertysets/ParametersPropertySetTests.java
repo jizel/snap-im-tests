@@ -10,6 +10,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParam
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -76,7 +77,7 @@ public class ParametersPropertySetTests extends CommonTest {
     @FileParameters(EXAMPLES + "sendPOSTRequestWithEmptyBodyToAllPropertySetEndpoints.csv")
     @Test
     public void sendPOSTRequestWithEmptyBodyToAllPropertySetEndpoints(String endpoint) {
-        commonHelpers.sendBlankPost(PROPERTY_SETS_PATH, "identity");
+        sendBlankPost(PROPERTY_SETS_PATH, "identity");
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
     }

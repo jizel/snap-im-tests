@@ -77,6 +77,8 @@ public abstract class CommonTest {
     protected static final ConfigurationSteps configurationSteps = new ConfigurationSteps();
     protected static final DbUtilsSteps dbSteps = new DbUtilsSteps();
 
+    private static final BasicSteps basicSteps = new BasicSteps();
+
     //    Helpers
     protected static final CustomerHelpers customerHelpers = new CustomerHelpers();
     protected static final PropertyHelpers propertyHelpers = new PropertyHelpers();
@@ -146,6 +148,21 @@ public abstract class CommonTest {
     protected static ApplicationVersionDto testAppVersion2;
     protected static ApplicationVersionDto testAppVersion3;
 
+    @Rule
+    public IKeeperJUnitConnector issueKeeper = new IKeeperJUnitConnector(
+            new JiraCredentialsClient("https://conhos.atlassian.net")
+    );
+
+    @Before
+    public void setUp() throws Exception{
+        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        loadDefaultTestEntities();
+    }
+
+    @After
+    public void cleanUp() throws Throwable {
+    }
+
 
     /**
      * Loading default entities before each test class so any changes made in class do not interfere with other test classes.
@@ -190,21 +207,6 @@ public abstract class CommonTest {
         testAppVersion1 = applicationVersionDtos.get("app_version1");
         testAppVersion2 = applicationVersionDtos.get("app_version2");
         testAppVersion3 = applicationVersionDtos.get("app_version3");
-    }
-
-    @Rule
-    public IKeeperJUnitConnector issueKeeper = new IKeeperJUnitConnector(
-            new JiraCredentialsClient("https://conhos.atlassian.net")
-    );
-
-    @Before
-    public void setUp() throws Exception{
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        loadDefaultTestEntities();
-    }
-
-    @After
-    public void cleanUp() throws Throwable {
     }
 
 
@@ -303,6 +305,10 @@ public abstract class CommonTest {
 
     protected static void entityDoesNotExist(String basePath, UUID entityId){
         assertThat(commonHelpers.getEntity(basePath, entityId).getStatusCode(), is(SC_NOT_FOUND));
+    }
+
+    protected String getAttributeValue(String attributeName) {
+        return basicSteps.getAttributeValue(attributeName);
     }
 
 }

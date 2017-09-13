@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.asList;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -28,11 +29,26 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_ETAG;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_IF_MATCH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_APPLICATION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_USER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getBaseUriForModule;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.transformNull;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMap.endpointEntityMap;
 import static travel.snapshot.dp.qa.junit.utils.EntityEndpointMap.entityEndpointMap;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.builder.RequestSpecBuilder;
+import com.jayway.restassured.config.ObjectMapperConfig;
+import com.jayway.restassured.config.RestAssuredConfig;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -43,17 +59,19 @@ import travel.snapshot.dp.qa.junit.utils.EndpointEntityMap;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class CommonHelpers extends BasicSteps {
+public class CommonHelpers {
+
+    protected RequestSpecification spec = null;
+    private BasicSteps basicSteps = new BasicSteps();
 
     public static final String ENTITIES_TO_DELETE = "deleteThese";
 
-    public static final List<String> ALL_ENDPOINTS = Arrays.asList(
+    public static final List<String> ALL_ENDPOINTS = asList(
             APPLICATIONS_PATH,
             APPLICATION_VERSIONS_PATH,
             USER_CUSTOMER_ROLES_PATH,
@@ -78,8 +96,16 @@ public class CommonHelpers extends BasicSteps {
     );
 
 
+    /**
+     * Restassured initialization is copied from BasicSteps. This class should replace basic steps once all cucumber
+     * tests are gone and should not inherit from it. However some functionality is similar.
+     */
     public CommonHelpers() {
-        spec.baseUri(getBaseUriForModule("identity"));
+        RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
+                new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> OBJECT_MAPPER));
+
+        RequestSpecBuilder builder = new RequestSpecBuilder();
+        spec = builder.build().baseUri(getBaseUriForModule("identity")).contentType("application/json; charset=UTF-8");
     }
 
     public void updateRegistryOfDeletables(String basePath, UUID id) {
@@ -208,7 +234,9 @@ public class CommonHelpers extends BasicSteps {
         return createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entity);
     }
 
+
     public Response createEntity(Object entity) {
+//    public <T> Response createEntity(T entity) {
         String basePath = entityEndpointMap.get(entity.getClass());
         return createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entity);
     }
@@ -251,9 +279,9 @@ public class CommonHelpers extends BasicSteps {
                 .basePath(basePath)
                 .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
-                if(etag != null) {
-                    requestSpecification.header(HEADER_IF_MATCH, etag);
-                }
+        if (etag != null) {
+            requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
         Response response = requestSpecification
                 .body(data)
                 .when()
@@ -335,7 +363,7 @@ public class CommonHelpers extends BasicSteps {
         Response response = requestSpecification.when().delete("/{id}", entityId);
         setSessionResponse(response);
     }
-    
+
 //    Second level entities generic methods - CREATE
 
     /**
@@ -418,9 +446,15 @@ public class CommonHelpers extends BasicSteps {
         return (string.startsWith("/")) ? string.substring(1) : string;
     }
 
-    public static <T> void assertIfNotNull(T actual, T expected){
-        if(transformNull(expected) != null){
+    public static <T> void assertIfNotNull(T actual, T expected) {
+        if (transformNull(expected) != null) {
             assertThat(actual, is(expected));
         }
     }
+
+    //    Forwarders for necessary BasicSteps that cannot be made static used in tests. Should be refactored in the future.
+    public void useFileForSendDataTo(String filename, String method, String url, String module) throws Exception {
+        basicSteps.useFileForSendDataTo(filename, method, url, module);
+    }
+
 }

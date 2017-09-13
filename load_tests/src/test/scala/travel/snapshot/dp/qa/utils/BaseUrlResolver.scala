@@ -172,8 +172,8 @@ object TestingUrlResolver extends SystemPropertiesGatherer {
 object ProductionUrlResolver extends SystemPropertiesGatherer {
 
   def apply(): String = {
-    val (protocol, host, port, scenario) = productionEnvironmentProperties
-    s"$protocol://$host:$port/${scenario.productionContext}"
+    val (protocol, host, port, version, scenario) = productionEnvironmentProperties
+    s"$protocol://$host:$port/$version/${scenario.localContext}"
   }
 }
 
