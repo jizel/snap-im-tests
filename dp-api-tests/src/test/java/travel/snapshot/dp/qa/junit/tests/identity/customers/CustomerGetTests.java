@@ -37,7 +37,7 @@ public class CustomerGetTests extends CommonTest{
                 testCustomer1.setEmail(String.format("customer-%d@snapshot.travel", n));
                 testCustomer1.setWebsite(String.format("http://www.customer%d.snapshot.travel", n));
                 testCustomer1.setId(null);
-                commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+                commonHelpers.entityIsCreated(testCustomer1);
             });
     }
 

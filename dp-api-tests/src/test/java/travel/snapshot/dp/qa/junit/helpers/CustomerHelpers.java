@@ -1,6 +1,5 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
-import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -8,7 +7,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.transformNull;
 
@@ -17,7 +15,6 @@ import com.jayway.restassured.response.Response;
 import lombok.extern.java.Log;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
@@ -39,11 +36,7 @@ public class CustomerHelpers extends CustomerSteps {
 
     public void createRandomCustomer(CustomerCreateDto customer) {
         customer.setId(null);
-        createCustomer(customer);
-    }
-
-    private void createCustomer(CustomerCreateDto customer) {
-        createCustomerByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, customer);
+        commonHelpers.entityIsCreated(customer);
     }
 
     /**
@@ -61,25 +54,6 @@ public class CustomerHelpers extends CustomerSteps {
         }
         Response createResponse = authorizationHelpers.createEntity(CUSTOMERS_PATH, jsonCustomer.toString());
         setSessionResponse(createResponse);
-    }
-
-    public Response createCustomerByUserForApp(UUID userId, UUID applicationId, CustomerCreateDto customer) {
-        JSONObject jsonCustomer = null;
-        try {
-            jsonCustomer = retrieveData(customer);
-        } catch (JsonProcessingException e) {
-            fail(e.getMessage());
-        }
-        Response createResponse = createEntityByUserForApplication(userId, applicationId, jsonCustomer.toString());
-        setSessionResponse(createResponse);
-        return createResponse;
-    }
-
-    public CustomerDto customerIsCreated(CustomerCreateDto customer) throws JsonProcessingException {
-        Response response = createCustomerByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, customer);
-        assertThat(String.format("Failed to create customer: %s", response.toString()), response.getStatusCode(), is(SC_CREATED));
-        setSessionResponse(response);
-        return response.as(CustomerDto.class);
     }
 
     public void customerIsUpdated(UUID customerId, CustomerUpdateDto customerUpdate) {
@@ -111,7 +85,7 @@ public class CustomerHelpers extends CustomerSteps {
         CustomerPropertyRelationshipPartialDto customerProperty = authorizationHelpers.createSecondLevelRelation(CUSTOMERS_PATH, customerId, PROPERTIES_RESOURCE, relation)
                 .as(CustomerPropertyRelationshipPartialDto.class);
         UUID relationId = customerProperty.getId();
-        commonHelpers.updateRegistryOfDeletables(CUSTOMER_PROPERTIES, relationId);
+        authorizationHelpers.updateRegistryOfDeletables(CUSTOMER_PROPERTIES, relationId);
         return relationId;
     }
 

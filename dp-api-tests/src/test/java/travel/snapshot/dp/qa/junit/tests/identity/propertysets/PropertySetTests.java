@@ -2,16 +2,10 @@ package travel.snapshot.dp.qa.junit.tests.identity.propertysets;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static travel.snapshot.dp.api.identity.model.PropertySetType.GEOLOCATION;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 
-import com.jayway.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,13 +13,11 @@ import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
-import java.io.IOException;
 import java.util.UUID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 
 @RunWith(SerenityRunner.class)
 public class PropertySetTests extends CommonTest {
@@ -39,8 +31,8 @@ public class PropertySetTests extends CommonTest {
 
     @Test
     public void propertySetCRUDTest() {
-        UUID createdCustomerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer2);
-        UUID psId = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
+        UUID createdCustomerId = commonHelpers.entityIsCreated(testCustomer2);
+        UUID psId = commonHelpers.entityIsCreated(testPropertySet1);
         PropertySetDto propertySet = commonHelpers.getEntityAsType(PROPERTY_SETS_PATH, PropertySetDto.class, psId);
         assert(propertySet.getType().equals(testPropertySet1.getType()));
         assert(propertySet.getCustomerId().equals(DEFAULT_SNAPSHOT_CUSTOMER_ID));
@@ -59,11 +51,11 @@ public class PropertySetTests extends CommonTest {
 
     @Test
     public void parentChildLoopTest() {
-        UUID ps1Id = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
+        UUID ps1Id = commonHelpers.entityIsCreated(testPropertySet1);
         testPropertySet2.setParentId(ps1Id);
-        UUID ps2Id = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet2);
+        UUID ps2Id = commonHelpers.entityIsCreated(testPropertySet2);
         testPropertySet3.setParentId(ps2Id);
-        UUID ps3Id = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet3);
+        UUID ps3Id = commonHelpers.entityIsCreated(testPropertySet3);
         PropertySetUpdateDto update = new PropertySetUpdateDto();
         update.setParentId(ps3Id);
         commonHelpers.updateEntity(PROPERTY_SETS_PATH, ps1Id, update);
@@ -74,11 +66,11 @@ public class PropertySetTests extends CommonTest {
 
     @Test
     public void parentPropertySetCannotBeDeletedUntilAllChildPropertySetsAreDeleted() {
-        UUID ps1Id = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
+        UUID ps1Id = commonHelpers.entityIsCreated(testPropertySet1);
         testPropertySet2.setParentId(ps1Id);
-        UUID ps2Id = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet2);
+        UUID ps2Id = commonHelpers.entityIsCreated(testPropertySet2);
         testPropertySet3.setParentId(ps2Id);
-        UUID ps3Id = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet3);
+        UUID ps3Id = commonHelpers.entityIsCreated(testPropertySet3);
         commonHelpers.deleteEntity(PROPERTY_SETS_PATH, ps1Id);
         responseCodeIs(SC_CONFLICT);
         customCodeIs(CC_ENTITY_REFERENCED);
@@ -94,10 +86,10 @@ public class PropertySetTests extends CommonTest {
 
     @Test
     public void updatingPropertySetUserRelationship() {
-        UUID psId = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
-        UUID userId = commonHelpers.entityIsCreated(USERS_PATH, testUser1);
-        UserPropertySetRelationshipDto relation = relationshipsHelpers.constructUserPropertySetRelationshipDto(userId, psId, true);
-        UUID relationId = commonHelpers.entityIsCreated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relation);
+        UUID psId = commonHelpers.entityIsCreated(testPropertySet1);
+        UUID userId = commonHelpers.entityIsCreated(testUser1);
+        UserPropertySetRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertySetRelationshipDto(userId, psId, true);
+        UUID relationId = commonHelpers.entityIsCreated(relation);
         UserPropertySetRelationshipUpdateDto update = new UserPropertySetRelationshipUpdateDto();
         update.setIsActive(false);
         commonHelpers.updateEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);

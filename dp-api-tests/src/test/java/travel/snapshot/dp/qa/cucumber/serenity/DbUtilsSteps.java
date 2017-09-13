@@ -15,6 +15,7 @@ import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
+import travel.snapshot.dp.api.type.HttpMethod;
 import travel.snapshot.dp.qa.cucumber.helpers.DbHelper;
 
 import java.util.List;
@@ -269,8 +270,8 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(POPULATE_APPLICATION_PERMISSION, applicationId);
     }
 
-    public void addApplicationPermission(UUID applicationId, String endpoint, String method) {
-        UUID permissionId = (UUID) dbHelper.identityDb().queryForList(SELECT_PERMISSION_ID, endpoint, method).get(0).get("id");
+    public void addApplicationPermission(UUID applicationId, String endpoint, HttpMethod method) {
+        UUID permissionId = dbHelper.identityDb().queryForObject(SELECT_PERMISSION_ID, UUID.class, endpoint, method.toString());
         dbHelper.identityDb().update(ADD_APPLICATION_PERMISSION, randomUUID(), applicationId, permissionId);
     }
 

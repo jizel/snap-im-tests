@@ -4,6 +4,7 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
 
 import lombok.extern.java.Log;
+import travel.snapshot.dp.api.identity.model.CommercialSubscriptionCreateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.qa.cucumber.serenity.commercial_subscription.CommercialSubscriptionSteps;
 
@@ -16,7 +17,7 @@ public class CommercialSubscriptionHelpers extends CommercialSubscriptionSteps {
     public CommercialSubscriptionHelpers() { super();}
 
     private void createCommercialSubscription(UUID customerId, UUID propertyId, UUID applicationId) {
-        CommercialSubscriptionDto subscription = new CommercialSubscriptionDto();
+        CommercialSubscriptionCreateDto subscription = new CommercialSubscriptionCreateDto();
         subscription.setApplicationId(applicationId);
         subscription.setCustomerId(customerId);
         subscription.setPropertyId(propertyId);
@@ -29,8 +30,8 @@ public class CommercialSubscriptionHelpers extends CommercialSubscriptionSteps {
         return getSessionResponse().as(CommercialSubscriptionDto.class).getId();
     }
 
-    public CommercialSubscriptionDto constrcutCommercialSubscriptionDto(UUID applicationId, UUID customerId, UUID propertyId){
-        CommercialSubscriptionDto commercialSubscriptionDto = new CommercialSubscriptionDto();
+    public CommercialSubscriptionCreateDto constrcutCommercialSubscriptionDto(UUID applicationId, UUID customerId, UUID propertyId){
+        CommercialSubscriptionCreateDto commercialSubscriptionDto = new CommercialSubscriptionCreateDto();
         commercialSubscriptionDto.setApplicationId(applicationId);
         commercialSubscriptionDto.setCustomerId(customerId);
         commercialSubscriptionDto.setPropertyId(propertyId);

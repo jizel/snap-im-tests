@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.utils
 
+import travel.snapshot.dp.qa.utils.StagingUrlResolver.{host, protocol}
+
 object LoadTestEnvironment extends Enumeration {
   type LoadTestEnvironment = Value
 
@@ -64,7 +66,7 @@ trait SystemPropertiesGatherer {
 
   val productionEnvironmentProperties = Tuple5[String, String, String, String, LoadTestContext.LoadTestContextValue](
     System.getProperty("protocol", "https"),
-    System.getProperty("host", "europewest-api.snapshot.technology"),
+    System.getProperty("host", "euf-api.snapshot.technology"),
     System.getProperty("port", "443"),
     System.getProperty("version", "v1"),
     resolveScenario
@@ -171,9 +173,15 @@ object TestingUrlResolver extends SystemPropertiesGatherer {
 
 object ProductionUrlResolver extends SystemPropertiesGatherer {
 
+  val (protocol, host, port, version, scenario) = productionEnvironmentProperties
+
   def apply(): String = {
-    val (protocol, host, port, version, scenario) = productionEnvironmentProperties
-    s"$protocol://$host:$port/$version/${scenario.localContext}"
+//    s"$protocol://$host:$port/$version/${scenario.localContext}"
+    s"$protocol://$host/$version"
+  }
+
+  def resolveOauthUrl(): String = {
+    s"$protocol://$host/oauth/token/"
   }
 }
 
@@ -252,6 +260,7 @@ object OAuthUrlResolver {
       case LoadTestEnvironment.TESTING => TestingUrlResolver.resolveOauthUrl()
       case LoadTestEnvironment.STABLE => StableUrlResolver.resolveOauthUrl()
       case LoadTestEnvironment.STAGING => StagingUrlResolver.resolveOauthUrl()
+//      case LoadTestEnvironment.PRODUCTION => ProductionUrlResolver().resolveOauthUrl()
       case LoadTestEnvironment.LOCAL => "no_oauth"
       case LoadTestEnvironment.VM12 => "no_oauth"
     }

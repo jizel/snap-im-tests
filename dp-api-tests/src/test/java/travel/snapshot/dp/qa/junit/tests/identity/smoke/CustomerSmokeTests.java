@@ -13,11 +13,11 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
@@ -30,7 +30,7 @@ import java.util.UUID;
 @Category(Categories.Authorization.class)
 public class CustomerSmokeTests extends CommonSmokeTest {
 
-    private EntityNonNullMap<String, CustomerDto> customerDtos = null;
+    private EntityNonNullMap<String, CustomerCreateDto> customerDtos = null;
 
     @Before
     public void setUp() throws Exception {
@@ -64,7 +64,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
     @Test
     public void customerPropertyCRUD() {
         // create
-        CustomerPropertyRelationshipDto relation = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
+        CustomerPropertyRelationshipCreateDto relation = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
                 DEFAULT_SNAPSHOT_CUSTOMER_ID,
                 DEFAULT_PROPERTY_ID,
                 true,
@@ -94,7 +94,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         // create a customer
         UUID customerId = authorizationHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
         // create relation
-        UserCustomerRelationshipDto relation = relationshipsHelpers.constructUserCustomerRelationshipDto(
+        UserCustomerRelationshipCreateDto relation = relationshipsHelpers.constructUserCustomerRelationshipDto(
                 userId,
                 customerId,
                 true,

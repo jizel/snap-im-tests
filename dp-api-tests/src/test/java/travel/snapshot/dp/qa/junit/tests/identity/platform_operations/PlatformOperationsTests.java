@@ -16,6 +16,7 @@ import static travel.snapshot.dp.qa.junit.helpers.PlatformOperationHelpers.platf
 
 import com.jayway.restassured.response.Response;
 import org.junit.Test;
+import travel.snapshot.dp.api.identity.model.PlatformOperationCreateDto;
 import travel.snapshot.dp.api.identity.model.PlatformOperationDto;
 import travel.snapshot.dp.api.identity.model.PlatformOperationUpdateDto;
 import travel.snapshot.dp.api.type.HttpMethod;
@@ -64,7 +65,7 @@ public class PlatformOperationsTests extends CommonPlatformOperationTest {
     @Test
     public void createAndGetPlatformOperationTest() throws Exception {
         for (HttpMethod method : HttpMethod.values()) {
-            PlatformOperationDto platformOperationDto = platformOperationHelpers.constructPlatformOperation(method, TEST_URI_TEMPLATE + "/{create}");
+            PlatformOperationCreateDto platformOperationDto = platformOperationHelpers.constructPlatformOperation(method, TEST_URI_TEMPLATE + "/{create}");
 
             Response createResponse = commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, platformOperationDto);
             responseCodeIs(SC_CREATED);
@@ -105,7 +106,7 @@ public class PlatformOperationsTests extends CommonPlatformOperationTest {
         commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, platformOperationTestDto);
         verifyResponseAndCustomCode(SC_CONFLICT, CC_CONFLICT_VALUES);
 //        Missing httpMethod
-        PlatformOperationDto errorTestPO = platformOperationHelpers.constructPlatformOperation(HttpMethod.GET, TEST_URI_TEMPLATE);
+        PlatformOperationCreateDto errorTestPO = platformOperationHelpers.constructPlatformOperation(HttpMethod.GET, TEST_URI_TEMPLATE);
         errorTestPO.setHttpMethod(null);
         commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, errorTestPO);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);

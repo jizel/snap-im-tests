@@ -30,7 +30,7 @@ public class CustomerCodeTests extends CommonTest{
     @FileParameters(EXAMPLES + "generatedCustomerCodeTestExamples.csv")
     public void generatedCustomerCodeTests(String name) throws Exception {
         testCustomer1.setName(name);
-        commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        commonHelpers.entityIsCreated(testCustomer1);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("customer_code");
         String generatedCode = getAttributeValue("customer_code");
@@ -49,7 +49,7 @@ public class CustomerCodeTests extends CommonTest{
 
     @Test
     public void customerCodeCannotBeUpdatedManually() throws Exception {
-        UUID createdCustomerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
         CustomerDto customerWithCode = new CustomerDto();
         customerWithCode.setCode("anycode");
         commonHelpers.updateEntity(CUSTOMERS_PATH, createdCustomerId, customerWithCode);
@@ -63,7 +63,7 @@ public class CustomerCodeTests extends CommonTest{
         testCustomer1.setName(name);
         testCustomer1.setVatId(null);
         testCustomer1.setAddress(address);
-        commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        commonHelpers.entityIsCreated(testCustomer1);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("customer_code", resultCode);
     }
@@ -75,15 +75,15 @@ public class CustomerCodeTests extends CommonTest{
         testCustomer1.setVatId(null);
         testCustomer1.setId(null);
         testCustomer1.setAddress(address);
-        commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        commonHelpers.entityIsCreated(testCustomer1);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("customer_code", "CZBRQHIL");
 
-        commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        commonHelpers.entityIsCreated(testCustomer1);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("customer_code", "CZBRQHIL1");
 
-        commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        commonHelpers.entityIsCreated(testCustomer1);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("customer_code", "CZBRQHIL2");
     }

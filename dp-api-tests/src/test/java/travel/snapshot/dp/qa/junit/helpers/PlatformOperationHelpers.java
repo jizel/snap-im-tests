@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.helpers;
 
 import static org.junit.Assert.*;
 
+import travel.snapshot.dp.api.identity.model.PlatformOperationCreateDto;
 import travel.snapshot.dp.api.identity.model.PlatformOperationDto;
 import travel.snapshot.dp.api.type.HttpMethod;
 
@@ -10,8 +11,8 @@ import travel.snapshot.dp.api.type.HttpMethod;
  */
 public class PlatformOperationHelpers {
 
-    public PlatformOperationDto constructPlatformOperation(HttpMethod httpMethod, String uriTemplate) {
-        PlatformOperationDto platformOperation = new PlatformOperationDto();
+    public PlatformOperationCreateDto constructPlatformOperation(HttpMethod httpMethod, String uriTemplate) {
+        PlatformOperationCreateDto platformOperation = new PlatformOperationCreateDto();
         platformOperation.setHttpMethod(httpMethod);
         platformOperation.setUriTemplate(uriTemplate);
         return platformOperation;

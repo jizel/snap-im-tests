@@ -20,9 +20,9 @@ public class userPasswordRestrictionTests extends CommonTest {
     @Jira("DP-1985")
     @Test
     public void userPasswordRestrictionTest() throws Exception {
-        UserDto customerUser1 = userHelpers.userIsCreated(testUser1);
-        UserDto customerUser2 = userHelpers.userIsCreated(testUser2);
-        UserDto partnerUser = userHelpers.userIsCreated(testUser3);
+        UserDto customerUser1 = commonHelpers.entityIsCreatedAs(UserDto.class, testUser1);
+        UserDto customerUser2 = commonHelpers.entityIsCreatedAs(UserDto.class, testUser2);
+        UserDto partnerUser = commonHelpers.entityIsCreatedAs(UserDto.class, testUser3);
 //        Valid cases - snapshot user and user himself
         userHelpers.setUserPassword(customerUser1.getId(), "newPassword");
         responseCodeIs(SC_NO_CONTENT);

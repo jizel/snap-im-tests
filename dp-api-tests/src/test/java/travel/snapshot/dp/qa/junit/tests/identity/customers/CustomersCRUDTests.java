@@ -63,7 +63,7 @@ public class CustomersCRUDTests extends CommonTest {
 
     @Test
     public void customerIdMustBeUnique() throws Exception {
-        UUID createdCustomerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
         testCustomer1.setId(createdCustomerId);
         commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer1);
         responseIsConflictId();
@@ -71,11 +71,11 @@ public class CustomersCRUDTests extends CommonTest {
 
     @Test
     public void parentChildRelationCannotContainLoops() throws Exception {
-        UUID customer1Id = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID customer1Id = commonHelpers.entityIsCreated(testCustomer1);
         testCustomer2.setParentId(customer1Id);
-        UUID customer2Id = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer2);
+        UUID customer2Id = commonHelpers.entityIsCreated(testCustomer2);
         testCustomer3.setParentId(customer2Id);
-        UUID customer3Id = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer3);
+        UUID customer3Id = commonHelpers.entityIsCreated(testCustomer3);
         CustomerUpdateDto update = new CustomerUpdateDto();
         update.setParentId(customer3Id);
         commonHelpers.updateEntity(CUSTOMERS_PATH, customer1Id, update);
@@ -102,7 +102,7 @@ public class CustomersCRUDTests extends CommonTest {
 
     @Test
     public void updateCustomer() throws Exception {
-        UUID customerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
         CustomerUpdateDto customerUpdate = new CustomerUpdateDto();
         customerUpdate.setName("Updated name");
         customerUpdate.setEmail("updated@snapshot.travel");
@@ -118,7 +118,7 @@ public class CustomersCRUDTests extends CommonTest {
 
     @Test
     public void invalidUpdateCustomer() throws Exception {
-        UUID customerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
         Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
         commonHelpers.updateEntity(CUSTOMERS_PATH, customerId, invalidUpdate);
         responseIsUnprocessableEntity();
@@ -133,7 +133,7 @@ public class CustomersCRUDTests extends CommonTest {
 
     @Test
     public void updateCustomerWithInvalidEtag() throws Exception {
-        UUID customerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
         commonHelpers.updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), DEFAULT_SNAPSHOT_ETAG);
         responseCodeIs(SC_PRECONDITION_FAILED);
         customCodeIs(CC_INVALID_ETAG);
@@ -153,16 +153,16 @@ public class CustomersCRUDTests extends CommonTest {
 
     @Test
     public void deleteCustomer() throws Exception {
-        UUID customerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
         commonHelpers.deleteEntity(CUSTOMERS_PATH, customerId);
         responseCodeIs(SC_NO_CONTENT);
     }
 
     @Test
     public void customerWithParentChildRelationshipCannotBeDeleted() throws Exception {
-        UUID customer1Id = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID customer1Id = commonHelpers.entityIsCreated(testCustomer1);
         testCustomer2.setParentId(customer1Id);
-        UUID customer2Id = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer2);
+        UUID customer2Id = commonHelpers.entityIsCreated(testCustomer2);
 //        Customer cannot be deleted when it has children
         commonHelpers.deleteEntity(CUSTOMERS_PATH, customer1Id);
         responseIsEntityReferenced();

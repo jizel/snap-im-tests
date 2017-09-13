@@ -10,10 +10,10 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERT
 import com.jayway.restassured.specification.RequestSpecification;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
@@ -57,7 +57,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
         // create PS
         UUID propertySetId = authorizationHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
         // create propertyset-property relation
-        PropertySetPropertyRelationshipDto relation = relationshipsHelpers.constructPropertySetPropertyRelationship(propertySetId, DEFAULT_PROPERTY_ID, true);
+        PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers.constructPropertySetPropertyRelationship(propertySetId, DEFAULT_PROPERTY_ID, true);
         UUID relationId = authorizationHelpers.entityIsCreated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relation);
         // request
         authorizationHelpers.getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
@@ -78,7 +78,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
         // create user
         UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         // create property-user relation
-        UserPropertyRelationshipDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
+        UserPropertyRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
         UUID relationId = authorizationHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, relation);
         // request
         authorizationHelpers.getEntity(USER_PROPERTY_RELATIONSHIPS_PATH, relationId);

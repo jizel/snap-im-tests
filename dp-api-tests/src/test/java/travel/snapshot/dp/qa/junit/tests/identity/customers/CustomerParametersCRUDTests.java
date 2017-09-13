@@ -52,7 +52,7 @@ public class CustomerParametersCRUDTests extends CommonTest{
     @Test
     @FileParameters(EXAMPLES + "updateEachField.csv")
     public void updateCustomerEachField(String name, String email, String vatId, String phone, String website, String notes, String timezone, String hospitalityId) {
-        UUID createdCustomerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
         CustomerUpdateDto customerUpdate = customerHelpers.constructCustomerUpdate(name, email, vatId, phone, website, notes , timezone, hospitalityId);
         Response updateResponse = commonHelpers.updateEntity(CUSTOMERS_PATH, createdCustomerId, customerUpdate);
         responseCodeIs(SC_OK);
