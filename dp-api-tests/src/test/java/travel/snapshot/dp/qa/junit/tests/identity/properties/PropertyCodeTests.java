@@ -22,9 +22,9 @@ public class PropertyCodeTests extends CommonTest{
         testProperty1.setId(null);
         testProperty1.setCode(null);
         commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
-        String propertyCode1 = commonHelpers.getAttributeValue(PROPERTY_CODE);
+        String propertyCode1 = getAttributeValue(PROPERTY_CODE);
         commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
-        String propertyCode2 = commonHelpers.getAttributeValue(PROPERTY_CODE);
+        String propertyCode2 = getAttributeValue(PROPERTY_CODE);
         assertThat(propertyCode1, is("CZBRQPRO"));
         assertThat(propertyCode2, is("CZBRQPRO1"));
     }

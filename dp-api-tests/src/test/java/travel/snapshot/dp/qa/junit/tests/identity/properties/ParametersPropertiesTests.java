@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.OWNER;
+import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
@@ -21,7 +22,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParam
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
-import static  travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType;
+
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
 import org.junit.Test;
@@ -46,7 +47,6 @@ import java.util.UUID;
 @RunWith(JUnitParamsRunner.class)
 public class ParametersPropertiesTests extends CommonTest {
 
-    private UUID createdPropertyId;
     private static final String EXAMPLES = "src/test/resources/csv/properties/";
 
     @FileParameters(EXAMPLES + "correctPropertyCodeIsReturnedWhenNoneSent.csv")
@@ -56,7 +56,7 @@ public class ParametersPropertiesTests extends CommonTest {
         testProperty1.setId(null);
         testProperty1.setCode(null);
         commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
-        String propertyCode = commonHelpers.getAttributeValue(PROPERTY_CODE);
+        String propertyCode = getAttributeValue(PROPERTY_CODE);
         assertFalse("Property code is empty", propertyCode.isEmpty());
         assertFalse("Property code contains whitespaces", propertyCode.matches("\\s"));
         assertTrue("Property code contains invalid characters", propertyCode.matches("[A-Z0-9]+"));
@@ -82,7 +82,7 @@ public class ParametersPropertiesTests extends CommonTest {
         testProperty1.setCode(null);
         testProperty1.setAddress(address);
         commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
-        String propertyCode = commonHelpers.getAttributeValue(PROPERTY_CODE);
+        String propertyCode = getAttributeValue(PROPERTY_CODE);
         assertThat("Passed and returned property code mismatch", resultingPropertyCode, is(propertyCode));
     }
 
@@ -92,7 +92,7 @@ public class ParametersPropertiesTests extends CommonTest {
         testProperty1.setId(null);
         testProperty1.setCode(code);
         commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
-        String propertyCode = commonHelpers.getAttributeValue(PROPERTY_CODE);
+        String propertyCode = getAttributeValue(PROPERTY_CODE);
         assertThat("Passed and returned property code mismatch", propertyCode, is(code));
     }
 

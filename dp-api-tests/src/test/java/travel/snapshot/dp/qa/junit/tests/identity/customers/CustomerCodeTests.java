@@ -33,7 +33,7 @@ public class CustomerCodeTests extends CommonTest{
         commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("customer_code");
-        String generatedCode = commonHelpers.getAttributeValue("customer_code");
+        String generatedCode = getAttributeValue("customer_code");
         assertTrue("Attribute " + generatedCode + " is not sequence of capital latin letters and digits. It is: "+ generatedCode,
                 generatedCode.matches("[A-Z0-9]+"));
     }
