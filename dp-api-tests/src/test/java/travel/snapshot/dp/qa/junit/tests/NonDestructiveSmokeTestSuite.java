@@ -1,18 +1,11 @@
 package travel.snapshot.dp.qa.junit.tests;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runners.Suite;
+import com.googlecode.junittoolbox.WildcardPatternSuite;
+import com.googlecode.junittoolbox.SuiteClasses;
+import org.junit.runner.RunWith;
 
-@Suite.SuiteClasses(Categories.Authorization.class)
+@RunWith(WildcardPatternSuite.class)
+@SuiteClasses("identity/smoke/*.class")
 public class NonDestructiveSmokeTestSuite {
 
-    @BeforeClass
-    public static void setUp() {
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        // Do any setting after the whole suites is performed
-    }
 }
