@@ -35,7 +35,7 @@ public class CustomersCRUDTests extends CommonTest {
     @Test
     public void createAllCustomersTest() {
         customerDtos.values().forEach(customer -> {
-            customerHelpers.followingCustomerIsCreated(customer);
+            commonHelpers.createEntity(customer);
             responseCodeIs(SC_CREATED);
             bodyContainsEntityWith("name");
         });

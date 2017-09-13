@@ -15,7 +15,7 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipPartialDto;
@@ -485,9 +485,9 @@ public class UserGroupsSteps extends BasicSteps {
 
     public void checkUserGroupRoleRelationExistency(UUID userGroupId, UUID roleId, Boolean existency) {
         Response response = getSecondLevelEntities(userGroupId, ROLES_RESOURCE, null, null, null, null, null, null);
-        List<RoleDto> listOfRoles = getResponseAsRoles(response);
+        List<RoleBaseDto> listOfRoles = getResponseAsRoles(response);
         Boolean found = false;
-        for (RoleDto role : listOfRoles) {
+        for (RoleBaseDto role : listOfRoles) {
             if (role.getId().equals(roleId)) {
                 found = true;
             }

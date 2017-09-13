@@ -6,13 +6,12 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadEntities;
 import lombok.Getter;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
-import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
@@ -32,14 +31,13 @@ public class EntitiesLoader {
 
     private static EntitiesLoader instance = null;
 
-    private EntityNonNullMap<String, CustomerCreateDto> customerDtos;
+    private EntityNonNullMap<String, CustomerDto> customerDtos;
     private EntityNonNullMap<String, UserCreateDto> userDtos;
     private EntityNonNullMap<String, UserCreateDto> snapshotUserDtos;
     private EntityNonNullMap<String, PropertyDto> propertyDtos;
     private EntityNonNullMap<String, PropertySetDto> propertySetDtos;
     private EntityNonNullMap<String, CustomerRoleDto> customerRoleDtos;
     private EntityNonNullMap<String, PropertyRoleDto> propertyRoleDtos;
-    private EntityNonNullMap<String, PropertySetRoleDto> propertySetRoleDtos;
     private EntityNonNullMap<String, PartnerDto> partnerDtos;
     private EntityNonNullMap<String, UserGroupDto> userGroupDtos;
     private EntityNonNullMap<String, ApplicationDto> applicationDtos;
@@ -75,7 +73,7 @@ public class EntitiesLoader {
 
     private void loadCustomers() {
         Map<String, Object> yamlCustomers = loadEntities(String.format(YAML_DATA_PATH, "entities/customers.yaml"));
-        customerDtos = new EntityNonNullMap<>((LinkedHashMap<String, CustomerCreateDto>) yamlCustomers.get("customers"));
+        customerDtos = new EntityNonNullMap<>((LinkedHashMap<String, CustomerDto>) yamlCustomers.get("customers"));
 
     }
 
@@ -103,7 +101,6 @@ public class EntitiesLoader {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/roles.yaml"));
         customerRoleDtos = new EntityNonNullMap<>((LinkedHashMap<String, CustomerRoleDto>) yamlProperties.get("customerRoles"));
         propertyRoleDtos = new EntityNonNullMap<>((LinkedHashMap<String, PropertyRoleDto>) yamlProperties.get("propertyRoles"));
-        propertySetRoleDtos = new EntityNonNullMap<>((LinkedHashMap<String, PropertySetRoleDto>) yamlProperties.get("propertySetRoles"));
     }
 
     private void loadPartners() {

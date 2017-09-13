@@ -1,5 +1,13 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
+import static com.jayway.restassured.RestAssured.given;
+import static net.serenitybdd.core.Serenity.sessionVariableCalled;
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
+
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
@@ -8,15 +16,6 @@ import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static com.jayway.restassured.RestAssured.given;
-import static net.serenitybdd.core.Serenity.sessionVariableCalled;
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static org.junit.Assert.fail;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getDtoFromResponse;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
 
 public class AuthorizationHelpers extends AuthorizationSteps {
 
@@ -64,7 +63,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         responseCodeIs(SC_CREATED);
         UUID result = null;
         try {
-            result = getDtoFromResponse(response, basePath).getId();
+            result = commonHelpers.getDtoFromResponse(response, basePath).getId();
         } catch (Exception e) {
             fail(e.getMessage());
         }

@@ -13,7 +13,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
@@ -30,7 +30,7 @@ import java.util.UUID;
 @Category(Categories.Authorization.class)
 public class CustomerSmokeTests extends CommonSmokeTest {
 
-    private EntityNonNullMap<String, CustomerCreateDto> customerDtos = null;
+    private EntityNonNullMap<String, CustomerDto> customerDtos = null;
 
     @Before
     public void setUp() throws Exception {

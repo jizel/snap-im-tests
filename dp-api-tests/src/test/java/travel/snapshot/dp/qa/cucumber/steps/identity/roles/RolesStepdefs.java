@@ -15,8 +15,7 @@ import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
-import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
-import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
 import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps;
@@ -41,11 +40,6 @@ public class RolesStepdefs {
         roleBaseSteps.setRolesPathProperty();
     }
 
-    @Given("^Switch for user property set role tests$")
-    public void switchForUserPropertySetRoleTests() throws Throwable {
-        roleBaseSteps.setRolesPathPropertySet();
-    }
-
     @Given("^The following roles exist$")
     public void The_following_roles_exist(DataTable rolesTable) throws Throwable {
 //        We cannot convert to RoleDto (it's abstract) and Cucumber doesn't know what type of role to use. Hence the DataTable (and later conversion).
@@ -56,7 +50,7 @@ public class RolesStepdefs {
     @When("^Role is created$")
     public void Role_is_created(DataTable rolesTable) throws Throwable {
         Map<String, Object> roleAttributes = rolesTable.asMaps(String.class, Object.class).get(0);
-        RoleDto roleDto = getRoleBaseType().getDtoClassType().newInstance();
+        RoleBaseDto roleDto = getRoleBaseType().getDtoClassType().newInstance();
         roleBaseSteps.setRoleAttributes(roleDto, roleAttributes);
         roleBaseSteps.createRole(roleDto);
     }
@@ -79,7 +73,7 @@ public class RolesStepdefs {
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is updated with data$")
     public void role_with_name_for_application_id_is_updated_with_data(String roleName, UUID applicationId, List<RoleUpdateDto> roles) throws Throwable {
-        RoleDto role = roleBaseSteps.getRoleByName(roleName);
+        RoleBaseDto role = roleBaseSteps.getRoleByName(roleName);
         assertThat(role,is(notNullValue()));
         String etag = roleBaseSteps.getEntityEtag(role.getId());
         roleBaseSteps.updateRole(role.getId(), roles.get(0), etag);
@@ -88,7 +82,7 @@ public class RolesStepdefs {
 
     @When("^Role with name \"([^\"]*)\" is updated with data if updated before$")
     public void Role_with_name_for_application_id_is_updated_with_data_if_updated_before(String roleName, List<RoleUpdateDto> roles) throws Throwable {
-        RoleDto role = roleBaseSteps.getRoleByName(roleName);
+        RoleBaseDto role = roleBaseSteps.getRoleByName(roleName);
         assertThat(role,is(notNullValue()));
         String originalEtag = roleBaseSteps.getEntityEtag(role.getId());
         RoleUpdateDto firstUpdate = getRoleBaseType().getDtoClassType().newInstance();
@@ -105,8 +99,8 @@ public class RolesStepdefs {
     }
 
     @Then("^Updated role with name \"([^\"]*)\" has data$")
-    public void Updated_role_with_name_for_application_id_has_data(String roleName, List<RoleDto> roles) throws Throwable {
-        RoleDto requestedRole = roleBaseSteps.getRoleByName(roleName);
+    public void Updated_role_with_name_for_application_id_has_data(String roleName, List<RoleBaseDto> roles) throws Throwable {
+        RoleBaseDto requestedRole = roleBaseSteps.getRoleByName(roleName);
         assertThat("Role does not exists", requestedRole, is(notNullValue()));
         assertThat("Roles have different application ids", requestedRole.getId(), is(roles.get(0).getId()));
         assertThat("Roles have different names", requestedRole.getName(), is(roles.get(0).getName()));
@@ -119,8 +113,6 @@ public class RolesStepdefs {
             case CUSTOMER : roleBaseSteps.numberOfEntitiesInResponse(CustomerRoleDto.class, count);
                 break;
             case PROPERTY: roleBaseSteps.numberOfEntitiesInResponse(PropertyRoleDto.class, count);
-                break;
-            case PROPERTY_SET: roleBaseSteps.numberOfEntitiesInResponse(PropertySetRoleDto.class, count);
         }
     }
 
@@ -135,7 +127,7 @@ public class RolesStepdefs {
     }
 
     @Given("^The following roles don't exist$")
-    public void The_following_roles_don_t_exist(List<RoleDto> roles) throws Throwable {
+    public void The_following_roles_don_t_exist(List<RoleBaseDto> roles) throws Throwable {
         roleBaseSteps.deleteRoles(roles);
     }
 

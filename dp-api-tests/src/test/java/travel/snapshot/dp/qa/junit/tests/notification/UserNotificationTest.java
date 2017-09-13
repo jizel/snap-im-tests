@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
@@ -84,7 +84,7 @@ public class UserNotificationTest extends CommonTest {
     public void addRoleToUserNotificationTest() throws Exception {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "addRoleToUserNotificationTest");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "deleteRoleFromUserNotificationTest");
-        RoleDto testRole = roleHelpers.roleIsCreated(entitiesLoader.getCustomerRoleDtos().get("customerRole1"), CUSTOMER);
+        RoleBaseDto testRole = roleHelpers.roleIsCreated(entitiesLoader.getCustomerRoleDtos().get("customerRole1"), CUSTOMER);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         userHelpers.userAssignsRoleToRelationWithApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
                 createdUser1.getId(),

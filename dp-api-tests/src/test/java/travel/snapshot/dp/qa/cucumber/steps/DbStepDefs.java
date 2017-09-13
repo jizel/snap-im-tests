@@ -209,7 +209,6 @@ public class DbStepDefs {
         ArrayList<UUID> commercialSubscriptionIds = commonHelpers.getArrayFromMap(COMMERCIAL_SUBSCRIPTIONS_PATH, registry);
         ArrayList<UUID> customerRoleIds = commonHelpers.getArrayFromMap(USER_CUSTOMER_ROLES_PATH, registry);
         ArrayList<UUID> propertyRoleIds = commonHelpers.getArrayFromMap(USER_PROPERTY_ROLES_PATH, registry);
-        ArrayList<UUID> propertySetRoleIds = commonHelpers.getArrayFromMap(USER_PROPERTY_SET_ROLES_PATH, registry);
         ArrayList<UUID> userGroupIds = commonHelpers.getArrayFromMap(USER_GROUPS_PATH, registry);
         ArrayList<UUID> userPropertySetIds = commonHelpers.getArrayFromMap(USER_PROPERTY_SET_RELATIONSHIPS_PATH, registry);
         ArrayList<UUID> userPropertyIds = commonHelpers.getArrayFromMap(USER_PROPERTY_RELATIONSHIPS_PATH, registry);
@@ -227,9 +226,6 @@ public class DbStepDefs {
             dbSteps.deleteRole(roleId);
         });
         propertyRoleIds.forEach(roleId -> {
-            dbSteps.deleteRole(roleId);
-        });
-        propertySetRoleIds.forEach(roleId -> {
             dbSteps.deleteRole(roleId);
         });
         commercialSubscriptionIds.forEach(commercialSubscriptionId -> {

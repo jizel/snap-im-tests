@@ -19,6 +19,7 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
+import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
@@ -271,13 +272,13 @@ public class UsersSteps extends BasicSteps {
         return stream((userRolesUserEntity.as(RoleDto[].class))).findFirst().orElse(null);
     }
 
-    public void roleIsDeletedFromUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, UUID entityId) {
+    public void roleIsDeletedFromUserWithRelationshipTypeEntity(RoleBaseDto r, String username, String relationshipType, UUID entityId) {
         UserDto u = getUserByUsername(username);
         Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
         setSessionResponse(deleteResponse);
     }
 
-    public void roleDoesntExistForUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, UUID entityId) {
+    public void roleDoesntExistForUserWithRelationshipTypeEntity(RoleBaseDto r, String username, String relationshipType, UUID entityId) {
         UserDto u = getUserByUsername(username);
         RoleDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
         assertNull("Role should not be present for User", existingUserRole);
