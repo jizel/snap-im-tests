@@ -223,14 +223,10 @@ services:
         networks:
             - main
     activemq:
-        image: docker.snapshot.travel:5000/snapshot/activemq:5.13.4
+        image: rmohr/activemq:5.14.3
         ports:
-            - "1098:1098"
-            - "5672:5672"
-            - "8161:8161"
-            - "61613:61613"
-            - "61614:61614"
-            - "61616:61616"
+          - 61617:61616
+          - 8162:8161
         networks:
             - main
     keycloak:

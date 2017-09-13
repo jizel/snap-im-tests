@@ -25,10 +25,6 @@ docker build --force-rm=true -t snapshot/db_migrator db_migrator
 tag_image snapshot/db_migrator latest
 tag_image snapshot/db_migrator 1.37
 
-docker build --force-rm=true -t snapshot/activemq activemq
-tag_image snapshot/activemq latest
-tag_image snapshot/activemq 5.13.4
-
 docker build --force-rm=true -t snapshot/mongodb mongodb
 tag_image snapshot/mongodb latest
 tag_image snapshot/mongodb 3.4.2
