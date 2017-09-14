@@ -198,11 +198,11 @@ services:
             - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
              
     mariadb:
-        image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.22
+        image: docker.io/mariadb:10.1.22
         ports:
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: "identity"
+            - MYSQL_ROOT_PASSWORD=root
         networks:
             - main
 
@@ -217,7 +217,7 @@ services:
         networks:
             - main
     mongodb:
-        image: docker.snapshot.travel:5000/snapshot/mongodb:3.4.2
+        image: docker.io/mongo:latest
         ports:
             - "27017:27017"
         networks:

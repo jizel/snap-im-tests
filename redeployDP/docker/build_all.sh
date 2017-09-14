@@ -25,25 +25,10 @@ docker build --force-rm=true -t snapshot/db_migrator db_migrator
 tag_image snapshot/db_migrator latest
 tag_image snapshot/db_migrator 1.37
 
-docker build --force-rm=true -t snapshot/mongodb mongodb
-tag_image snapshot/mongodb latest
-tag_image snapshot/mongodb 3.4.2
-
-docker build --force-rm=true -t snapshot/mariadb mariadb
-tag_image snapshot/mariadb latest
-tag_image snapshot/mariadb 10.1.22
-
 docker build --force-rm=true -t snapshot/nonpms_integrations nonpms_integrations
 tag_image snapshot/nonpms_integrations latest
 tag_image snapshot/nonpms_integrations 1.37
 
-docker build --force-rm=true -t snapshot/dataplatform_builder builder
-tag_image snapshot/dataplatform_builder latest
-tag_image snapshot/dataplatform_builder 1.37
-
-docker build --force-rm=true -t snapshot/keycloak keycloak
-tag_image snapshot/keycloak latest
-tag_image snapshot/keycloak 1.9
-
-docker build --force-rm=true -t snapshot/nginx nginx
-tag_image snapshot/nginx latest
+# docker build --force-rm=true -t snapshot/dataplatform_builder builder
+# tag_image snapshot/dataplatform_builder latest
+# tag_image snapshot/dataplatform_builder 1.37

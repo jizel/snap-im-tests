@@ -6,23 +6,10 @@ clients:
     clientAuthenticatorType: client-secret,
     secret: a4000000-0000-4444-8888-000000000000,
     directAccessGrantsEnabled: true,
+    clientTemplate: "Snapshot Template",
+    publicClient: false,
     redirectUris: [
       "*"
-    ],
-    protocolMappers:
-    [
-      {
-        name: "Identity ID",
-        protocol: "openid-connect",
-        protocolMapper: "oidc-usermodel-attribute-mapper",
-        consentRequired: false,
-        config: {
-          user.attribute: identity-id,
-          access.token.claim: true,
-          claim.name: identity_id,
-          jsonType.label: String
-        }
-      }
     ]
   }
 
