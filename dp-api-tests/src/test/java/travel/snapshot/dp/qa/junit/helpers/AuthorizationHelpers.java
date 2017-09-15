@@ -30,18 +30,14 @@ public class AuthorizationHelpers extends AuthorizationSteps {
 
     public void updateRegistryOfDeletables(String basePath, UUID id) {
         // Retrieve the map from serenity session variable
-        Map<String, ArrayList<UUID>> registry = Serenity.sessionVariableCalled(ENTITIES_TO_DELETE);
-        // Retrieve the array of ids of the certain enity type
-        ArrayList<UUID> listIds = getArrayFromMap(basePath, registry);
+        Map<String, List<UUID>> registry = Serenity.sessionVariableCalled(ENTITIES_TO_DELETE);
+        // Retrieve the array of ids of the certain entity type
+        List<UUID> listIds = registry.getOrDefault(basePath, new ArrayList<>());
         // Update this list
         listIds.add(id);
         // Put it back to the map and map to session variable
         registry.put(basePath, listIds);
         Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(registry);
-    }
-
-    public ArrayList<UUID> getArrayFromMap(String aKey, Map<String, ArrayList<UUID>> inputMap) {
-        return (inputMap.get(aKey) == null) ? new ArrayList<>() : inputMap.get(aKey);
     }
 
     private RequestSpecification constructRequestSpecification(String basePath, String etag) {

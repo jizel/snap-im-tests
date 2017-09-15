@@ -30,6 +30,7 @@ import travel.snapshot.dp.qa.junit.tests.Categories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -56,7 +57,7 @@ public class CommonSmokeTest extends CommonTest {
         String clientId = (String) testClient1.get("clientId");
         String clientSecret = (String) testClient1.get("secret");
         authorizationHelpers.getToken(DEFAULT_SNAPSHOT_USER_NAME, DEFAULT_PASSWORD, clientId, clientSecret);
-        Map<String, ArrayList<String>> thingsToDelete = new HashMap<>();
+        Map<String, List<String>> thingsToDelete = new HashMap<>();
         Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(thingsToDelete);
     }
 
@@ -68,23 +69,23 @@ public class CommonSmokeTest extends CommonTest {
 
 
 
-    private void removeCreatedEntities(Map<String, ArrayList<UUID>> registry) {
+    private void removeCreatedEntities(Map<String, List<UUID>> registry) {
 
-        ArrayList<UUID> commercialSubscriptionIds = authorizationHelpers.getArrayFromMap(COMMERCIAL_SUBSCRIPTIONS_PATH, registry);
-        ArrayList<UUID> customerRoleIds = authorizationHelpers.getArrayFromMap(USER_CUSTOMER_ROLES_PATH, registry);
-        ArrayList<UUID> propertyRoleIds = authorizationHelpers.getArrayFromMap(USER_PROPERTY_ROLES_PATH, registry);
-        ArrayList<UUID> userGroupIds = authorizationHelpers.getArrayFromMap(USER_GROUPS_PATH, registry);
-        ArrayList<UUID> userPropertySetIds = authorizationHelpers.getArrayFromMap(USER_PROPERTY_SET_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> userPropertyIds = authorizationHelpers.getArrayFromMap(USER_PROPERTY_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> propertySetPropertyIds = authorizationHelpers.getArrayFromMap(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> propertyIds = authorizationHelpers.getArrayFromMap(PROPERTIES_PATH, registry);
-        ArrayList<UUID> propertySetIds = authorizationHelpers.getArrayFromMap(PROPERTY_SETS_PATH, registry);
-        ArrayList<UUID> customerPropertyIds = authorizationHelpers.getArrayFromMap(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> customerUserIds = authorizationHelpers.getArrayFromMap(USER_CUSTOMER_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> customerIds = authorizationHelpers.getArrayFromMap(CUSTOMERS_PATH, registry);
-        ArrayList<UUID> userIds = authorizationHelpers.getArrayFromMap(USERS_PATH, registry);
-        ArrayList<UUID> applicationIds = authorizationHelpers.getArrayFromMap(APPLICATIONS_PATH, registry);
-        ArrayList<UUID> appVersionIds = authorizationHelpers.getArrayFromMap(APPLICATION_VERSIONS_PATH, registry);
+        List<UUID> commercialSubscriptionIds = registry.getOrDefault(COMMERCIAL_SUBSCRIPTIONS_PATH, new ArrayList<UUID>());
+        List<UUID> customerRoleIds = registry.getOrDefault(USER_CUSTOMER_ROLES_PATH, new ArrayList<UUID>());
+        List<UUID> propertyRoleIds = registry.getOrDefault(USER_PROPERTY_ROLES_PATH, new ArrayList<UUID>());
+        List<UUID> userGroupIds = registry.getOrDefault(USER_GROUPS_PATH, new ArrayList<UUID>());
+        List<UUID> userPropertySetIds = registry.getOrDefault(USER_PROPERTY_SET_RELATIONSHIPS_PATH, new ArrayList<UUID>());
+        List<UUID> userPropertyIds = registry.getOrDefault(USER_PROPERTY_RELATIONSHIPS_PATH, new ArrayList<UUID>());
+        List<UUID> propertySetPropertyIds = registry.getOrDefault(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, new ArrayList<UUID>());
+        List<UUID> propertyIds = registry.getOrDefault(PROPERTIES_PATH, new ArrayList<UUID>());
+        List<UUID> propertySetIds = registry.getOrDefault(PROPERTY_SETS_PATH, new ArrayList<UUID>());
+        List<UUID> customerPropertyIds = registry.getOrDefault(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, new ArrayList<UUID>());
+        List<UUID> customerUserIds = registry.getOrDefault(USER_CUSTOMER_RELATIONSHIPS_PATH, new ArrayList<UUID>());
+        List<UUID> customerIds = registry.getOrDefault(CUSTOMERS_PATH, new ArrayList<UUID>());
+        List<UUID> userIds = registry.getOrDefault(USERS_PATH, new ArrayList<UUID>());
+        List<UUID> applicationIds = registry.getOrDefault(APPLICATIONS_PATH, new ArrayList<UUID>());
+        List<UUID> appVersionIds = registry.getOrDefault(APPLICATION_VERSIONS_PATH, new ArrayList<UUID>());
 
         customerRoleIds.forEach(dbSteps::deleteRole);
         propertyRoleIds.forEach(dbSteps::deleteRole);
