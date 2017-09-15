@@ -26,6 +26,5 @@ function run {
         "$API/$path";
 }
 
-run "POST" "admin/realms/Snapshot/clients" "client.json"
 run "POST" "admin/realms/Snapshot/components" "component-UserStorageProvider.json"
 run "POST" "admin/realms/Snapshot/components" "component-KeyProvider.json"
