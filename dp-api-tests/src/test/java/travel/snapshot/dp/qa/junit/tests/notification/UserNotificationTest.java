@@ -21,6 +21,7 @@ import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * JMS notification tests for User entity
@@ -28,14 +29,14 @@ import java.util.Map;
 @RunWith(SerenityRunner.class)
 public class UserNotificationTest extends CommonTest {
     private static Map<String, Map<String, Object>> notificationTestsData = loadTestData(String.format(YAML_DATA_PATH, "notifications/user_notification_tests.yaml"));
-    private UserDto createdUser1;
+    private UUID createdUserId;
     private UserCreateDto user2;
     private Map<String, Object> receivedNotification;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        createdUser1 = userHelpers.userIsCreated(testUser1);
+        createdUserId = commonHelpers.entityIsCreated(testUser1);
         user2 = entitiesLoader.getUserDtos().get("user2");
     }
 
@@ -60,7 +61,7 @@ public class UserNotificationTest extends CommonTest {
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         UserUpdateDto userUpdate = new UserUpdateDto();
         userUpdate.setUsername("Updated Username");
-        userHelpers.updateUser(createdUser1.getId(), userUpdate);
+        userHelpers.updateUser(createdUserId, userUpdate);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -87,13 +88,13 @@ public class UserNotificationTest extends CommonTest {
         RoleBaseDto testRole = roleHelpers.roleIsCreated(entitiesLoader.getCustomerRoleDtos().get("customerRole1"), CUSTOMER);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         userHelpers.userAssignsRoleToRelationWithApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
-                createdUser1.getId(),
+                createdUserId,
                 "customer",
                 DEFAULT_SNAPSHOT_CUSTOMER_ID,
                 testRole.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        userHelpers.roleBetweenUserAndEntityIsDeleted("customers", testRole.getId(), createdUser1.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, null);
+        userHelpers.roleBetweenUserAndEntityIsDeleted("customers", testRole.getId(), createdUserId, DEFAULT_SNAPSHOT_CUSTOMER_ID, null);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }

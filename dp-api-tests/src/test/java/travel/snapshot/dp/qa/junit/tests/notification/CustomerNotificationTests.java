@@ -9,13 +9,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * JMS notification tests for Customer entity
@@ -25,12 +23,12 @@ import java.util.Map;
 public class CustomerNotificationTests extends CommonTest {
 
     private static Map<String, Map<String, Object>> notificationTestsData = loadTestData(String.format(YAML_DATA_PATH, "notifications/customer_notification_tests.yaml"));
-    private CustomerDto createdCustomer1;
+    private UUID createdCustomerId;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        createdCustomer1 = customerHelpers.customerIsCreated(testCustomer1);
+        createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
     }
 
     @After
@@ -43,7 +41,7 @@ public class CustomerNotificationTests extends CommonTest {
     public void createCustomerNotificationTest() throws Exception{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createCustomerNotificationTest");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        customerHelpers.customerIsCreated(entitiesLoader.getCustomerDtos().get("customer2"));
+        commonHelpers.entityIsCreated(testCustomer2);
         Map<String, Object> receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -56,7 +54,7 @@ public class CustomerNotificationTests extends CommonTest {
         customerUpdate.setName("Update Customer Name");
 //        Get update notification and verify
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        customerHelpers.customerIsUpdated(createdCustomer1.getId(), customerUpdate);
+        customerHelpers.customerIsUpdated(createdCustomerId, customerUpdate);
         Map<String, Object> receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }
@@ -65,7 +63,7 @@ public class CustomerNotificationTests extends CommonTest {
     public void deleteCustomerNotificationTest() throws Exception{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "deleteCustomerNotificationTest");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        customerHelpers.customerIsDeleted(createdCustomer1.getId());
+        customerHelpers.customerIsDeleted(createdCustomerId);
         Map<String, Object> receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }
@@ -75,9 +73,9 @@ public class CustomerNotificationTests extends CommonTest {
     @Test
     public void addPropertyToCustomerNotificationTest() throws Exception{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "addPropertyToCustomerNotificationTest");
-        PropertyDto testProperty = propertyHelpers.propertyIsCreated(entitiesLoader.getPropertyDtos().get("property1"));
+        UUID testPropertyId = commonHelpers.entityIsCreated(testProperty1);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        customerHelpers.addPropertyToCustomer(testProperty.getId(), createdCustomer1.getId(), null, null, null, true);
+        customerHelpers.addPropertyToCustomer(testPropertyId, createdCustomerId, null, null, null, true);
         Map<String, Object> receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -85,10 +83,10 @@ public class CustomerNotificationTests extends CommonTest {
     @Test
     public void updatePropertyForCustomerNotificationTest() throws Exception{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "updatePropertyForCustomerNotificationTest");
-        PropertyDto testProperty = propertyHelpers.propertyIsCreated(entitiesLoader.getPropertyDtos().get("property1"));
-        customerHelpers.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(testProperty.getId(), createdCustomer1.getId(), null, null, null, true);
+        UUID testPropertyId = commonHelpers.entityIsCreated(testProperty1);
+        customerHelpers.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(testPropertyId, createdCustomerId, null, null, null, true);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        customerHelpers.propertyIsUpdatedForCustomerWith(testProperty.getId(), createdCustomer1.getId(), "valid_from", "2015-01-01");
+        customerHelpers.propertyIsUpdatedForCustomerWith(testPropertyId, createdCustomerId, "valid_from", "2015-01-01");
         Map<String, Object> receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }
@@ -96,9 +94,9 @@ public class CustomerNotificationTests extends CommonTest {
     @Test
     public void addAndRemoveCustomerUser() throws Exception{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "addAndRemoveCustomerUser");
-        UserDto testUser = userHelpers.userIsCreated(testSnapshotUser1);
+        UUID testUserId = commonHelpers.entityIsCreated(testSnapshotUser1);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        customerHelpers.addUserToCustomer(testUser.getId(), createdCustomer1.getId(), true, true);
+        customerHelpers.addUserToCustomer(testUserId, createdCustomerId, true, true);
         Map<String, Object> receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }

@@ -14,27 +14,28 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+
+import java.util.UUID;
 
 /**
  * Integration tests for /identity/user_property_set_relationships endpoint
  */
 @RunWith(SerenityRunner.class)
 public class UserPropertySetRelationshipTests extends CommonTest {
-    private PropertySetDto createdPropertySet1;
-    private UserDto createdUser1;
-    private UserPropertySetRelationshipDto testUserPropertySetRelationship;
+    private UUID createdPropertySetId;
+    private UUID createdUserId;
+    private UserPropertySetRelationshipCreateDto testUserPropertySetRelationship;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        createdPropertySet1 = propertySetHelpers.propertySetIsCreated(testPropertySet1);
-        createdUser1 = userHelpers.userIsCreated(testUser1);
-        testUserPropertySetRelationship = relationshipsHelpers.constructUserPropertySetRelationshipDto(createdUser1.getId(), createdPropertySet1.getId(), true);
+        createdPropertySetId = commonHelpers.entityIsCreated(testPropertySet1);
+        createdUserId = commonHelpers.entityIsCreated(testUser1);
+        testUserPropertySetRelationship = relationshipsHelpers.constructUserPropertySetRelationshipDto(createdUserId, createdPropertySetId, true);
     }
 
     @Test
@@ -42,21 +43,21 @@ public class UserPropertySetRelationshipTests extends CommonTest {
         Response response = commonHelpers.createEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, testUserPropertySetRelationship);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("id");
-        UserPropertySetRelationshipDto returnedRelationship = response.as(UserPropertySetRelationshipDto.class);
-        assertThat(returnedRelationship.getPropertySetId(), is(createdPropertySet1.getId()));
-        assertThat(returnedRelationship.getUserId(), is(createdUser1.getId()));
+        UserPropertySetRelationshipCreateDto returnedRelationship = response.as(UserPropertySetRelationshipDto.class);
+        assertThat(returnedRelationship.getPropertySetId(), is(createdPropertySetId));
+        assertThat(returnedRelationship.getUserId(), is(createdUserId));
         assertThat(returnedRelationship.getIsActive(), is(true));
-        UserPropertySetRelationshipDto requestedRelationship = commonHelpers.getEntityAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, returnedRelationship.getId());
+        UserPropertySetRelationshipCreateDto requestedRelationship = commonHelpers.getEntityAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, returnedRelationship.getId());
         assertThat("Returned relationship is different from sent ", requestedRelationship, is(returnedRelationship));
     }
 
     @Test
     public void createUserPropertySetRelationshipErrors() {
-        testUserPropertySetRelationship = relationshipsHelpers.constructUserPropertySetRelationshipDto(NON_EXISTENT_ID, createdPropertySet1.getId(), true);
+        testUserPropertySetRelationship = relationshipsHelpers.constructUserPropertySetRelationshipDto(NON_EXISTENT_ID, createdPropertySetId, true);
         commonHelpers.createEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, testUserPropertySetRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
-        testUserPropertySetRelationship = relationshipsHelpers.constructUserPropertySetRelationshipDto(createdUser1.getId(), NON_EXISTENT_ID, true);
+        testUserPropertySetRelationship = relationshipsHelpers.constructUserPropertySetRelationshipDto(createdUserId, NON_EXISTENT_ID, true);
         commonHelpers.createEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, testUserPropertySetRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
@@ -64,17 +65,17 @@ public class UserPropertySetRelationshipTests extends CommonTest {
 
     @Test
     public void updateUserPropertySetRelationship() throws Exception {
-        UserPropertySetRelationshipDto UserPropertySetRelationship = commonHelpers.entityWithTypeIsCreated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, testUserPropertySetRelationship);
+        UserPropertySetRelationshipCreateDto UserPropertySetRelationship = commonHelpers.entityIsCreatedAs(UserPropertySetRelationshipDto.class, testUserPropertySetRelationship);
         UserPropertySetRelationshipUpdateDto update = relationshipsHelpers.constructUserPropertySetRelationshipUpdateDto(false);
         commonHelpers.updateEntityPost(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationship.getId(), update);
         responseCodeIs(SC_NO_CONTENT);
-        UserPropertySetRelationshipDto returnedRelationship = commonHelpers.getEntityAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, UserPropertySetRelationship.getId());
+        UserPropertySetRelationshipCreateDto returnedRelationship = commonHelpers.getEntityAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, UserPropertySetRelationship.getId());
         assertThat(returnedRelationship.getIsActive(), is(false));
     }
 
     @Test
     public void deleteUserPropertySetRelationship(){
-        UserPropertySetRelationshipDto UserPropertySetRelationship = commonHelpers.entityWithTypeIsCreated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, testUserPropertySetRelationship);
+        UserPropertySetRelationshipCreateDto UserPropertySetRelationship = commonHelpers.entityIsCreatedAs(UserPropertySetRelationshipDto.class, testUserPropertySetRelationship);
         commonHelpers.deleteEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationship.getId());
         responseCodeIs(SC_NO_CONTENT);
         commonHelpers.getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationship.getId());

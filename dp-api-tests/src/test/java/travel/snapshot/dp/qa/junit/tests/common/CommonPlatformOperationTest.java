@@ -7,6 +7,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PLATFOR
 import com.jayway.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
+import travel.snapshot.dp.api.identity.model.PlatformOperationCreateDto;
 import travel.snapshot.dp.api.identity.model.PlatformOperationDto;
 import travel.snapshot.dp.api.type.HttpMethod;
 
@@ -19,7 +20,7 @@ public class CommonPlatformOperationTest extends CommonTest{
 
     protected static final String TEST_URI_TEMPLATE = "/test/uri/template";
     protected static final String TEST_IDENTITY_URI_TEMPLATE = "/identity/anything";
-    protected static PlatformOperationDto platformOperationTestDto;
+    protected static PlatformOperationCreateDto platformOperationTestDto;
     protected static PlatformOperationDto createdPlatformOperation;
 
     @Override
@@ -27,7 +28,7 @@ public class CommonPlatformOperationTest extends CommonTest{
     public void setUp() throws Exception {
         super.setUp();
         platformOperationTestDto = platformOperationHelpers.constructPlatformOperation(HttpMethod.GET, TEST_URI_TEMPLATE);
-        createdPlatformOperation = commonHelpers.entityWithTypeIsCreated(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class, platformOperationTestDto);
+        createdPlatformOperation = commonHelpers.entityIsCreatedAs(PlatformOperationDto.class, platformOperationTestDto);
     }
 
     @After

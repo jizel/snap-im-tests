@@ -17,6 +17,7 @@ import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
 import travel.snapshot.dp.api.identity.model.RoleBaseDto;
+import travel.snapshot.dp.api.identity.model.RoleCreateBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
@@ -84,7 +85,7 @@ public class RoleBaseSteps extends BasicSteps {
 
 
     @Step
-    public Response createRole(RoleBaseDto role) {
+    public Response createRole(RoleCreateBaseDto role) {
         setSessionVariable(SESSION_CREATED_ROLE, role);
         Response response = createEntity(role);
         setSessionResponse(response);

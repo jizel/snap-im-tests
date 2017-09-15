@@ -5,17 +5,17 @@ import static org.junit.Assert.*;
 
 import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.api.identity.model.RoleBaseDto;
+import travel.snapshot.dp.api.identity.model.RoleCreateBaseDto;
 import travel.snapshot.dp.qa.cucumber.helpers.RoleType;
 import travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps;
 
 /**
- * Created by zelezny on 6/26/2017.
+ * Helper class for roles. Obsolete dependency on RoleBaseSteps will be removed when obsolete role types are removed completely from IM.
  */
 public class RoleHelpers extends RoleBaseSteps {
-    private final CommonHelpers commonHelpers = new CommonHelpers();
-    private final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
 
-    public RoleBaseDto roleIsCreated(RoleBaseDto role, RoleType roleType) {
+    @Deprecated
+    public RoleBaseDto roleIsCreated(RoleCreateBaseDto role, RoleType roleType) {
         setRolesPath(roleType);
         Response response = createRole(role);
         assertEquals(String.format("Failed to create role: %s", response.toString()), response.getStatusCode(), SC_CREATED);

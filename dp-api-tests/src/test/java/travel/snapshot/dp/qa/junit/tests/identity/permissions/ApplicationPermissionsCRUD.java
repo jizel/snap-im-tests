@@ -6,13 +6,13 @@ import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_PERMISSIONS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
+import travel.snapshot.dp.api.identity.model.ApplicationPermissionCreateDto;
 import travel.snapshot.dp.api.identity.model.ApplicationPermissionDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
@@ -23,7 +23,7 @@ import java.util.UUID;
  */
 public class ApplicationPermissionsCRUD extends CommonTest {
 
-    private ApplicationPermissionDto testApplicationPermission;
+    private ApplicationPermissionCreateDto testApplicationPermission;
     private UUID createdApplicationId;
 
     private static final UUID TEST_PLATFORM_OPERATION_ID = UUID.fromString("47a5f462-8068-4c28-bc84-b0e428b6a76f");
@@ -32,7 +32,7 @@ public class ApplicationPermissionsCRUD extends CommonTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        createdApplicationId = commonHelpers.entityIsCreated(APPLICATIONS_PATH, testApplication1);
+        createdApplicationId = commonHelpers.entityIsCreated(testApplication1);
         testApplicationPermission = permissionHelpers.constructAppPermission(createdApplicationId, TEST_PLATFORM_OPERATION_ID);
     }
 
@@ -48,7 +48,7 @@ public class ApplicationPermissionsCRUD extends CommonTest {
 
     @Test
     public void deleteAppPermission() {
-        UUID createdAppPermissionId = commonHelpers.entityIsCreated(APPLICATION_PERMISSIONS_PATH, testApplicationPermission);
+        UUID createdAppPermissionId = commonHelpers.entityIsCreated(testApplicationPermission);
 
         commonHelpers.deleteEntity(APPLICATION_PERMISSIONS_PATH, createdAppPermissionId);
         responseCodeIs(SC_NO_CONTENT);

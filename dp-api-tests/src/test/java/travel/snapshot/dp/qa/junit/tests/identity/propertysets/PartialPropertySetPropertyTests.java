@@ -9,13 +9,11 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionRespo
 
 import org.junit.Before;
 import org.junit.Test;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
-import java.io.IOException;
 import java.util.UUID;
 
 
@@ -25,28 +23,25 @@ import java.util.UUID;
 public class PartialPropertySetPropertyTests extends CommonTest {
 
     //    Load this test class specific test data
-    private static PropertyDto createdProperty = null;
-    private static PropertySetDto createdPropertySet = null;
+    private static UUID createdPropertyId;
+    private static UUID createdPropertySetId;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
         UserCustomerRelationshipPartialDto relation = new UserCustomerRelationshipPartialDto();
         relation.setCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
-        createdProperty = propertyHelpers.propertyIsCreated(testProperty1);
-        createdPropertySet = propertySetHelpers.propertySetIsCreated(testPropertySet1);
+        createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
+        createdPropertySetId = commonHelpers.entityIsCreated(testPropertySet1);
 
     }
 
     @Test
     public void addRemovePropertyToPropertySet() {
-        UUID propertySetId = createdPropertySet.getId();
-        UUID propertyId = createdProperty.getId();
-        PropertySetPropertyRelationshipDto relation = new PropertySetPropertyRelationshipDto();
-        relation.setPropertySetId(propertySetId);
-        relation.setPropertyId(propertyId);
-        relation.setIsActive(true);
-        commonHelpers.entityIsCreated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relation);
+        UUID propertySetId = createdPropertySetId;
+        UUID propertyId = createdPropertyId;
+        PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers.constructPropertySetPropertyRelationship(propertySetId, propertyId, true);
+        commonHelpers.entityIsCreated(relation);
         UUID relationId = getSessionResponse().as(PropertySetPropertyRelationshipDto.class).getId();
         commonHelpers.deleteEntity(PROPERTIES_PATH, propertyId);
         responseCodeIs(SC_CONFLICT);

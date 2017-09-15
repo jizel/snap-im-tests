@@ -9,16 +9,16 @@ import org.yaml.snakeyaml.constructor.AbstractConstruct;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.Tag;
-import travel.snapshot.dp.api.identity.model.ApplicationDto;
-import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
-import travel.snapshot.dp.api.identity.model.PartnerDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
-import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.ApplicationCreateDto;
+import travel.snapshot.dp.api.identity.model.ApplicationVersionCreateDto;
+import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.CustomerRoleCreateDto;
+import travel.snapshot.dp.api.identity.model.PartnerCreateDto;
+import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
+import travel.snapshot.dp.api.identity.model.PropertyRoleCreateDto;
+import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
-import travel.snapshot.dp.api.identity.model.UserGroupDto;
+import travel.snapshot.dp.api.identity.model.UserGroupCreateDto;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -105,17 +105,17 @@ public class YamlLoader {
         public YamlConstructor() {
             this.yamlConstructors.put(new Tag("!localDate"), new LocalDateConstructor());
 
-            addTypeDescription(new TypeDescription(CustomerDto.class, "!customer"));
-            addTypeDescription(new TypeDescription(ApplicationDto.class, "!application"));
-            addTypeDescription(new TypeDescription(ApplicationVersionDto.class, "!applicationVersion"));
+            addTypeDescription(new TypeDescription(CustomerCreateDto.class, "!customer"));
+            addTypeDescription(new TypeDescription(ApplicationCreateDto.class, "!application"));
+            addTypeDescription(new TypeDescription(ApplicationVersionCreateDto.class, "!applicationVersion"));
             addTypeDescription(new TypeDescription(UserCreateDto.class, "!user"));
-            addTypeDescription(new TypeDescription(PropertyDto.class, "!property"));
-            addTypeDescription(new TypeDescription(PropertySetDto.class, "!propertySet"));
-            addTypeDescription(new TypeDescription(CustomerRoleDto.class, "!customerRole"));
-            addTypeDescription(new TypeDescription(PropertyRoleDto.class, "!propertyRole"));
-            addTypeDescription(new TypeDescription(PartnerDto.class, "!partner"));
-            addTypeDescription(new TypeDescription(UserGroupDto.class, "!user_group"));
-            addTypeDescription(new TypeDescription(ApplicationDto.class, "!application"));
+            addTypeDescription(new TypeDescription(PropertyCreateDto.class, "!property"));
+            addTypeDescription(new TypeDescription(PropertySetCreateDto.class, "!propertySet"));
+            addTypeDescription(new TypeDescription(CustomerRoleCreateDto.class, "!customerRole"));
+            addTypeDescription(new TypeDescription(PropertyRoleCreateDto.class, "!propertyRole"));
+            addTypeDescription(new TypeDescription(PartnerCreateDto.class, "!partner"));
+            addTypeDescription(new TypeDescription(UserGroupCreateDto.class, "!user_group"));
+            addTypeDescription(new TypeDescription(ApplicationCreateDto.class, "!application"));
         }
     }
 

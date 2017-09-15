@@ -70,21 +70,21 @@ public class CommonSmokeTest extends CommonTest {
 
     private void removeCreatedEntities(Map<String, ArrayList<UUID>> registry) {
 
-        ArrayList<UUID> commercialSubscriptionIds = commonHelpers.getArrayFromMap(COMMERCIAL_SUBSCRIPTIONS_PATH, registry);
-        ArrayList<UUID> customerRoleIds = commonHelpers.getArrayFromMap(USER_CUSTOMER_ROLES_PATH, registry);
-        ArrayList<UUID> propertyRoleIds = commonHelpers.getArrayFromMap(USER_PROPERTY_ROLES_PATH, registry);
-        ArrayList<UUID> userGroupIds = commonHelpers.getArrayFromMap(USER_GROUPS_PATH, registry);
-        ArrayList<UUID> userPropertySetIds = commonHelpers.getArrayFromMap(USER_PROPERTY_SET_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> userPropertyIds = commonHelpers.getArrayFromMap(USER_PROPERTY_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> propertySetPropertyIds = commonHelpers.getArrayFromMap(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> propertyIds = commonHelpers.getArrayFromMap(PROPERTIES_PATH, registry);
-        ArrayList<UUID> propertySetIds = commonHelpers.getArrayFromMap(PROPERTY_SETS_PATH, registry);
-        ArrayList<UUID> customerPropertyIds = commonHelpers.getArrayFromMap(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> customerUserIds = commonHelpers.getArrayFromMap(USER_CUSTOMER_RELATIONSHIPS_PATH, registry);
-        ArrayList<UUID> customerIds = commonHelpers.getArrayFromMap(CUSTOMERS_PATH, registry);
-        ArrayList<UUID> userIds = commonHelpers.getArrayFromMap(USERS_PATH, registry);
-        ArrayList<UUID> applicationIds = commonHelpers.getArrayFromMap(APPLICATIONS_PATH, registry);
-        ArrayList<UUID> appVersionIds = commonHelpers.getArrayFromMap(APPLICATION_VERSIONS_PATH, registry);
+        ArrayList<UUID> commercialSubscriptionIds = authorizationHelpers.getArrayFromMap(COMMERCIAL_SUBSCRIPTIONS_PATH, registry);
+        ArrayList<UUID> customerRoleIds = authorizationHelpers.getArrayFromMap(USER_CUSTOMER_ROLES_PATH, registry);
+        ArrayList<UUID> propertyRoleIds = authorizationHelpers.getArrayFromMap(USER_PROPERTY_ROLES_PATH, registry);
+        ArrayList<UUID> userGroupIds = authorizationHelpers.getArrayFromMap(USER_GROUPS_PATH, registry);
+        ArrayList<UUID> userPropertySetIds = authorizationHelpers.getArrayFromMap(USER_PROPERTY_SET_RELATIONSHIPS_PATH, registry);
+        ArrayList<UUID> userPropertyIds = authorizationHelpers.getArrayFromMap(USER_PROPERTY_RELATIONSHIPS_PATH, registry);
+        ArrayList<UUID> propertySetPropertyIds = authorizationHelpers.getArrayFromMap(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, registry);
+        ArrayList<UUID> propertyIds = authorizationHelpers.getArrayFromMap(PROPERTIES_PATH, registry);
+        ArrayList<UUID> propertySetIds = authorizationHelpers.getArrayFromMap(PROPERTY_SETS_PATH, registry);
+        ArrayList<UUID> customerPropertyIds = authorizationHelpers.getArrayFromMap(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, registry);
+        ArrayList<UUID> customerUserIds = authorizationHelpers.getArrayFromMap(USER_CUSTOMER_RELATIONSHIPS_PATH, registry);
+        ArrayList<UUID> customerIds = authorizationHelpers.getArrayFromMap(CUSTOMERS_PATH, registry);
+        ArrayList<UUID> userIds = authorizationHelpers.getArrayFromMap(USERS_PATH, registry);
+        ArrayList<UUID> applicationIds = authorizationHelpers.getArrayFromMap(APPLICATIONS_PATH, registry);
+        ArrayList<UUID> appVersionIds = authorizationHelpers.getArrayFromMap(APPLICATION_VERSIONS_PATH, registry);
 
         customerRoleIds.forEach(dbSteps::deleteRole);
         propertyRoleIds.forEach(dbSteps::deleteRole);

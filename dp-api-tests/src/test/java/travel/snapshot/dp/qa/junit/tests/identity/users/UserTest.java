@@ -28,7 +28,7 @@ public class UserTest extends CommonTest{
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        createdUserId = commonHelpers.entityIsCreated(USERS_PATH, testUser1);
+        createdUserId = commonHelpers.entityIsCreated(testUser1);
     }
 
     @Test

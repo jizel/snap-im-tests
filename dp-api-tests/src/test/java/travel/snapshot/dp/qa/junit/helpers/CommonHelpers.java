@@ -41,8 +41,8 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionRespo
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.transformNull;
-import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMap.endpointEntityMap;
-import static travel.snapshot.dp.qa.junit.utils.EntityEndpointMap.entityEndpointMap;
+import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping.endpointDtoMap;
+import static travel.snapshot.dp.qa.junit.utils.EntityEndpointMapping.entityCreateDtoEndpointMap;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.RestAssured;
@@ -51,17 +51,14 @@ import com.jayway.restassured.config.ObjectMapperConfig;
 import com.jayway.restassured.config.RestAssuredConfig;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
-import net.serenitybdd.core.Serenity;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.model.EntityDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
-import travel.snapshot.dp.qa.junit.utils.EndpointEntityMap;
+import travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class CommonHelpers {
@@ -108,25 +105,9 @@ public class CommonHelpers {
         spec = builder.build().baseUri(getBaseUriForModule("identity")).contentType("application/json; charset=UTF-8");
     }
 
-    public void updateRegistryOfDeletables(String basePath, UUID id) {
-        // Retrieve the map from serenity session variable
-        Map<String, ArrayList<UUID>> registry = Serenity.sessionVariableCalled(ENTITIES_TO_DELETE);
-        // Retrieve the array of ids of the certain enity type
-        ArrayList<UUID> listIds = getArrayFromMap(basePath, registry);
-        // Update this list
-        listIds.add(id);
-        // Put it back to the map and map to session variable
-        registry.put(basePath, listIds);
-        Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(registry);
-    }
-
-    public ArrayList<UUID> getArrayFromMap(String aKey, Map<String, ArrayList<UUID>> inputMap) {
-        return (inputMap.get(aKey) == null) ? new ArrayList<>() : inputMap.get(aKey);
-    }
-
-    public static <T> List<T> parseResponseAsListOfObjects(Class<T> clazz) {
+    public static <DTO> List<DTO> parseResponseAsListOfObjects(Class<DTO> clazz) {
         Response response = getSessionResponse();
-        List<T> objects = null;
+        List<DTO> objects = null;
         try {
             objects = OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
         } catch (IOException e) {
@@ -146,21 +127,19 @@ public class CommonHelpers {
             fail("User ID to be send in request header is null.");
         }
         spec.basePath(basePath);
-        RequestSpecification requestSpecification = given().spec(spec)
-                .header(HEADER_XAUTH_USER_ID, userId)
-                .header(HEADER_XAUTH_APPLICATION_ID, appId);
+        RequestSpecification requestSpecification = givenContext(userId, appId).spec(spec);
         if (queryParams != null) requestSpecification.parameters(queryParams);
         Response response = requestSpecification.when().get();
         setSessionResponse(response);
         return response;
     }
 
-    public <T> List<T> getEntitiesAsType(String basePath, Class<T> clazz, Map<String, String> queryParams) {
+    public <DTO> List<DTO> getEntitiesAsType(String basePath, Class<DTO> clazz, Map<String, String> queryParams) {
         setSessionResponse(getEntities(basePath, queryParams));
         return parseResponseAsListOfObjects(clazz);
     }
 
-    public <T> List<T> getEntitiesAsTypeByUserForApp(UUID userId, UUID appId, String basePath, Class<T> clazz, Map<String, String> queryParams) {
+    public <DTO> List<DTO> getEntitiesAsTypeByUserForApp(UUID userId, UUID appId, String basePath, Class<DTO> clazz, Map<String, String> queryParams) {
         setSessionResponse(getEntitiesByUserForApp(userId, appId, basePath, queryParams));
         return parseResponseAsListOfObjects(clazz);
     }
@@ -173,25 +152,23 @@ public class CommonHelpers {
 
     public Response getEntityByUserForApplication(UUID userId, UUID applicationId, String basePath, UUID entityId) {
         spec.basePath(basePath);
-        RequestSpecification requestSpecification = given().spec(spec);
-        if (userId == null) {
-            fail("User ID to be send in request header is null.");
-        }
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
+        RequestSpecification requestSpecification = givenContext(userId, applicationId).spec(spec);
+        assertNotNull("User ID to be send in request header is null.", userId);
         Response response = requestSpecification.when().get("/{id}", entityId);
         setSessionResponse(response);
+
         return response;
     }
 
-    public <T> T getEntityAsType(String basePath, Class<T> type, UUID entityId) {
+    public <DTO> DTO getEntityAsType(String basePath, Class<DTO> type, UUID entityId) {
         return getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, type, entityId);
     }
 
-    public <T> T getEntityAsTypeByUserForApp(UUID userId, UUID appVersionId, String basePath, Class<T> type, UUID entityId) {
+    public <DTO> DTO getEntityAsTypeByUserForApp(UUID userId, UUID appVersionId, String basePath, Class<DTO> type, UUID entityId) {
         Response response = getEntityByUserForApplication(userId, appVersionId, basePath, entityId);
-        if (response.getStatusCode() != SC_OK) {
-            throw new RuntimeException(String.format("%s entity with id %s does not exist. Response is: %s", basePath, entityId, response.toString()));
-        }
+        assertThat(String.format("%s entity with id %s does not exist. Response is: %s", basePath, entityId, response.toString()),
+                response.getStatusCode(), is(SC_OK));
+
         return response.as(type);
     }
 
@@ -201,54 +178,70 @@ public class CommonHelpers {
         return getEntityEtagByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
-    public String getEntityEtagByUserForApp(UUID userId, UUID applicationId, String basePath, UUID entityId) {
+    public String getEntityEtagByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId) {
         spec.basePath(basePath);
-        RequestSpecification requestSpecification = given().spec(spec);
-        requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
 
-        return requestSpecification.when().head("/{id}", entityId).getHeader(HEADER_ETAG);
+        return givenContext(userId, applicationVersionId)
+                .spec(spec)
+                .head("/{id}", entityId)
+                .getHeader(HEADER_ETAG);
     }
 
 
     // Create
 
-    public UUID entityIsCreated(String basePath, Object entity) {
-        Response response = createEntity(basePath, entity);
-        responseCodeIs(SC_CREATED);
-        UUID result = null;
-        try {
-            result = getDtoFromResponse(response, basePath).getId();
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-        return result;
+    public <DTO> UUID entityIsCreated(DTO entity) {
+        Response response = createEntity(entity)
+                .then()
+                .statusCode(SC_CREATED)
+                .extract().response();
+        String basePath = getCreateBasePath(entity);
+        return getDtoFromResponse(response, basePath).getId();
     }
 
-    public <T> T entityWithTypeIsCreated(String basePath, Class<T> type, T entity) {
-        Response response = createEntity(basePath, entity);
-        responseCodeIs(SC_CREATED);
+    public <DTO, CDTO> DTO entityIsCreatedAs(Class<DTO> type, CDTO entity) {
+        Response response = createEntity(entity)
+                .then()
+                .statusCode(SC_CREATED)
+                .extract().response();
         return response.as(type);
     }
 
-    public Response createEntity(String basePath, Object entity) {
-        return createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entity);
+    public <CDTO> Response createEntity(CDTO entity) {
+        return createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entity);
     }
 
-
-    public Response createEntity(Object entity) {
-//    public <T> Response createEntity(T entity) {
-        String basePath = entityEndpointMap.get(entity.getClass());
-        return createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entity);
-    }
-
-    public Response createEntityByUserForApplication(UUID userId, UUID applicationId, String basePath, Object entity) {
-        spec.basePath(basePath);
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(entity).when().post();
+    /**
+     * Specify context user and application for access check testing.
+     */
+    public <CDTO> Response createEntityByUserForApplication(UUID userId, UUID applicationVersionId, CDTO entity) {
+        spec.basePath(getCreateBasePath(entity));
+        Response response = givenContext(userId, applicationVersionId)
+                .spec(spec)
+                .body(entity)
+                .post();
+        // Cucumber leftovers. Leaving it for now, will be removed in the future
         setSessionResponse(response);
         return response;
     }
 
+    /**
+     * Create entity with with path specified. This method is useful for negative test scenaries, i.e. enables sending
+     * Map<String, Object> as entity with invalid values to any endpoint.
+     */
+    public Response createEntity(String basePath, Object entity) {
+        spec.basePath(basePath);
+        Response response = givenContext(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).spec(spec)
+                .body(entity)
+                .post();
+        // Cucumber leftovers. Leaving it for now, will be removed in the future
+        setSessionResponse(response);
+        return response;
+    }
+
+
     // Update
+
     //    Deprecated update using POST method. Will be removed completely in the future.
     @Deprecated
     public Response updateEntityPost(String basePath, UUID entityId, Object data) {
@@ -256,37 +249,20 @@ public class CommonHelpers {
     }
 
     @Deprecated
-    public Response updateEntityByUserForAppPost(UUID userId, UUID applicationId, String basePath, UUID entityId, Object data) {
+    public Response updateEntityByUserForAppPost(UUID userId, UUID applicationVersionId, String basePath, UUID entityId, Object data) {
         if (userId == null) {
             fail("User ID to be send in request header is null.");
         }
-        String etag = getEntityEtagByUserForApp(userId, applicationId, basePath, entityId);
-        RequestSpecification requestSpecification = given().spec(spec)
+        String etag = getEntityEtagByUserForApp(userId, applicationVersionId, basePath, entityId);
+        Response response = givenContext(userId, applicationVersionId)
+                .spec(spec)
                 .basePath(basePath)
-                .header(HEADER_XAUTH_USER_ID, userId)
-                .header(HEADER_XAUTH_APPLICATION_ID, applicationId)
-                .header(HEADER_IF_MATCH, etag);
-        Response response = requestSpecification
+                .header(HEADER_IF_MATCH, etag)
                 .body(data)
                 .when()
                 .post("/{id}", entityId);
         setSessionResponse(response);
-        return response;
-    }
 
-    public Response updateEntityWithEtag(String basePath, UUID entityId, Object data, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec)
-                .basePath(basePath)
-                .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
-                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
-        if (etag != null) {
-            requestSpecification.header(HEADER_IF_MATCH, etag);
-        }
-        Response response = requestSpecification
-                .body(data)
-                .when()
-                .patch("/{id}", entityId);
-        setSessionResponse(response);
         return response;
     }
 
@@ -316,10 +292,10 @@ public class CommonHelpers {
     /**
      * Update of any IM entity using defined user and application. Should be used for update access check testing.
      *
-     * @param userId        - context user, user performing the update
-     * @param applicationId - context application
+     * @param userId               - context user, user performing the update
+     * @param applicationVersionId - context application
      */
-    public Response updateEntityByUserForApp(UUID userId, UUID applicationId, String basePath, UUID entityId, Object data) {
+    public Response updateEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId, Object data) {
         if (userId == null) {
             fail("User ID to be send in request header is null.");
         }
@@ -327,16 +303,30 @@ public class CommonHelpers {
 //        Raw etag is got first, stored into var and then valuated to save api calls.
         String rawEtag = getEntityEtag(basePath, entityId);
         String usedEtag = (rawEtag == null) ? DEFAULT_SNAPSHOT_ETAG : rawEtag;
-        RequestSpecification requestSpecification = given().spec(spec)
+        Response response = givenContext(userId, applicationVersionId)
+                .spec(spec)
                 .basePath(basePath)
-                .header(HEADER_XAUTH_USER_ID, userId)
-                .header(HEADER_XAUTH_APPLICATION_ID, applicationId)
-                .header(HEADER_IF_MATCH, usedEtag);
+                .header(HEADER_IF_MATCH, usedEtag)
+                .body(data)
+                .when()
+                .patch("/{id}", entityId);
+        setSessionResponse(response);
+        return response;
+    }
+
+    public Response updateEntityWithEtag(String basePath, UUID entityId, Object data, String etag) {
+        RequestSpecification requestSpecification = givenContext(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
+                .spec(spec)
+                .basePath(basePath);
+        if (etag != null) {
+            requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
         Response response = requestSpecification
                 .body(data)
                 .when()
                 .patch("/{id}", entityId);
         setSessionResponse(response);
+
         return response;
     }
 
@@ -351,16 +341,12 @@ public class CommonHelpers {
         deleteEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
-    public void deleteEntityByUserForApp(UUID userId, UUID applicationId, String basePath, UUID entityId) {
-        if (userId == null) {
-            fail("User ID to be send in request header is blank.");
-        }
-        RequestSpecification requestSpecification = given()
+    public void deleteEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId) {
+        assertNotNull("User ID to be send in request header is blank.", userId);
+        Response response = givenContext(userId, applicationVersionId)
                 .spec(spec)
                 .basePath(basePath)
-                .header(HEADER_XAUTH_USER_ID, userId)
-                .header(HEADER_XAUTH_APPLICATION_ID, applicationId);
-        Response response = requestSpecification.when().delete("/{id}", entityId);
+                .delete("/{id}", entityId);
         setSessionResponse(response);
     }
 
@@ -378,14 +364,14 @@ public class CommonHelpers {
         return createRelationshipByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, firstLevelEntityId, secondLevelPath, body);
     }
 
-    public Response createRelationshipByUserForApp(UUID userId, UUID applicationId, String basePath, UUID firstLevelEntityId, String secondLevelResource, Object body) {
+    public Response createRelationshipByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID firstLevelEntityId, String secondLevelResource, Object body) {
         spec.basePath(basePath);
-        RequestSpecification requestSpecification = given().spec(spec)
-                .header(HEADER_XAUTH_USER_ID, userId)
-                .header(HEADER_XAUTH_APPLICATION_ID, applicationId)
-                .body(body);
-        Response response = requestSpecification.post("{id}/{secondLevelName}", firstLevelEntityId, stripSlash(secondLevelResource));
+        Response response = givenContext(userId, applicationVersionId)
+                .spec(spec)
+                .body(body)
+                .post("{id}/{secondLevelName}", firstLevelEntityId, stripSlash(secondLevelResource));
         setSessionResponse(response);
+
         return response;
     }
 
@@ -402,11 +388,10 @@ public class CommonHelpers {
         return getRelationshipsByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, firstLevelEntityId, secondLevelPath, queryParams);
     }
 
-    public Response getRelationshipsByUserForApp(UUID userId, UUID applicationId, String basePath, UUID firstLevelEntityId, String secondLevelResource, Map<String, String> queryParams) {
+    public Response getRelationshipsByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID firstLevelEntityId, String secondLevelResource, Map<String, String> queryParams) {
         spec.basePath(basePath);
-        RequestSpecification requestSpecification = given().spec(spec)
-                .header(HEADER_XAUTH_USER_ID, userId)
-                .header(HEADER_XAUTH_APPLICATION_ID, applicationId);
+        RequestSpecification requestSpecification = givenContext(userId, applicationVersionId)
+                .spec(spec);
         if (queryParams != null) {
             requestSpecification.parameters(queryParams);
         }
@@ -420,10 +405,16 @@ public class CommonHelpers {
 //    Help methods
 
     EntityDto getDtoFromResponse(Response response, String basePath) {
-        if (endpointEntityMap.get(basePath) == null) {
-            throw new NoSuchElementException("There is no key " + basePath + " in " + EndpointEntityMap.class.getCanonicalName() + ". It should probably be added.");
-        }
-        return response.as(endpointEntityMap.get(basePath));
+        assertThat("There is no key " + basePath + " in " + EndpointEntityMapping.class.getCanonicalName() + ". It should probably be added.",
+                endpointDtoMap.containsKey(basePath), is(true));
+        return response.as(endpointDtoMap.get(basePath));
+    }
+
+    private static <DTO> String getCreateBasePath(DTO entity) {
+        assertThat("There is no key " + entity.getClass() + " in entityCreateDtoEndpointMap. Are you sure it is a createDto? If so then it should probably be added.",
+                entityCreateDtoEndpointMap.containsKey(entity.getClass()), is(true));
+
+        return entityCreateDtoEndpointMap.get(entity.getClass());
     }
 
     public AddressDto constructAddressDto(String line1, String city, String zipCode, String countryCode) {
@@ -450,6 +441,10 @@ public class CommonHelpers {
         if (transformNull(expected) != null) {
             assertThat(actual, is(expected));
         }
+    }
+
+    RequestSpecification givenContext(UUID userId, UUID applicationId) {
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
     }
 
     //    Forwarders for necessary BasicSteps that cannot be made static used in tests. Should be refactored in the future.

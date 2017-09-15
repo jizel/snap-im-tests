@@ -6,6 +6,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParam
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import travel.snapshot.dp.api.identity.model.PlatformOperationCreateDto;
 import travel.snapshot.dp.api.identity.model.PlatformOperationDto;
 import travel.snapshot.dp.api.identity.model.PlatformOperationUpdateDto;
 import travel.snapshot.dp.api.type.HttpMethod;
@@ -22,7 +23,7 @@ public class IdentityPlatformOperationsTests extends CommonPlatformOperationTest
     @Test
     public void identityPermissionCannotBeCreated() {
         for (HttpMethod method : HttpMethod.values()) {
-            PlatformOperationDto platformOperationDto = platformOperationHelpers.constructPlatformOperation(method, TEST_IDENTITY_URI_TEMPLATE);
+            PlatformOperationCreateDto platformOperationDto = platformOperationHelpers.constructPlatformOperation(method, TEST_IDENTITY_URI_TEMPLATE);
             commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, platformOperationDto);
             responseCodeIs(SC_FORBIDDEN);
         }

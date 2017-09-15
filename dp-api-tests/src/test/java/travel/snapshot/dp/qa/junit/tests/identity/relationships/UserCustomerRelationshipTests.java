@@ -16,12 +16,14 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import qa.tools.ikeeper.annotation.Jira;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+
+import java.util.UUID;
 
 /**
  * Integration tests for /identity/user_customer_relationships endpoint
@@ -29,16 +31,16 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 @RunWith(SerenityRunner.class)
 public class UserCustomerRelationshipTests extends CommonTest{
     private UserDto createdUser1;
-    private CustomerDto createdCustomer1;
-    private UserCustomerRelationshipDto testUserCustomerRelationship;
+    private UUID createdCustomerId;
+    private UserCustomerRelationshipCreateDto testUserCustomerRelationship;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
-        createdCustomer1 = customerHelpers.customerIsCreated(testCustomer1);
+        createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
         testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(createdUser1.getId(),
-                createdCustomer1.getId(), true, true);
+                createdCustomerId, true, true);
     }
 
     @Test
@@ -47,18 +49,18 @@ public class UserCustomerRelationshipTests extends CommonTest{
         Response response = commonHelpers.createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("id");
-        UserCustomerRelationshipDto returnedRelationship = response.as(UserCustomerRelationshipDto.class);
-        assertThat(returnedRelationship.getCustomerId(), is(createdCustomer1.getId()));
+        UserCustomerRelationshipCreateDto returnedRelationship = response.as(UserCustomerRelationshipDto.class);
+        assertThat(returnedRelationship.getCustomerId(), is(createdCustomerId));
         assertThat(returnedRelationship.getUserId(), is(createdUser1.getId()));
         assertThat(returnedRelationship.getIsActive(), is(true));
         assertThat(returnedRelationship.getIsPrimary(), is(true));
-        UserCustomerRelationshipDto requestedRelationship = commonHelpers.getEntityAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, returnedRelationship.getId());
+        UserCustomerRelationshipCreateDto requestedRelationship = commonHelpers.getEntityAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, returnedRelationship.getId());
         assertThat(requestedRelationship, is(returnedRelationship));
     }
 
     @Test
     public void createUserCustomerRelationshipErrors() {
-        testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(NON_EXISTENT_ID, createdCustomer1.getId(), true, false);
+        testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(NON_EXISTENT_ID, createdCustomerId, true, false);
         commonHelpers.createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
@@ -66,7 +68,7 @@ public class UserCustomerRelationshipTests extends CommonTest{
         commonHelpers.createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
-        testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(createdUser1.getId(), createdCustomer1.getId(), null, null);
+        testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(createdUser1.getId(), createdCustomerId, null, null);
         commonHelpers.createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
@@ -75,11 +77,11 @@ public class UserCustomerRelationshipTests extends CommonTest{
     @Test
     @Jira("DPIM-52")
     public void updateUserCustomerRelationship() throws Exception {
-        UserCustomerRelationshipDto userCustomerRelationship = commonHelpers.entityWithTypeIsCreated(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, testUserCustomerRelationship);
+        UserCustomerRelationshipCreateDto userCustomerRelationship = commonHelpers.entityIsCreatedAs(UserCustomerRelationshipDto.class, testUserCustomerRelationship);
         UserCustomerRelationshipUpdateDto update = relationshipsHelpers.constructUserCustomerRelationshipUpdate( false, false);
         commonHelpers.updateEntityPost(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationship.getId(), update);
         responseCodeIs(SC_NO_CONTENT);
-        UserCustomerRelationshipDto returnedRelationship = commonHelpers.getEntityAsType(USER_CUSTOMER_RELATIONSHIPS_PATH,
+        UserCustomerRelationshipCreateDto returnedRelationship = commonHelpers.getEntityAsType(USER_CUSTOMER_RELATIONSHIPS_PATH,
                 UserCustomerRelationshipDto.class, userCustomerRelationship.getId());
         assertThat(returnedRelationship.getIsActive(), is(false));
         assertThat(returnedRelationship.getIsPrimary(), is(false));
@@ -93,7 +95,7 @@ public class UserCustomerRelationshipTests extends CommonTest{
 
     @Test
     public void deleteUserCustomerRelationship(){
-        UserCustomerRelationshipDto userCustomerRelationship = commonHelpers.entityWithTypeIsCreated(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, testUserCustomerRelationship);
+        UserCustomerRelationshipDto userCustomerRelationship = commonHelpers.entityIsCreatedAs(UserCustomerRelationshipDto.class, testUserCustomerRelationship);
         commonHelpers.deleteEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationship.getId());
         responseCodeIs(SC_NO_CONTENT);
         commonHelpers.getEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationship.getId());

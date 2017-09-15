@@ -7,9 +7,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
@@ -22,8 +19,9 @@ import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RES
 import org.junit.Ignore;
 import org.junit.Test;
 import qa.tools.ikeeper.annotation.Jira;
+import travel.snapshot.dp.api.identity.model.ApplicationCreateDto;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
-import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
+import travel.snapshot.dp.api.identity.model.ApplicationVersionCreateDto;
 import travel.snapshot.dp.api.type.HttpMethod;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
@@ -43,10 +41,10 @@ public class ApplicationsTests extends CommonTest {
 //    Not merged into master, will be handled diffrently. Skipping test for now.
     public void partnerIdIsReturnedOnlyForInternalAppAllApplications() throws Exception {
         prepareExternalAppPermissionsAndRelations(testApplication3);
-        ApplicationVersionDto externalAppVersion = testAppVersion3;
+        ApplicationVersionCreateDto externalAppVersion = testAppVersion3;
         externalAppVersion.setApplicationId(externalAppId);
         externalAppVersion.setIsNonCommercial(true);
-        UUID externalAppVersionId = commonHelpers.entityIsCreated(APPLICATION_VERSIONS_PATH, externalAppVersion);
+        UUID externalAppVersionId = commonHelpers.entityIsCreated(externalAppVersion);
 //        Get all apps with internal context app
         List<ApplicationDto> applications = commonHelpers.getEntitiesAsType(APPLICATIONS_PATH, ApplicationDto.class, null);
         responseCodeIs(SC_OK);
@@ -71,10 +69,10 @@ public class ApplicationsTests extends CommonTest {
 //    Not merged into master, will be handled diffrently. Skipping test for now.
     public void partnerIdIsReturnedOnlyForInternalAppSingleApplication() throws Exception {
         prepareExternalAppPermissionsAndRelations(testApplication3);
-        ApplicationVersionDto externalAppVersion = testAppVersion3;
+        ApplicationVersionCreateDto externalAppVersion = testAppVersion3;
         externalAppVersion.setApplicationId(externalAppId);
         externalAppVersion.setIsNonCommercial(true);
-        UUID externalAppVersionId = commonHelpers.entityIsCreated(APPLICATION_VERSIONS_PATH, externalAppVersion);
+        UUID externalAppVersionId = commonHelpers.entityIsCreated(externalAppVersion);
 
 //        Get single app with internal context app
         assertThat(commonHelpers.getEntityAsType(APPLICATIONS_PATH, ApplicationDto.class, externalAppId).getPartnerId(),
@@ -99,14 +97,14 @@ public class ApplicationsTests extends CommonTest {
     }
 
     //    Help methods
-    private void prepareExternalAppPermissionsAndRelations(ApplicationDto application) {
-        externalAppId = commonHelpers.entityIsCreated(APPLICATIONS_PATH, application);
-        dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_APPLICATIONS_ENDPOINT, HttpMethod.GET.toString());
-        dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_SINGLE_APPLICATION_ENDPOINT, HttpMethod.GET.toString());
-        commonHelpers.entityIsCreated(USER_CUSTOMER_RELATIONSHIPS_PATH, relationshipsHelpers
-                .constructUserCustomerRelationshipDto(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true));
-        commonHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, relationshipsHelpers
-                .constructUserPropertyRelationshipDto(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_PROPERTY_ID, true));
+    private void prepareExternalAppPermissionsAndRelations(ApplicationCreateDto application) {
+        externalAppId = commonHelpers.entityIsCreated(application);
+        dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_APPLICATIONS_ENDPOINT, HttpMethod.GET);
+        dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_SINGLE_APPLICATION_ENDPOINT, HttpMethod.GET);
+        commonHelpers.entityIsCreated(relationshipsHelpers.constructUserCustomerRelationshipDto(
+                DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true));
+        commonHelpers.entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(
+                DEFAULT_SNAPSHOT_USER_ID, DEFAULT_PROPERTY_ID, true));
         commercialSubscriptionHelpers.commercialSubscriptionIsCreated(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID, externalAppId);
     }
 }

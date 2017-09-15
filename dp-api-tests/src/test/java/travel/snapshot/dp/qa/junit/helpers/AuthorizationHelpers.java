@@ -6,13 +6,16 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENTITIES_TO_DELETE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+import net.serenitybdd.core.Serenity;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -25,7 +28,23 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         super();
     }
 
-    public RequestSpecification constructRequestSpecification(String basePath, String etag) {
+    public void updateRegistryOfDeletables(String basePath, UUID id) {
+        // Retrieve the map from serenity session variable
+        Map<String, ArrayList<UUID>> registry = Serenity.sessionVariableCalled(ENTITIES_TO_DELETE);
+        // Retrieve the array of ids of the certain enity type
+        ArrayList<UUID> listIds = getArrayFromMap(basePath, registry);
+        // Update this list
+        listIds.add(id);
+        // Put it back to the map and map to session variable
+        registry.put(basePath, listIds);
+        Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(registry);
+    }
+
+    public ArrayList<UUID> getArrayFromMap(String aKey, Map<String, ArrayList<UUID>> inputMap) {
+        return (inputMap.get(aKey) == null) ? new ArrayList<>() : inputMap.get(aKey);
+    }
+
+    private RequestSpecification constructRequestSpecification(String basePath, String etag) {
         spec.baseUri(PropertiesHelper.getProperty("identity_nginx.baseURI"));
         spec.basePath(basePath);
         RequestSpecification specification = given().spec(spec);
@@ -67,7 +86,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         } catch (Exception e) {
             fail(e.getMessage());
         }
-        commonHelpers.updateRegistryOfDeletables(basePath, result);
+        updateRegistryOfDeletables(basePath, result);
         return result;
     }
 

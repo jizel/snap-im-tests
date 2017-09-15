@@ -62,7 +62,7 @@ public class ParametersCustomer extends CommonTest {
                                                                                           String sortDesc,
                                                                                           String responseCode,
                                                                                           String customCode) throws Throwable {
-        UUID createdCustomerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
         commonHelpers.getRelationships(CUSTOMERS_PATH, createdCustomerId, COMMERCIAL_SUBSCRIPTIONS_RESOURCE,
                 buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
         responseCodeIs(Integer.valueOf(responseCode));

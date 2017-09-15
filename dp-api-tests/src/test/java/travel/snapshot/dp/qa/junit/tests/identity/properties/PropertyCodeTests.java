@@ -21,9 +21,9 @@ public class PropertyCodeTests extends CommonTest{
     public void whenPropertyCodeIsNotUniqueTheSmallestPossibleIntegerIsConcatenatedToIt() {
         testProperty1.setId(null);
         testProperty1.setCode(null);
-        commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
+        commonHelpers.entityIsCreated(testProperty1);
         String propertyCode1 = getAttributeValue(PROPERTY_CODE);
-        commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
+        commonHelpers.entityIsCreated(testProperty1);
         String propertyCode2 = getAttributeValue(PROPERTY_CODE);
         assertThat(propertyCode1, is("CZBRQPRO"));
         assertThat(propertyCode2, is("CZBRQPRO1"));
@@ -33,7 +33,7 @@ public class PropertyCodeTests extends CommonTest{
     public void propertyCodeHasToBeUnique() {
         testProperty1.setId(null);
         testProperty1.setCode("ليونيكود");
-        commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
+        commonHelpers.entityIsCreated(testProperty1);
         commonHelpers.createEntity(PROPERTIES_PATH, testProperty1);
         responseCodeIs(SC_CONFLICT);
         customCodeIs(CC_CONFLICT_CODE);
@@ -43,7 +43,7 @@ public class PropertyCodeTests extends CommonTest{
     public void maximumPropertyCodeLengthIs50Characters() {
         testProperty1.setId(null);
         testProperty1.setCode(StringUtils.repeat("A", 50));
-        commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
+        commonHelpers.entityIsCreated(testProperty1);
         testProperty1.setCode(StringUtils.repeat("A", 51));
         commonHelpers.createEntity(PROPERTIES_PATH, testProperty1);
         responseIsUnprocessableEntity();
@@ -51,7 +51,7 @@ public class PropertyCodeTests extends CommonTest{
 
     @Test
     public void propertyCodeCanNotBeUpdated() {
-        UUID createdPropertyId = commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
+        UUID createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
         PropertyUpdateDto update = new PropertyUpdateDto();
         SingletonMap map = new SingletonMap("property_code", "BRQ1234567");
         Gson gsone = new Gson();
