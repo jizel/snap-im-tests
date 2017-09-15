@@ -1,3 +1,24 @@
+roles:
+  role1: !role &BASIC_ROLE {
+      isActive: true,
+      applicationId: 03000000-0000-4444-8888-000000000000,
+      name: Test Application Role 1,
+      description: Test Application Role description,
+      isInitial: false
+}
+
+  role2: !role {
+    <<: *BASIC_ROLE,
+    name: Test Application Role 2,
+    isInitial: true
+  }
+
+  role3: !role {
+    <<: *BASIC_ROLE,
+    name: Test Application Role 3,
+    isActive: false
+  }
+
 customerRoles:
   customerRole1: !customerRole {
     id: 0a000000-0000-4444-8888-000000000001,

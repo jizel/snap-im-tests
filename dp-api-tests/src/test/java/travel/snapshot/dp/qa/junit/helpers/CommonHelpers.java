@@ -17,6 +17,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PLATFOR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLES_PATH;
@@ -63,7 +64,7 @@ import java.util.UUID;
 
 public class CommonHelpers {
 
-    protected RequestSpecification spec = null;
+    protected RequestSpecification spec;
     private BasicSteps basicSteps = new BasicSteps();
 
     public static final String ENTITIES_TO_DELETE = "deleteThese";
@@ -71,6 +72,7 @@ public class CommonHelpers {
     public static final List<String> ALL_ENDPOINTS = asList(
             APPLICATIONS_PATH,
             APPLICATION_VERSIONS_PATH,
+            ROLES_PATH,
             USER_CUSTOMER_ROLES_PATH,
             USER_PROPERTY_ROLES_PATH,
             PROPERTIES_PATH,
@@ -333,21 +335,22 @@ public class CommonHelpers {
     // Delete
 
     public void entityIsDeleted(String basePath, UUID entityId) {
-        deleteEntity(basePath, entityId);
-        responseCodeIs(SC_NO_CONTENT);
+        deleteEntity(basePath, entityId).then().statusCode(SC_NO_CONTENT);
     }
 
-    public void deleteEntity(String basePath, UUID entityId) {
-        deleteEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
+    public Response deleteEntity(String basePath, UUID entityId) {
+        return deleteEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
-    public void deleteEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId) {
+    public Response deleteEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId) {
         assertNotNull("User ID to be send in request header is blank.", userId);
         Response response = givenContext(userId, applicationVersionId)
                 .spec(spec)
                 .basePath(basePath)
                 .delete("/{id}", entityId);
         setSessionResponse(response);
+
+        return response;
     }
 
 //    Second level entities generic methods - CREATE
