@@ -17,6 +17,7 @@ import travel.snapshot.dp.api.identity.model.PartnerCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyRoleCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
+import travel.snapshot.dp.api.identity.model.RoleCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupCreateDto;
 
@@ -111,6 +112,7 @@ public class YamlLoader {
             addTypeDescription(new TypeDescription(UserCreateDto.class, "!user"));
             addTypeDescription(new TypeDescription(PropertyCreateDto.class, "!property"));
             addTypeDescription(new TypeDescription(PropertySetCreateDto.class, "!propertySet"));
+            addTypeDescription(new TypeDescription(RoleCreateDto.class, "!role"));
             addTypeDescription(new TypeDescription(CustomerRoleCreateDto.class, "!customerRole"));
             addTypeDescription(new TypeDescription(PropertyRoleCreateDto.class, "!propertyRole"));
             addTypeDescription(new TypeDescription(PartnerCreateDto.class, "!partner"));

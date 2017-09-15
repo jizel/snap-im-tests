@@ -19,6 +19,7 @@ import travel.snapshot.dp.api.identity.model.CustomerRoleCreateDto;
 import travel.snapshot.dp.api.identity.model.PartnerCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
+import travel.snapshot.dp.api.identity.model.RoleCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupCreateDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
@@ -117,6 +118,7 @@ public abstract class CommonTest {
     protected static EntityNonNullMap<String, PartnerCreateDto> partnerDtos;
     protected static EntityNonNullMap<String, ApplicationCreateDto> applicationDtos;
     protected static EntityNonNullMap<String, ApplicationVersionCreateDto> applicationVersionDtos;
+    protected static EntityNonNullMap<String, RoleCreateDto> roleDtos;
     protected static UserCreateDto testUser1;
     protected static UserCreateDto testUser2;
     protected static UserCreateDto testUser3;
@@ -131,6 +133,9 @@ public abstract class CommonTest {
     protected static PropertySetCreateDto testPropertySet1;
     protected static PropertySetCreateDto testPropertySet2;
     protected static PropertySetCreateDto testPropertySet3;
+    protected static RoleCreateDto testRole1;
+    protected static RoleCreateDto testRole2;
+    protected static RoleCreateDto testRole3;
     protected static CustomerRoleCreateDto testCustomerRole1;
     protected static PartnerCreateDto testPartner1;
     protected static PartnerCreateDto testPartner2;
@@ -176,6 +181,7 @@ public abstract class CommonTest {
         partnerDtos = entitiesLoader.getPartnerDtos();
         applicationDtos =  entitiesLoader.getApplicationDtos();
         applicationVersionDtos =  entitiesLoader.getApplicationVersionDtos();
+        roleDtos =  entitiesLoader.getRoleDtos();
 
         testUser1 = userDtos.get("user1");
         testUser2 = userDtos.get("user2");
@@ -191,6 +197,9 @@ public abstract class CommonTest {
         testPropertySet1 = propertySetDtos.get("propertySet1");
         testPropertySet2 = propertySetDtos.get("propertySet2");
         testPropertySet3 = propertySetDtos.get("propertySet3");
+        testRole1 = roleDtos.get("role1");
+        testRole2 = roleDtos.get("role2");
+        testRole3 = roleDtos.get("role3");
         testCustomerRole1 = entitiesLoader.getCustomerRoleDtos().get("customerRole1");
         testPartner1 = partnerDtos.get("partner1");
         testPartner2 = partnerDtos.get("partner2");

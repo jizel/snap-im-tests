@@ -12,11 +12,11 @@ import travel.snapshot.dp.api.identity.model.PartnerCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyRoleCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
+import travel.snapshot.dp.api.identity.model.RoleCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupCreateDto;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -36,13 +36,14 @@ public class EntitiesLoader {
     private EntityNonNullMap<String, UserCreateDto> snapshotUserDtos;
     private EntityNonNullMap<String, PropertyCreateDto> propertyDtos;
     private EntityNonNullMap<String, PropertySetCreateDto> propertySetDtos;
+    private EntityNonNullMap<String, RoleCreateDto> roleDtos;
     private EntityNonNullMap<String, CustomerRoleCreateDto> customerRoleDtos;
     private EntityNonNullMap<String, PropertyRoleCreateDto> propertyRoleDtos;
     private EntityNonNullMap<String, PartnerCreateDto> partnerDtos;
     private EntityNonNullMap<String, UserGroupCreateDto> userGroupDtos;
     private EntityNonNullMap<String, ApplicationCreateDto> applicationDtos;
     private EntityNonNullMap<String, ApplicationVersionCreateDto> applicationVersionDtos;
-    private LinkedHashMap<String, Map<String, Object>> clients;
+    private Map<String, Map<String, Object>> clients;
 
     private EntitiesLoader() {
         loadCustomers();
@@ -64,58 +65,59 @@ public class EntitiesLoader {
 
     private void loadClients() {
         Map<String, Object> yamlClients = loadEntities(String.format(YAML_DATA_PATH, "entities/clients.yaml"));
-        clients = (LinkedHashMap<String, Map<String, Object>>) yamlClients.get("clients");
+        clients = (Map<String, Map<String, Object>>) yamlClients.get("clients");
     }
 
     private void loadCustomers() {
         Map<String, Object> yamlCustomers = loadEntities(String.format(YAML_DATA_PATH, "entities/customers.yaml"));
-        customerDtos = new EntityNonNullMap<>((LinkedHashMap<String, CustomerCreateDto>) yamlCustomers.get("customers"));
+        customerDtos = new EntityNonNullMap<>((Map<String, CustomerCreateDto>) yamlCustomers.get("customers"));
 
     }
 
     private void loadUsers() {
         Map<String, Object> yamlUsers = loadEntities(String.format(YAML_DATA_PATH, "entities/users.yaml"));
-        userDtos = new EntityNonNullMap<>((LinkedHashMap<String, UserCreateDto>) yamlUsers.get("users"));
+        userDtos = new EntityNonNullMap<>((Map<String, UserCreateDto>) yamlUsers.get("users"));
     }
 
     private void loadSnapshotUsers() {
         Map<String, Object> yamlCustomers = loadEntities(String.format(YAML_DATA_PATH, "entities/users.yaml"));
-        snapshotUserDtos = new EntityNonNullMap<>((LinkedHashMap<String, UserCreateDto>) yamlCustomers.get("snapshotUsers"));
+        snapshotUserDtos = new EntityNonNullMap<>((Map<String, UserCreateDto>) yamlCustomers.get("snapshotUsers"));
     }
 
     private void loadProperties() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/properties.yaml"));
-        propertyDtos = new EntityNonNullMap<>((LinkedHashMap<String, PropertyCreateDto>) yamlProperties.get("properties"));
+        propertyDtos = new EntityNonNullMap<>((Map<String, PropertyCreateDto>) yamlProperties.get("properties"));
     }
 
     private void loadPropertySets() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/property_sets.yaml"));
-        propertySetDtos = new EntityNonNullMap<>((LinkedHashMap<String, PropertySetCreateDto>) yamlProperties.get("propertySets"));
+        propertySetDtos = new EntityNonNullMap<>((Map<String, PropertySetCreateDto>) yamlProperties.get("propertySets"));
     }
 
     private void loadRoles() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/roles.yaml"));
-        customerRoleDtos = new EntityNonNullMap<>((LinkedHashMap<String, CustomerRoleCreateDto>) yamlProperties.get("customerRoles"));
-        propertyRoleDtos = new EntityNonNullMap<>((LinkedHashMap<String, PropertyRoleCreateDto>) yamlProperties.get("propertyRoles"));
+        roleDtos = new EntityNonNullMap<>((Map<String, RoleCreateDto>) yamlProperties.get("roles"));
+        customerRoleDtos = new EntityNonNullMap<>((Map<String, CustomerRoleCreateDto>) yamlProperties.get("customerRoles"));
+        propertyRoleDtos = new EntityNonNullMap<>((Map<String, PropertyRoleCreateDto>) yamlProperties.get("propertyRoles"));
     }
 
     private void loadPartners() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/partners.yaml"));
-        partnerDtos = new EntityNonNullMap<>((LinkedHashMap<String, PartnerCreateDto>) yamlProperties.get("partners"));
+        partnerDtos = new EntityNonNullMap<>((Map<String, PartnerCreateDto>) yamlProperties.get("partners"));
     }
 
     private void loadUserGroups() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/user_groups.yaml"));
-        userGroupDtos = new EntityNonNullMap<>((LinkedHashMap<String, UserGroupCreateDto>) yamlProperties.get("user_groups"));
+        userGroupDtos = new EntityNonNullMap<>((Map<String, UserGroupCreateDto>) yamlProperties.get("user_groups"));
     }
 
     private void loadApplications() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/applications.yaml"));
-        applicationDtos = new EntityNonNullMap<>((LinkedHashMap<String, ApplicationCreateDto>) yamlProperties.get("applications"));
+        applicationDtos = new EntityNonNullMap<>((Map<String, ApplicationCreateDto>) yamlProperties.get("applications"));
     }
 
     private void loadApplicationVersions() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/application_versions.yaml"));
-        applicationVersionDtos = new EntityNonNullMap<>((LinkedHashMap<String, ApplicationVersionCreateDto>) yamlProperties.get("application_versions"));
+        applicationVersionDtos = new EntityNonNullMap<>((Map<String, ApplicationVersionCreateDto>) yamlProperties.get("application_versions"));
     }
 }
