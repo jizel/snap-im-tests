@@ -117,7 +117,7 @@ public class ConfigurationsTests extends CommonTest {
         List<Map<String, String>> listOfParams = selectExamplesForTestFromTable(configurationsTestsTables, "configurationsFilteringErrorData");
         for (Map<String, String> params : listOfParams) {
             configurationHelpers.listOfConfigurationsIsGot(params.get("limit"), params.get("cursor"),
-                    params.get("filter"), params.get("sort"), params.get("sortDesc"), CONF_TYPE_IDENTIFIER);
+                    params.get("filter"), params.get("sort"), params.get("sort_desc"), CONF_TYPE_IDENTIFIER);
             verifyResponseAndCustomCode(params.get("response_code"), params.get("custom_code"));
         }
     }
