@@ -12,6 +12,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_ASSIGNMENTS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_PERMISSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLES_PATH;
@@ -50,8 +52,12 @@ import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.RoleAssignmentCreateDto;
+import travel.snapshot.dp.api.identity.model.RoleAssignmentDto;
 import travel.snapshot.dp.api.identity.model.RoleCreateDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RolePermissionCreateDto;
+import travel.snapshot.dp.api.identity.model.RolePermissionDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
@@ -111,6 +117,8 @@ public class EndpointEntityMapping {
         helpMap.put(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, PropertySetPropertyRelationshipDto.class);
         helpMap.put(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class);
         helpMap.put(APPLICATION_PERMISSIONS_PATH, ApplicationPermissionDto.class);
+        helpMap.put(ROLE_ASSIGNMENTS_PATH, RoleAssignmentDto.class);
+        helpMap.put(ROLE_PERMISSIONS_PATH, RolePermissionDto.class);
 
         endpointDtoMap = Collections.unmodifiableMap(helpMap);
     }
@@ -142,6 +150,8 @@ public class EndpointEntityMapping {
         helpMap.put(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, PropertySetPropertyRelationshipCreateDto.class);
         helpMap.put(PLATFORM_OPERATIONS_PATH, PlatformOperationCreateDto.class);
         helpMap.put(APPLICATION_PERMISSIONS_PATH, ApplicationPermissionCreateDto.class);
+        helpMap.put(ROLE_ASSIGNMENTS_PATH, RoleAssignmentCreateDto.class);
+        helpMap.put(ROLE_PERMISSIONS_PATH, RolePermissionCreateDto.class);
 
         endpointCreateDtoMap = Collections.unmodifiableMap(helpMap);
     }

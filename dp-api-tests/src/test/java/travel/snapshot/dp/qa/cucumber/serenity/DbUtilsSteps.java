@@ -76,6 +76,8 @@ public class DbUtilsSteps {
     static final String DELETE_PARTNER = "delete from Partner";
     static final String DELETE_PARTNER_USER = "delete from User_Partner";
     static final String DELETE_USER_CUSTOMER_ROLE = "delete from User_Customer_Role";
+    static final String DELETE_ROLE_PERMISSION = "delete from Rolepermission";
+    static final String DELETE_ROLE_ASSIGNMENT = "delete from Roleassignment";
     static final String CREATE_DB_USER = "INSERT INTO public.user (id, type, username, password, first_name, last_name, email, timezone, language_code, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_PARTNER = "INSERT INTO Partner (id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION = "INSERT INTO Application (id, name, description, website, partner_id, is_internal, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
@@ -224,6 +226,8 @@ public class DbUtilsSteps {
     }
 
     public void cleanDatabase() {
+        dbHelper.identityDb().update(DELETE_ROLE_PERMISSION);
+        dbHelper.identityDb().update(DELETE_ROLE_ASSIGNMENT);
         dbHelper.identityDb().update(DELETE_APPLICATION_PERMISSION);
         dbHelper.identityDb().update(DELETE_CUSTOMER_HIERARCHY_PATH);
         dbHelper.identityDb().update(DELETE_PROPERTY_SET_HIERARCHY_PATH);

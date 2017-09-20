@@ -2,11 +2,14 @@ package travel.snapshot.dp.qa.junit.helpers;
 
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.Matchers.not;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
@@ -30,6 +33,9 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.CONFIGURATION_REQUEST_HTTP_LOG_LEVEL;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.CONFIGURATION_RESPONSE_HTTP_LOG_STATUS;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
@@ -37,6 +43,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_IF_MATCH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_USER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getBaseUriForModule;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
@@ -50,10 +57,13 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.config.ObjectMapperConfig;
 import com.jayway.restassured.config.RestAssuredConfig;
+import com.jayway.restassured.filter.log.LogDetail;
+import com.jayway.restassured.filter.log.ResponseLoggingFilter;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.model.EntityDto;
+import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping;
 
@@ -104,6 +114,22 @@ public class CommonHelpers {
                 new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> OBJECT_MAPPER));
 
         RequestSpecBuilder builder = new RequestSpecBuilder();
+        String responseLogLevel = PropertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL);
+        String requestLogLevel = PropertiesHelper.getProperty(CONFIGURATION_REQUEST_HTTP_LOG_LEVEL);
+
+        if (isNotBlank(responseLogLevel)) {
+            builder.log(LogDetail.valueOf(requestLogLevel));
+        }
+
+        if (isNotBlank(responseLogLevel)) {
+            RestAssured.replaceFiltersWith(
+                    new ResponseLoggingFilter(
+                            LogDetail.valueOf(responseLogLevel),
+                            true,
+                            System.out,
+                            not(isOneOf(PropertiesHelper.getListOfInt(CONFIGURATION_RESPONSE_HTTP_LOG_STATUS)))));
+        }
+
         spec = builder.build().baseUri(getBaseUriForModule("identity")).contentType("application/json; charset=UTF-8");
     }
 
@@ -453,6 +479,10 @@ public class CommonHelpers {
     //    Forwarders for necessary BasicSteps that cannot be made static used in tests. Should be refactored in the future.
     public void useFileForSendDataTo(String filename, String method, String url, String module) throws Exception {
         basicSteps.useFileForSendDataTo(filename, method, url, module);
+    }
+
+    public static Map<String, String> emptyQueryParams() {
+        return buildQueryParamMapForPaging(null, null, null, null, null, null);
     }
 
 }
