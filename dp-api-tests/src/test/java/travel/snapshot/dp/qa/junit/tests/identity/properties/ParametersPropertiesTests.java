@@ -129,7 +129,7 @@ public class ParametersPropertiesTests extends CommonTest {
     public void validateThatPropertyRegionsBelongToTheCorrectCountry(String country, String region) {
         AddressDto address = testProperty1.getAddress();
         address.setCountryCode(country);
-        address.setRegion(region);
+        address.setRegionCode(region);
         testProperty1.setAddress(address);
         commonHelpers.entityIsCreated(testProperty1);
         bodyContainsEntityWith("address.region", region);
@@ -140,7 +140,7 @@ public class ParametersPropertiesTests extends CommonTest {
     public void checkingErrorCodesForRegions(String country, String region) {
         AddressDto address = testProperty1.getAddress();
         address.setCountryCode(country);
-        address.setRegion(region);
+        address.setRegionCode(region);
         testProperty1.setAddress(address);
         commonHelpers.createEntity(PROPERTIES_PATH, testProperty1);
         responseIsReferenceDoesNotExist();

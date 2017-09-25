@@ -13,7 +13,7 @@ properties:
           line1: CoreQA,
           line2: address line 2,
           city: Brno,
-          region: null,
+          regionCode: null,
           zipCode: 60200
           }
   }

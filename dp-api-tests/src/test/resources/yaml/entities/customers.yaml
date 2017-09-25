@@ -11,13 +11,12 @@ customers:
     website:  'http://www.snapshot.travel',
     timezone:  Europe/Prague,
     type:  HOTEL,
-    hospitalityId: 000000b2-3836-4207-a705-42bbec000001,
     address: {
       countryCode: DE,
       line2: Address 2,
       line1: CoreQA,
       city: Berlin,
-      region: null,
+      regionCode: null,
       zipCode: 60300
       }
   }
@@ -28,8 +27,7 @@ customers:
     name:  Creation test company2,
     email:  s2@tenants.biz,
     salesforceId:  SALESFORCEID002,
-    vatId:  DE999999929,
-    hospitalityId: 000000b2-3836-4207-a705-42bbec000002,
+    vatId:  DE999999929
   }
 
   customer3: !customer {
@@ -38,8 +36,7 @@ customers:
     name:  Creation test company3,
     email:  s3@tenants.biz,
     salesforceId:  SALESFORCEID003,
-    vatId:  DE999999939,
-    hospitalityId: 000000b2-3836-4207-a705-42bbec000003,
+    vatId:  DE999999939
 }
 
   customer4: !customer {
@@ -48,6 +45,5 @@ customers:
     name:  Creation test company4,
     email:  s4@tenants.biz,
     salesforceId:  SALESFORCEID004,
-    vatId:  DE999999939,
-    hospitalityId: 000000b2-3836-4207-a705-42bbec000004,
+    vatId:  DE999999939
 }

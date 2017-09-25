@@ -2,8 +2,6 @@ package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.type.HttpMethod.POST;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.assertIfNotNull;
@@ -51,9 +49,9 @@ public class CustomerParametersCRUDTests extends CommonTest{
 
     @Test
     @FileParameters(EXAMPLES + "updateEachField.csv")
-    public void updateCustomerEachField(String name, String email, String vatId, String phone, String website, String notes, String timezone, String hospitalityId) {
+    public void updateCustomerEachField(String name, String email, String vatId, String phone, String website, String notes, String timezone) {
         UUID createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
-        CustomerUpdateDto customerUpdate = customerHelpers.constructCustomerUpdate(name, email, vatId, phone, website, notes , timezone, hospitalityId);
+        CustomerUpdateDto customerUpdate = customerHelpers.constructCustomerUpdate(name, email, vatId, phone, website, notes , timezone);
         Response updateResponse = commonHelpers.updateEntity(CUSTOMERS_PATH, createdCustomerId, customerUpdate);
         responseCodeIs(SC_OK);
 
@@ -66,8 +64,5 @@ public class CustomerParametersCRUDTests extends CommonTest{
         assertIfNotNull(updatedCustomer.getWebsite(), website);
         assertIfNotNull(updatedCustomer.getNotes(), notes);
         assertIfNotNull(updatedCustomer.getTimezone(), timezone);
-        if (transformNull(hospitalityId) != null) {
-            assertThat(updatedCustomer.getHospitalityId(), is(UUID.fromString(hospitalityId)));
-        }
     }
 }

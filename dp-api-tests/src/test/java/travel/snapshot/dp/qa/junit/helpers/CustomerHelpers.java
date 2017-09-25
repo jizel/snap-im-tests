@@ -99,8 +99,7 @@ public class CustomerHelpers extends CustomerSteps {
                                                      String phone,
                                                      String website,
                                                      String notes,
-                                                     String timezone,
-                                                     String hospitalityId){
+                                                     String timezone){
         CustomerUpdateDto customerUpdate = new CustomerUpdateDto();
         customerUpdate.setName(transformNull(name));
         customerUpdate.setEmail(transformNull(email));
@@ -109,7 +108,6 @@ public class CustomerHelpers extends CustomerSteps {
         customerUpdate.setWebsite(transformNull(website));
         customerUpdate.setNotes(transformNull(notes));
         customerUpdate.setTimezone(transformNull(timezone));
-        if(transformNull(hospitalityId) != null) customerUpdate.setHospitalityId(UUID.fromString(hospitalityId));
 
         return customerUpdate;
     }
