@@ -85,7 +85,6 @@ public class BasicSteps {
     public static final UUID DEFAULT_API_SUBSCRIPTION_ID = UUID.fromString("11111111-0000-4000-a000-999999999999");
     public static final String DEFAULT_SNAPSHOT_TIMEZONE = "Europe/Prague";
     public static final String DEFAULT_SNAPSHOT_SALESFORCE_ID = "DEFAULTSFID0001";
-    public static final UUID DEFAULT_SNAPSHOT_HOSPITALITY_ID = UUID.fromString("a8d4e1b1-4f15-47b0-be00-db03c2c9a3c4");
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
     public static final UUID NON_EXISTENT_ID = UUID.fromString("00000000-0000-4000-a000-000000000000");
     public static final String SESSION_RESPONSE = "response";
@@ -121,7 +120,6 @@ public class BasicSteps {
     public static final String PROPERTY_CODE = "property_code";
     public static final String IS_ACTIVE = "is_active";
     public static final String PROPERTY_ID = "property_id";
-    public static final String HOSPITALITY_ID = "hospitality_id";
     public static final String RELATIONSHIP_TYPE = "relationship_type";
     public static final String VALID_FROM = "valid_from";
     public static final String VALID_TO = "valid_to";

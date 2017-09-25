@@ -6,7 +6,6 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ADDRESS
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ENCRYPTED_PASSWORD;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_HOSPITALITY_ID;
 
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
@@ -83,7 +82,7 @@ public class DbUtilsSteps {
     static final String CREATE_DB_APPLICATION_VERSION = "INSERT INTO ApplicationVersion (id, application_id, api_manager_id, name, status, release_date, description, is_active, is_non_commercial, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (id, is_active, salesforce_id, name, phone, email, website, vat_id, is_demo, notes, address_id, timezone, type, code, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_CUSTOMER_TYPE + "', 'defaultCode1', '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_ADDRESS = "INSERT INTO Address (id, line1, line2, city, zip_code, country_code) VALUES (?, ?, ?, ?, ?, ?);";
-    static final String CREATE_DB_PROPERTY = "INSERT INTO Property (id, is_active, salesforce_id, name, email, website, is_demo, address_id, timezone, code, description, customer_id, version, tti_id, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', '" + DEFAULT_SNAPSHOT_HOSPITALITY_ID + "');";
+    static final String CREATE_DB_PROPERTY = "INSERT INTO Property (id, is_active, salesforce_id, name, email, website, is_demo, address_id, timezone, code, description, customer_id, version, tti_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123');";
     static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO CommercialSubscription (id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO ApiSubscription (id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_CUSTOMER_HIERARCHY_PATH = "INSERT INTO CustomerHierarchyPath (parent_id, child_id) values (?, ?) ;";
@@ -229,7 +228,7 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_CUSTOMER_HIERARCHY_PATH);
         dbHelper.identityDb().update(DELETE_PROPERTY_SET_HIERARCHY_PATH);
         dbHelper.identityDb().update(DELETE_CUSTOMER_PROPERTY);
-        dbHelper.identityDb().update(DELETE_USER_CUSTOMER_ROLE);
+//        dbHelper.identityDb().update(DELETE_USER_CUSTOMER_ROLE);
         dbHelper.identityDb().update(DELETE_CUSTOMER_USER);
         dbHelper.identityDb().update(DELETE_PARTNER_USER);
         dbHelper.identityDb().update(DELETE_USER_PROPERTY_ROLE);

@@ -14,7 +14,6 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HOSPITALITY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.IS_ACTIVE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.PROPERTY_CODE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.PROPERTY_ID;
@@ -103,10 +102,8 @@ public class PropertyTest extends CommonTest {
     @Test
     public void createPropertyWithCapitalIdLetters() throws Exception {
         String id = "000e833e-50b8-4854-a233-289f00bc4a09";
-        String hospitalityId = "000000b2-3836-4207-a705-42bbec000000";
         commonHelpers.useFileForSendDataTo("/messages/identity/properties/property_capital_letters.json", "POST", PROPERTIES_PATH, "identity");
         bodyContainsEntityWith(PROPERTY_ID, id);
-        bodyContainsEntityWith(HOSPITALITY_ID, hospitalityId);
     }
 
     @Test

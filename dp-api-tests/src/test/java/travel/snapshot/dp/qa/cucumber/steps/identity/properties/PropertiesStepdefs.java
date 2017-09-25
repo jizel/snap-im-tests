@@ -20,7 +20,6 @@ import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
@@ -147,7 +146,7 @@ public class PropertiesStepdefs {
         address.setCity("someCity");
         address.setZipCode("1234");
         address.setCountryCode(country);
-        address.setRegion(region);
+        address.setRegionCode(region);
         property.setCustomerId(customerId);
         property.setName("someProperty");
         property.setCode(code);

@@ -19,7 +19,7 @@ public class AddressUtils {
         }
 
         if (region != null && !region.isEmpty()) {
-            a.setRegion(region);
+            a.setRegionCode(region);
         }
 
         return a;

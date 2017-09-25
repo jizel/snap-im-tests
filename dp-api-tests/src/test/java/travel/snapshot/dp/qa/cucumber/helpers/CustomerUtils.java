@@ -71,7 +71,6 @@ public class CustomerUtils {
         customerDto.setPhone(Objects.toString(customerAttributes.get("phone"), null));
         customerDto.setTimezone(Objects.toString(customerAttributes.get("timezone"), null));
         customerDto.setName(Objects.toString(customerAttributes.get("name"), null));
-        customerDto.setHospitalityId(UUID.fromString(Objects.toString(customerAttributes.get("hospitalityId"), null)));
         customerDto.setParentId(UUID.fromString(Objects.toString(customerAttributes.get("parentId"), null)));
         customerDto.setSalesforceId(SalesforceId.of(Objects.toString(customerAttributes.get("salesforceId"), null)));
         if(customerAttributes.containsKey("isActive")){
