@@ -1,5 +1,19 @@
 package travel.snapshot.dp.qa.junit.tests.identity.roles;
 
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_ASSIGNMENTS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_PERMISSIONS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ALL_ENDPOINTS;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
+
 import lombok.extern.java.Log;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,24 +25,11 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.UUID;
 
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_ASSIGNMENTS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_PERMISSIONS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ALL_ENDPOINTS;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
-
 @Log
 public class RoleAssignmentTests extends CommonTest {
-    protected UUID createdUserId = null;
-    protected UUID createdAppId = null;
-    protected UUID createdAppVersionId = null;
-    protected UUID roleId = null;
+    private UUID createdUserId;
+    private UUID createdAppVersionId;
+    private UUID roleId;
 
 
     @Before
@@ -37,7 +38,7 @@ public class RoleAssignmentTests extends CommonTest {
         createdUserId = commonHelpers.entityIsCreated(testUser1);
 
         testApplication1.setIsInternal(false);
-        createdAppId = commonHelpers.entityIsCreated(testApplication1);
+        UUID createdAppId = commonHelpers.entityIsCreated(testApplication1);
         commercialSubscriptionHelpers.commercialSubscriptionIsCreated(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID, createdAppId);
 
         testAppVersion1.setApplicationId(createdAppId);
@@ -47,6 +48,7 @@ public class RoleAssignmentTests extends CommonTest {
         commonHelpers.entityIsCreated(relationship);
 
         testRole1.setApplicationId(createdAppId);
+        testRole1.setIsActive(true);
         roleId = commonHelpers.entityIsCreated(testRole1);
 
         dbSteps.populateApplicationPermissionsTableForApplication(createdAppId);
@@ -93,5 +95,13 @@ public class RoleAssignmentTests extends CommonTest {
         assertThat(rolePermissionId, is(rolePermission.getId()));
         // Role permissions do not support update, therefore - delete
         commonHelpers.entityIsDeleted(ROLE_PERMISSIONS_PATH, rolePermissionId);
+    }
+
+    @Test
+    public void userCustomerRelationshipIsNeededToCreateRole() {
+        commonHelpers.createEntity(relationshipsHelpers.constructRoleAssignment(roleId, DEFAULT_SNAPSHOT_USER_ID))
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY);
+        customCodeIs(CC_NO_MATCHING_ENTITY);
     }
 }

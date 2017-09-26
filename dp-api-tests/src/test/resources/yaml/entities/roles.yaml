@@ -1,6 +1,6 @@
 roles:
   role1: !role &BASIC_ROLE {
-      isActive: true,
+      isActive: false,
       applicationId: 03000000-0000-4444-8888-000000000000,
       name: Test Application Role 1,
       description: Test Application Role description,
@@ -15,8 +15,7 @@ roles:
 
   role3: !role {
     <<: *BASIC_ROLE,
-    name: Test Application Role 3,
-    isActive: false
+    name: Test Application Role 3
   }
 
 customerRoles:

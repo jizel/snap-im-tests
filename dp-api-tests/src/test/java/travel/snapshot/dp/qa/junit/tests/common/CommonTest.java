@@ -108,6 +108,7 @@ public abstract class CommonTest {
     protected static final int CC_BAD_PARAMS = 40002;
     protected static final int CC_SEMANTIC_ERRORS = 42201;
     protected static final int CC_NON_EXISTING_REFERENCE = 42202;
+    protected static final int CC_NO_MATCHING_ENTITY = 42203;
     protected static final int CC_INVALID_ETAG = 41202;
 
     //    Basic test entities
