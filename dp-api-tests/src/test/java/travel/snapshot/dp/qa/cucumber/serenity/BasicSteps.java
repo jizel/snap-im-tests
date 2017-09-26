@@ -111,9 +111,9 @@ public class BasicSteps {
     public static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     public static final String HEADER_ETAG = "ETag";
     public static final String CURLY_BRACES_EMPTY = "{}";
-    private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
-    private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
-    private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
+    public static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
+    public static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
+    public static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
     public static final String REQUESTOR_ID = "requestorId";
     public static final String TARGET_ID = "targetId";
     public static final String ROLE_ID = "role_id";

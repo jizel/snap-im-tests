@@ -7,6 +7,8 @@ import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.RoleAssignmentCreateDto;
+import travel.snapshot.dp.api.identity.model.RolePermissionCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
@@ -22,8 +24,10 @@ import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
+import travel.snapshot.dp.api.type.HttpMethod;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.junit.tests.identity.roles.RoleAssignmentTests;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,7 +43,7 @@ public class RelationshipsHelpers extends BasicSteps {
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
     }
 
-    private final CommonHelpers commonHelpers = new CommonHelpers();
+    private final PlatformOperationHelpers platformOperationHelpers = new PlatformOperationHelpers();
     private final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
 
     //    User Customer Relationships
@@ -194,5 +198,20 @@ public class RelationshipsHelpers extends BasicSteps {
         UserGroupPropertySetRelationshipUpdateDto userGroupPropertySetRelationshipUpdate = new UserGroupPropertySetRelationshipUpdateDto();
         userGroupPropertySetRelationshipUpdate.setIsActive(isActive);
         return userGroupPropertySetRelationshipUpdate;
+    }
+
+    public RoleAssignmentCreateDto constructRoleAssignment(UUID roleId, UUID userId) {
+        RoleAssignmentCreateDto assignment = new RoleAssignmentCreateDto();
+        assignment.setRoleId(roleId);
+        assignment.setUserId(userId);
+        return assignment;
+    }
+
+    public RolePermissionCreateDto constructRolePermission(UUID roleId, HttpMethod method, String uriTemplate) {
+        UUID platformOperationId = platformOperationHelpers.getPlatformOperationId(method, uriTemplate);
+        RolePermissionCreateDto rolePermission = new RolePermissionCreateDto();
+        rolePermission.setRoleId(roleId);
+        rolePermission.setPlatformOperationId(platformOperationId);
+        return rolePermission;
     }
 }
