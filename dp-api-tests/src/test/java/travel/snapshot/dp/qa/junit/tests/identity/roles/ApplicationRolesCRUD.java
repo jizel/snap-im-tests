@@ -14,6 +14,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CU
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 
 import org.junit.Test;
+import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.RoleCreateDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
@@ -25,6 +26,7 @@ import java.util.Map;
 /**
  * CRUD tests for /identity/roles endpoint
  */
+@Jira("DPIM-127")
 public class ApplicationRolesCRUD extends CommonTest {
 
     private RoleDto createdRole;

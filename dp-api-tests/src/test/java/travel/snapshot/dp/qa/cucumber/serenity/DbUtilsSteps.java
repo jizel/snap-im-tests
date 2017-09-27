@@ -22,7 +22,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by sedlacek on 9/23/2015.
+ * Class that manages direct DB access operations.
+ *
+ * Should be renamed to something more meaningful once All Cucumber relicts are gone.
  */
 public class DbUtilsSteps {
 
@@ -75,7 +77,6 @@ public class DbUtilsSteps {
     static final String DELETE_TTI_CROSSREFERENCES = "delete  from crossreferences";
     static final String DELETE_PARTNER = "delete from Partner";
     static final String DELETE_PARTNER_USER = "delete from User_Partner";
-    static final String DELETE_USER_CUSTOMER_ROLE = "delete from User_Customer_Role";
     static final String DELETE_ROLE_PERMISSION = "delete from Rolepermission";
     static final String DELETE_ROLE_ASSIGNMENT = "delete from Roleassignment";
     static final String CREATE_DB_USER = "INSERT INTO public.user (id, type, username, password, first_name, last_name, email, timezone, language_code, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
@@ -86,7 +87,6 @@ public class DbUtilsSteps {
     static final String CREATE_DB_ADDRESS = "INSERT INTO Address (id, line1, line2, city, zip_code, country_code) VALUES (?, ?, ?, ?, ?, ?);";
     static final String CREATE_DB_PROPERTY = "INSERT INTO Property (id, is_active, salesforce_id, name, email, website, is_demo, address_id, timezone, code, description, customer_id, version, tti_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123');";
     static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO CommercialSubscription (id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO ApiSubscription (id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_CUSTOMER_HIERARCHY_PATH = "INSERT INTO CustomerHierarchyPath (parent_id, child_id) values (?, ?) ;";
     static final String DELETE_APPLICATION_PERMISSION = "DELETE FROM ApplicationPermission;";
     static final String POPULATE_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (id, application_id, platform_operation_id) SELECT uuid_generate_v4(), ?, id FROM platformoperation;";
@@ -210,11 +210,6 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(CREATE_DB_COMMERCIAL_SUBSCRIPTION, (commercialSubscription.getId()), (commercialSubscription.getCustomerId()), (commercialSubscription.getPropertyId()), (commercialSubscription.getApplicationId()), commercialSubscription.getIsActive());
     }
 
-//    Don't delete, can be reused in the future when api subscriptions are reintroduced
-//    public void createDBApiSubscription(ApiSubscriptionDto apiSubscription) {
-//        dbHelper.identityDb().update(CREATE_DB_API_SUBSCRIPTION, apiSubscription.getId(), apiSubscription.getCommercialSubscriptionId(), apiSubscription.getApplicationVersionId(), apiSubscription.getIsActive());
-//    }
-
     public List<Map<String, Object>> selectColumnFromTableWhere(String column, String tableName, String conditionColumn, String conditionValue, String schemaName) {
         String sqlSelect = "SELECT " + column + " FROM " + tableName + " WHERE " + conditionColumn + " = ?";
 //        Only tti and identity schemes are used in tests now. New schemas constants can be added if needed. Identity should always be default.
@@ -232,7 +227,6 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_CUSTOMER_HIERARCHY_PATH);
         dbHelper.identityDb().update(DELETE_PROPERTY_SET_HIERARCHY_PATH);
         dbHelper.identityDb().update(DELETE_CUSTOMER_PROPERTY);
-//        dbHelper.identityDb().update(DELETE_USER_CUSTOMER_ROLE);
         dbHelper.identityDb().update(DELETE_CUSTOMER_USER);
         dbHelper.identityDb().update(DELETE_PARTNER_USER);
         dbHelper.identityDb().update(DELETE_USER_PROPERTY_ROLE);
