@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests.identity.roles;
 
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
@@ -19,17 +20,19 @@ import org.junit.Before;
 import org.junit.Test;
 import travel.snapshot.dp.api.identity.model.RoleAssignmentDto;
 import travel.snapshot.dp.api.identity.model.RolePermissionDto;
+import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.type.HttpMethod;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
+import java.util.List;
 import java.util.UUID;
 
 @Log
 public class RoleAssignmentTests extends CommonTest {
     private UUID createdUserId;
     private UUID createdAppVersionId;
-    private UUID roleId;
+    private UUID createdRoleId;
 
 
     @Before
@@ -49,7 +52,7 @@ public class RoleAssignmentTests extends CommonTest {
 
         testRole1.setApplicationId(createdAppId);
         testRole1.setIsActive(true);
-        roleId = commonHelpers.entityIsCreated(testRole1);
+        createdRoleId = commonHelpers.entityIsCreated(testRole1);
 
         dbSteps.populateApplicationPermissionsTableForApplication(createdAppId);
     }
@@ -66,13 +69,13 @@ public class RoleAssignmentTests extends CommonTest {
 
     @Test
     public void roleWithWithoutPermissions() {
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructRoleAssignment(roleId, createdUserId));
+        commonHelpers.entityIsCreated(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId));
         ALL_ENDPOINTS.forEach(endpoint -> {
             log.info("Endpoint is " + endpoint);
             commonHelpers.getEntitiesByUserForApp(createdUserId, createdAppVersionId, endpoint, emptyQueryParams())
                     .then()
                     .statusCode(SC_NOT_FOUND);
-            commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(roleId, HttpMethod.GET, String.format("/identity%s", endpoint)));
+            commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, HttpMethod.GET, String.format("/identity%s", endpoint)));
             commonHelpers.getEntitiesByUserForApp(createdUserId, createdAppVersionId, endpoint, emptyQueryParams())
                     .then()
                     .statusCode(SC_OK);
@@ -81,7 +84,7 @@ public class RoleAssignmentTests extends CommonTest {
 
     @Test
     public void roleAssignmentCRUD() {
-        UUID assignmentId = commonHelpers.entityIsCreated(relationshipsHelpers.constructRoleAssignment(roleId, createdUserId));
+        UUID assignmentId = commonHelpers.entityIsCreated(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId));
         RoleAssignmentDto assignmentDto = commonHelpers.getEntityAsType(ROLE_ASSIGNMENTS_PATH, RoleAssignmentDto.class, assignmentId);
         assertThat(assignmentId, is(assignmentDto.getId()));
         // Role assignments do not support update, therefore - delete
@@ -90,7 +93,7 @@ public class RoleAssignmentTests extends CommonTest {
 
     @Test
     public void rolePermissionsCRUD() {
-        UUID rolePermissionId = commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(roleId, HttpMethod.GET, String.format("/identity%s", PROPERTIES_PATH)));
+        UUID rolePermissionId = commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, HttpMethod.GET, String.format("/identity%s", PROPERTIES_PATH)));
         RolePermissionDto rolePermission = commonHelpers.getEntityAsType(ROLE_PERMISSIONS_PATH, RolePermissionDto.class, rolePermissionId);
         assertThat(rolePermissionId, is(rolePermission.getId()));
         // Role permissions do not support update, therefore - delete
@@ -99,9 +102,37 @@ public class RoleAssignmentTests extends CommonTest {
 
     @Test
     public void userCustomerRelationshipIsNeededToCreateRole() {
-        commonHelpers.createEntity(relationshipsHelpers.constructRoleAssignment(roleId, DEFAULT_SNAPSHOT_USER_ID))
+        commonHelpers.createEntity(relationshipsHelpers.constructRoleAssignment(createdRoleId, DEFAULT_SNAPSHOT_USER_ID))
                 .then()
                 .statusCode(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NO_MATCHING_ENTITY);
+    }
+
+    @Test
+    public void roleAssignmentIsAliasForOldEndpoint() {
+        RoleRelationshipDto roleRelationship = constructTestRoleRelationship(createdRoleId);
+        roleHelpers.assignRoleToUserCustomerRelationshipOld(createdUserId, DEFAULT_SNAPSHOT_CUSTOMER_ID, roleRelationship);
+
+        List<RoleAssignmentDto> roleAssignments = commonHelpers.getEntitiesAsType(ROLE_ASSIGNMENTS_PATH, RoleAssignmentDto.class, emptyQueryParams());
+
+        assertThat(roleAssignments.size(), is(1));
+        assertThat(roleAssignments.get(0).getUserId(), is(createdUserId));
+        assertThat(roleAssignments.get(0).getRoleId(), is(createdRoleId));
+    }
+
+    @Test
+    public void userIdIsUniqueForAllUserCustomerRoleAssignemtns() {
+        RoleRelationshipDto roleRelationship = constructTestRoleRelationship(createdRoleId);
+        roleHelpers.assignRoleToUserCustomerRelationshipOld(createdUserId, DEFAULT_SNAPSHOT_CUSTOMER_ID, roleRelationship);
+
+        commonHelpers.createEntity(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId))
+                .then()
+                .statusCode(SC_CONFLICT);
+    }
+
+    private RoleRelationshipDto constructTestRoleRelationship(UUID roleId){
+        RoleRelationshipDto roleRelationshipDto = new RoleRelationshipDto();
+        roleRelationshipDto.setRoleId(roleId);
+        return roleRelationshipDto;
     }
 }
