@@ -25,7 +25,7 @@ public class PropertySetTests extends CommonTest {
     private PropertySetDto createdPropertySet;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
     }
 

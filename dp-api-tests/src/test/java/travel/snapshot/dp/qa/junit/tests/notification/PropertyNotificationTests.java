@@ -36,7 +36,7 @@ public class PropertyNotificationTests extends CommonTest{
     private Map<String, Object> receivedNotification;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
     }

@@ -31,7 +31,7 @@ public class UserGroupUserRelationshipTests extends CommonTest {
     private UserGroupUserRelationshipCreateDto testUserGroupUserRelationship;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdUserId = commonHelpers.entityIsCreated(testUser1);
         createdUserGroupId = commonHelpers.entityIsCreated(testUserGroup1);

@@ -43,7 +43,7 @@ public class CustomerGetTests extends CommonTest{
 
     @Override
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // Override CommonTest setup and don't delete all created customers
     }
 

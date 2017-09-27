@@ -31,7 +31,7 @@ public class ApplicationPermissionsCRUD extends CommonTest {
 
     @Override
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdApplicationId = commonHelpers.entityIsCreated(testApplication1);
         testApplicationPermission = permissionHelpers.constructAppPermission(createdApplicationId, TEST_PLATFORM_OPERATION_ID);

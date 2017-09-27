@@ -33,7 +33,7 @@ public class UserPropertyRelationshipTests extends CommonTest {
     private UserPropertyRelationshipCreateDto testUserPropertyRelationship;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdProperty1Id = commonHelpers.entityIsCreated(testProperty1);
         createdUserId = commonHelpers.entityIsCreated(testUser1);

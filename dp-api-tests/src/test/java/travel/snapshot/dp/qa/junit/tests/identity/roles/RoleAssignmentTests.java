@@ -36,7 +36,7 @@ public class RoleAssignmentTests extends CommonTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdUserId = commonHelpers.entityIsCreated(testUser1);
 

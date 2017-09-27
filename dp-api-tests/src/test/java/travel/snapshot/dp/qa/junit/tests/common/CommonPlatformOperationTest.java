@@ -25,7 +25,7 @@ public class CommonPlatformOperationTest extends CommonTest{
 
     @Override
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         platformOperationTestDto = platformOperationHelpers.constructPlatformOperation(HttpMethod.GET, TEST_URI_TEMPLATE);
         createdPlatformOperation = commonHelpers.entityIsCreatedAs(PlatformOperationDto.class, platformOperationTestDto);

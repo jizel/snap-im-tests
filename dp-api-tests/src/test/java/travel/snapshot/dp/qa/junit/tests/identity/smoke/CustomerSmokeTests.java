@@ -33,7 +33,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
     private EntityNonNullMap<String, CustomerCreateDto> customerDtos = null;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         customerDtos = entitiesLoader.getCustomerDtos();
     }

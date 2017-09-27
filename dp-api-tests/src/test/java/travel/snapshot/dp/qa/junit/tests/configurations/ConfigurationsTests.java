@@ -40,7 +40,7 @@ public class ConfigurationsTests extends CommonTest {
     private static final String CONF_TYPE_IDENTIFIER = "NotificationTestConfType";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ConfigurationTypeDto testConfigurationType1 = new ConfigurationTypeDto();
         testConfigurationType1.setIdentifier(CONF_TYPE_IDENTIFIER);
         testConfigurationType1.setDescription("Notification Test Configuration Type Description");

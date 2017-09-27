@@ -35,7 +35,7 @@ public class UserCustomerRelationshipTests extends CommonTest{
     private UserCustomerRelationshipCreateDto testUserCustomerRelationship;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
         createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);

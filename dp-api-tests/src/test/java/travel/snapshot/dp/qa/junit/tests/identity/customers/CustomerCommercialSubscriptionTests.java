@@ -10,6 +10,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERC
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.constructCommercialSubscriptionDto;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -33,11 +34,11 @@ public class CustomerCommercialSubscriptionTests extends CommonTest{
 
     @Override
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
         super.setUp();
         createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
         createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
-        testCommercialSubscription = commercialSubscriptionHelpers.constrcutCommercialSubscriptionDto(DEFAULT_SNAPSHOT_APPLICATION_ID, createdCustomerId, createdPropertyId);
+        testCommercialSubscription = constructCommercialSubscriptionDto(DEFAULT_SNAPSHOT_APPLICATION_ID, createdCustomerId, createdPropertyId);
     }
 
     @Test

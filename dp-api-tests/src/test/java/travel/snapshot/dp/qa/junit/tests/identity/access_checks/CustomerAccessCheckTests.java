@@ -28,7 +28,7 @@ public class CustomerAccessCheckTests extends CommonTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         versionWithSubscriptionId = testAppVersion1.getId();
         versionWithoutSubscriptionId = testAppVersion2.getId();

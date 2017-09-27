@@ -40,7 +40,7 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
 
     @Override
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_EFFECTIVE_PERMISSIONS, GET);
         paramsMap = new HashMap<>();

@@ -47,7 +47,7 @@ public abstract class CommonRestrictionTest extends CommonTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         restrictedApp = commonHelpers.entityIsCreatedAs(ApplicationDto.class, testApplication1);
         createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());
