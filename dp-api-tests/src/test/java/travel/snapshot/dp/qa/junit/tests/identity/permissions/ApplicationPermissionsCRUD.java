@@ -7,6 +7,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_PERMISSIONS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 
 import com.jayway.restassured.response.Response;
@@ -26,7 +27,7 @@ public class ApplicationPermissionsCRUD extends CommonTest {
     private ApplicationPermissionCreateDto testApplicationPermission;
     private UUID createdApplicationId;
 
-    private static final UUID TEST_PLATFORM_OPERATION_ID = UUID.fromString("47a5f462-8068-4c28-bc84-b0e428b6a76f");
+    private static final UUID TEST_PLATFORM_OPERATION_ID = UUID.fromString("94e20801-4c09-4b8e-ab1c-7b3f6b3cf912");
 
     @Override
     @Before
@@ -58,14 +59,33 @@ public class ApplicationPermissionsCRUD extends CommonTest {
 
     @Test
     public void appPermissionsFilteringSorting() {
+        UUID createdAppPermissionId = commonHelpers.entityIsCreated(testApplicationPermission);
+
         commonHelpers.getEntities(APPLICATION_PERMISSIONS_PATH, buildQueryParamMapForPaging("10", null,
-                "platform_operation_id==" + TEST_PLATFORM_OPERATION_ID, "application_id", null, null))
+                "id==" + createdAppPermissionId, "application_id", null, null))
                 .then()
                 .statusCode(SC_OK)
                 .header(TOTAL_COUNT_HEADER, "1");
 
         commonHelpers.getEntities(APPLICATION_PERMISSIONS_PATH, buildQueryParamMapForPaging("10", null,
-                "application_id==" + createdApplicationId, null, "id", null))
+                "application_id==" + testApplicationPermission.getApplicationId(), null, "id", null))
+                .then()
+                .statusCode(SC_OK)
+                .header(TOTAL_COUNT_HEADER, "1");
+    }
+
+    @Test
+    public void appPermissionsAccessCheck() {
+        UUID createdAppPermissionId = commonHelpers.entityIsCreated(testApplicationPermission);
+
+        UUID userWithoutPermissionsID = commonHelpers.entityIsCreated(testUser2);
+        commonHelpers.getEntityByUserForApplication(userWithoutPermissionsID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
+                APPLICATION_PERMISSIONS_PATH, createdAppPermissionId)
+                .then()
+                .statusCode(SC_NOT_FOUND);
+
+        commonHelpers.getEntitiesByUserForApp(userWithoutPermissionsID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, APPLICATION_PERMISSIONS_PATH,
+                buildQueryParamMapForPaging(null, null, "id==" + createdAppPermissionId, null, null, null))
                 .then()
                 .statusCode(SC_OK)
                 .header(TOTAL_COUNT_HEADER, "0");
