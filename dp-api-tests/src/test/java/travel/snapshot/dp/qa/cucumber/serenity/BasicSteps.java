@@ -494,7 +494,7 @@ public class BasicSteps {
         return response;
     }
 
-    protected Response createThirdLevelEntity(UUID firstLevelId, String secondLevelType, UUID secondLevelId, String thirdLevelType, Object jsonBody) {
+    public Response createThirdLevelEntity(UUID firstLevelId, String secondLevelType, UUID secondLevelId, String thirdLevelType, Object jsonBody) {
         return createThirdLevelEntityByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelType, secondLevelId, thirdLevelType, jsonBody);
     }
 
@@ -504,7 +504,7 @@ public class BasicSteps {
 
     protected Response createThirdLevelEntityByUserForApplication(UUID userId, UUID applicationId, UUID firstLevelId, String secondLevelType, UUID secondLevelId, String thirdLevelType, Object jsonBody) {
         RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(jsonBody);
-        return requestSpecification.post("/" + firstLevelId + "/" + secondLevelType + "/" + secondLevelId + "/" + thirdLevelType);
+        return requestSpecification.post("/{firstLevelId}/{secondLevelType}/{secondLevelId}/{thirdLevelType}", firstLevelId, secondLevelType, secondLevelId, thirdLevelType);
     }
 
     protected Response deleteThirdLevelEntity(UUID firstLevelId, String secondLevelType, UUID secondLevelId, String thirdLevelType, UUID thirdLevelId, String eTag) {
