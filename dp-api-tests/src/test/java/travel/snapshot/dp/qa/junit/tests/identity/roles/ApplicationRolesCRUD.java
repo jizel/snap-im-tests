@@ -22,6 +22,7 @@ import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * CRUD tests for /identity/roles endpoint
@@ -68,6 +69,16 @@ public class ApplicationRolesCRUD extends CommonTest {
         assertThat(createdRole.getIsInitial(), is(userCustomerRole.getIsInitial()));
         assertThat(createdRole.getDescription(), is(userCustomerRole.getDescription()));
         assertThat(createdRole.getApplicationId(), is(userCustomerRole.getApplicationId()));
+    }
+
+    @Test
+    public void appIdCannotBeChangedAfterRoleIsCreated() {
+        createdRole = commonHelpers.entityIsCreatedAs(RoleDto.class, testRole1);
+        UUID anotherCreatedApplication = commonHelpers.entityIsCreated(testApplication2);
+        testRole1.setApplicationId(anotherCreatedApplication);
+        commonHelpers.updateEntity(ROLES_PATH, createdRole.getId(), testRole1)
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY);
     }
 
     //    Help test methods
