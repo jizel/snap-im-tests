@@ -1,10 +1,14 @@
+/null,/null,1,1,address.country==CZ,/null,/null,/null
+20,47,5,52,address.country==DE,/null,/null,</identity/customers?limit=20&cursor=27&filter=address.country==DE>; rel="prev"
+20,47,6,53,/null,address.country,/null,</identity/customers?limit=20&cursor=27&sort=address.country>; rel="prev"
+20,47,6,53,/null,/null,address.country,</identity/customers?limit=20&cursor=27&sort_desc=address.country>; rel="prev"
 5,0,5,52,name=='customer*',email,,</identity/customers?limit=5&cursor=5&sort=email&filter=name=='customer*'>; rel="next"
 5,0,5,52,name=='customer*',,email,</identity/customers?limit=5&cursor=5&sort_desc=email&filter=name=='customer*'>; rel="next"
-5,2,5,52,name=='customer*',email,,</identity/customers?limit=5&cursor=0&sort=email&filter=name=='customer*'>; rel="prev"\, </identity/customers?limit=5&cursor=7&sort=email&filter=name=='customer*'>; rel="next"
+5,2,5,52,name=='customer*',email,,/null
 5,50,2,52,name=='customer*',,email,</identity/customers?limit=5&cursor=45&sort_desc=email&filter=name=='customer*'>; rel="prev"
 5,47,5,52,name=='customer*',email,,</identity/customers?limit=5&cursor=42&sort=email&filter=name=='customer*'>; rel="prev"
 200,60,0,52,name=='customer*',email,,</identity/customers?limit=200&cursor=0&sort=email&filter=name=='customer*'>; rel="prev"
-1,10,1,53,/null,/null,,</identity/customers?limit=1&cursor=9>; rel="prev"\, </identity/customers?limit=1&cursor=11>; rel="next"
+1,10,1,53,/null,/null,,/null
 /null,10,43,53,/null,/null,,</identity/customers?limit=50&cursor=0>; rel="prev"
 30,/null,30,53,/null,/null,,</identity/customers?limit=30&cursor=30>; rel="next"
 /null,/null,1,1,email=='customer-51@snapshot.travel',/null,/null,/null

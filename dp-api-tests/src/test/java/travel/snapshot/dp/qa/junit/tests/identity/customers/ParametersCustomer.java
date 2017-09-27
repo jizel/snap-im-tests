@@ -37,7 +37,6 @@ public class ParametersCustomer extends CommonTest {
     private static final String INVALID_REGIONS_EXAMPLES = CUSTOMER_EXAMPLES + "invalidRegions.csv";
     private static final String INVALID_VAT_ID_EXAMPLES = CUSTOMER_EXAMPLES + "validateInvalidVatId.csv";
     private static final String VALID_VAT_ID_EXAMPLES = CUSTOMER_EXAMPLES + "validateValidVatId.csv";
-    private static final String FILTERING_CUSTOMERS_EXAMPLES = CUSTOMER_EXAMPLES + "filteringCustomers.csv";
 
 
     @Before

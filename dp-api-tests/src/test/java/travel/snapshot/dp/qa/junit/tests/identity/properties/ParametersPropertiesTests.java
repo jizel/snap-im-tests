@@ -11,6 +11,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.cucumber.helpers.AddressUtils.createRandomAddress;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.PROPERTY_CODE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.VALID_FROM_VALUE;
@@ -22,6 +23,9 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitie
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -70,6 +74,7 @@ public class ParametersPropertiesTests extends CommonTest {
         String city,
         String zipCode,
         String countryCode,
+        String regionCode,
         String resultingPropertyCode
     ) throws IOException {
         AddressDto address = new AddressDto();
@@ -77,6 +82,7 @@ public class ParametersPropertiesTests extends CommonTest {
         address.setZipCode(zipCode);
         address.setCity(city);
         address.setLine1(line1);
+        address.setRegionCode(transformNull(regionCode));
         testProperty1.setName(name);
         testProperty1.setId(null);
         testProperty1.setCode(null);
@@ -137,13 +143,13 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @FileParameters(EXAMPLES + "checkingErrorCodesForRegions.csv")
     @Test
-    public void checkingErrorCodesForRegions(String country, String region) {
+    public void checkingErrorCodesForRegions(String country, String region, String errorCode) {
         AddressDto address = testProperty1.getAddress();
         address.setCountryCode(country);
         address.setRegionCode(region);
         testProperty1.setAddress(address);
         commonHelpers.createEntity(PROPERTIES_PATH, testProperty1);
-        responseIsReferenceDoesNotExist();
+        customCodeIs(Integer.valueOf(errorCode));
     }
 
     @FileParameters(EXAMPLES + "gettingListOfProperties.csv")
@@ -152,6 +158,7 @@ public class ParametersPropertiesTests extends CommonTest {
     public void gettingListOfProperties(
         String limit,
         String cursor,
+        String filter,
         String sort,
         String returned,
         String total,
@@ -163,11 +170,19 @@ public class ParametersPropertiesTests extends CommonTest {
             testProperty1.setCode(null);
             commonHelpers.entityIsCreated(testProperty1);
         });
-        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, null, sort, null, null);
+        // The following is needed to test customer filtering/sorting by address.country DPIM-116
+        AddressDto address = createRandomAddress(5, 5, 6, "DE", null);
+        testProperty1.setAddress(address);
+        testProperty1.setName("prop_name_59");
+        testProperty1.setId(null);
+        commonHelpers.entityIsCreated(testProperty1);
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, null, null);
         commonHelpers.getEntities(PROPERTIES_PATH, params);
         numberOfEntitiesInResponse(PropertyDto.class, Integer.parseInt(returned));
         headerIs("X-Total-Count", total);
-        headerContains("Link", linkHeader);
+        if (! linkHeader.equals("/null")) {
+            headerContains("Link", linkHeader);
+        }
 
     }
 

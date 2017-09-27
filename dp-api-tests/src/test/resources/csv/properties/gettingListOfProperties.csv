@@ -1,7 +1,8 @@
-,/null,/null,50,60,</identity/properties?limit=50&cursor=50>
-/null,,name,50,60,</identity/properties?limit=50&cursor=50&sort=name>
-15,,/null,15,60,</identity/properties?limit=15&cursor=15>
-,1,/null,50,60,</identity/properties?limit=50&cursor=0>
-20,0,/null,20,60,</identity/properties?limit=20&cursor=20>
-10,0,/null,10,60,</identity/properties?limit=10&cursor=10>
-5,10,name,5,60,</identity/properties?limit=5&cursor=15&sort=name>
+,/null,/null,/null,50,61,</identity/properties?limit=50&cursor=50>
+/null,,/null,name,50,61,</identity/properties?limit=50&cursor=50&sort=name>
+15,,/null,/null,15,61,</identity/properties?limit=15&cursor=15>
+,1,/null,/null,50,61,</identity/properties?limit=50&cursor=0>
+20,0,/null,address.country,20,61,</identity/properties?limit=20&cursor=20&sort=address.country>
+10,0,/null,/null,10,61,</identity/properties?limit=10&cursor=10>
+5,10,/null,name,5,61,</identity/properties?limit=5&cursor=15&sort=name>
+,,address.country==DE,/null,1,1,/null
