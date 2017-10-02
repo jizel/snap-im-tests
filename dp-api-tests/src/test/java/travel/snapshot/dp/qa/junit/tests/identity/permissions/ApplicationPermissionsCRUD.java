@@ -39,7 +39,7 @@ public class ApplicationPermissionsCRUD extends CommonTest {
 
     @Test
     public void createAndGetAppPermission() {
-        Response response = commonHelpers.createEntity(APPLICATION_PERMISSIONS_PATH, testApplicationPermission);
+        Response response = commonHelpers.createEntity(testApplicationPermission);
         responseCodeIs(SC_CREATED);
         ApplicationPermissionDto createdAppPermission = response.as(ApplicationPermissionDto.class);
 

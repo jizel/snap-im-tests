@@ -11,10 +11,12 @@ import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.isOneOf;
 import static org.hamcrest.Matchers.not;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_PERMISSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.EFFECTIVE_PERMISSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PLATFORM_OPERATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
@@ -101,7 +103,9 @@ public class CommonHelpers {
             USER_GROUP_PROPERTY_RELATIONSHIPS_PATH,
             USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH,
             USER_GROUP_USER_RELATIONSHIPS_PATH,
-            PLATFORM_OPERATIONS_PATH
+            PLATFORM_OPERATIONS_PATH,
+            APPLICATION_PERMISSIONS_PATH,
+            EFFECTIVE_PERMISSIONS_PATH
     );
 
 
@@ -476,7 +480,7 @@ public class CommonHelpers {
         }
     }
 
-    RequestSpecification givenContext(UUID userId, UUID applicationId) {
+    private RequestSpecification givenContext(UUID userId, UUID applicationId) {
         return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
     }
 

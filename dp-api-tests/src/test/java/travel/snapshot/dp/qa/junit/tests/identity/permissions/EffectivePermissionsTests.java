@@ -5,11 +5,13 @@ import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.toList;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.EFFECTIVE_PERMISSIONS_PATH;
 import static travel.snapshot.dp.api.type.HttpMethod.GET;
 import static travel.snapshot.dp.api.type.HttpMethod.POST;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 
@@ -35,27 +37,35 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
     private static String USER_ID = "user_id";
     private static String APP_VERSION_ID = "application_version_id";
 
-    private Map<String, String> paramsMap;
+    private Map<String, String> pathParams;
     private List<EffectivePermissionDto> effectivePermissions;
+    private UUID createdUserId;
 
     @Override
     @Before
     public void setUp() {
         super.setUp();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_EFFECTIVE_PERMISSIONS, GET);
-        paramsMap = new HashMap<>();
-        paramsMap.put(USER_ID, DEFAULT_SNAPSHOT_USER_ID.toString());
-        paramsMap.put(APP_VERSION_ID, createdAppVersion.getId().toString());
+        createdUserId = commonHelpers.entityIsCreated(testUser1);
+        pathParams = new HashMap<>();
+        pathParams.put(USER_ID, createdUserId.toString());
+        pathParams.put(APP_VERSION_ID, createdAppVersion.getId().toString());
     }
 
     @Test
     public void getEffectivePermissionsBasedOnAppVersion() {
-        effectivePermissions = collectEffectivePermissionsWithParams(paramsMap);
-        assertThat(effectivePermissions.size(), is(1));
+        effectivePermissions = collectEffectivePermissionsWithParams(pathParams);
+        assertThat(effectivePermissions)
+                .hasSize(1)
+                .extracting(EffectivePermissionDto::getUriTemplate)
+                .containsOnly(RESTRICTIONS_EFFECTIVE_PERMISSIONS);
 
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_ALL_USERS_ENDPOINT, POST);
-        effectivePermissions = collectEffectivePermissionsWithParams(paramsMap);
-        assertThat(effectivePermissions.size(), is(2));
+        effectivePermissions = collectEffectivePermissionsWithParams(pathParams);
+        assertThat(effectivePermissions)
+                .hasSize(2)
+                .extracting(EffectivePermissionDto::getUriTemplate)
+                .containsOnly(RESTRICTIONS_EFFECTIVE_PERMISSIONS, RESTRICTIONS_ALL_USERS_ENDPOINT);
     }
 
     @Test
@@ -77,31 +87,60 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
     }
 
     @Test
-    @Jira("DPIM-127")
+    @Jira({"DPIM-127", "DPIM-130"})
     public void userPermissionsAreReturnedWhenAppRoleIsDefined() {
-        UUID createdUserId = commonHelpers.entityIsCreated(testUser1);
+        //        Prepare data
+        commonHelpers.entityIsCreated(permissionHelpers.constructAppPermission(
+                restrictedApp.getId(),
+                platformOperationHelpers.getPlatformOperationId(GET, RESTRICTIONS_ALL_USERS_ENDPOINT))
+        );
+        testRole1.setApplicationId(restrictedApp.getId());
         UUID createdRoleId = commonHelpers.entityIsCreated(testRole1);
-        commonHelpers.entityIsCreated(
-                relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_EFFECTIVE_PERMISSIONS)
-        );
-        commonHelpers.entityIsCreated(
-                relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId)
-        );
-        paramsMap.put(USER_ID, createdUserId.toString());
+        commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_EFFECTIVE_PERMISSIONS));
+        commonHelpers.entityIsCreated(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId));
+        pathParams.put(USER_ID, createdUserId.toString());
+
+        //        Test with inactive role
+        effectivePermissions = getEffectivePermissionsByUserForApp(createdUserId, createdAppVersion.getId(), pathParams);
+        assertThat(effectivePermissions)
+                .hasSize(2)
+                .extracting(EffectivePermissionDto::getUriTemplate)
+                .containsOnly(RESTRICTIONS_EFFECTIVE_PERMISSIONS, RESTRICTIONS_ALL_USERS_ENDPOINT);
+
+        //        Get permissions as user - with active role
         roleHelpers.setRoleIsActive(createdRoleId, true);
-
-        Response response = commonHelpers.getEntitiesByUserForApp(createdUserId, createdAppVersion.getId(), EFFECTIVE_PERMISSIONS_PATH,
-                buildQueryParamMapForPaging(null, null, null, null, null, paramsMap))
-                .then()
-                .statusCode(SC_OK)
-                .extract().response();
-        effectivePermissions = stream(response.as(EffectivePermissionDto[].class)).collect(toList());
-
-        assertThat(effectivePermissions.size(), is(1));
-        assertThat(effectivePermissions.get(0).getHttpMethod(), is(GET));
-        assertThat(effectivePermissions.get(0).getUriTemplate(), is(RESTRICTIONS_EFFECTIVE_PERMISSIONS));
+        effectivePermissions = getEffectivePermissionsByUserForApp(createdUserId, createdAppVersion.getId(), pathParams);
+        assertThat(effectivePermissions)
+                .hasSize(1)
+                .extracting(EffectivePermissionDto::getUriTemplate)
+                .containsOnly(RESTRICTIONS_EFFECTIVE_PERMISSIONS);
+        assertThat(effectivePermissions)
+                .extracting(EffectivePermissionDto::getHttpMethod)
+                .containsOnly(GET);
     }
 
+    @Test
+    public void appPermissionMustExistBeforeRolePermission() {
+        testRole1.setApplicationId(restrictedApp.getId());
+        UUID createdRoleId = commonHelpers.entityIsCreated(testRole1);
+        commonHelpers.createEntity(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_ALL_CUSTOMERS_ENDPOINT))
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY);
+        customCodeIs(42203);
+    }
+
+    @Test
+    public void snapshotUserWithInternalAppIgnoreRoles() {
+        setDefaultUserAndApplicationPathParams();
+        effectivePermissions = getEffectivePermissionsByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, pathParams);
+
+        testRole1.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
+        commonHelpers.entityIsCreated(testRole1);
+        List<EffectivePermissionDto> effectivePermissionsAfterRoleIsCreated = getEffectivePermissionsByUserForApp(
+                DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, pathParams
+        );
+        assertThat(effectivePermissionsAfterRoleIsCreated).isEqualTo(effectivePermissions);
+    }
 
     private Response getAllEffectivePermissionsWithParams(Map<String, String> params) {
         return commonHelpers.getEntities(EFFECTIVE_PERMISSIONS_PATH,
@@ -113,5 +152,20 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
                 .then()
                 .statusCode(SC_OK)
                 .extract().response().as(EffectivePermissionDto[].class)).collect(toList());
+    }
+
+    private List<EffectivePermissionDto> getEffectivePermissionsByUserForApp(UUID userId, UUID applicationVersionId, Map<String, String> params) {
+        return commonHelpers.getEntitiesAsTypeByUserForApp(
+                userId,
+                applicationVersionId,
+                EFFECTIVE_PERMISSIONS_PATH,
+                EffectivePermissionDto.class,
+                buildQueryParamMapForPaging(null, null, null, null, null, params)
+        );
+    }
+
+    private void setDefaultUserAndApplicationPathParams(){
+        pathParams.put(USER_ID, DEFAULT_SNAPSHOT_USER_ID.toString());
+        pathParams.put(APP_VERSION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID.toString());
     }
 }
