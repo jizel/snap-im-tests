@@ -42,7 +42,7 @@ public class PartnerTests extends CommonTest{
     private UUID createdUserId;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdPartner1Id = commonHelpers.entityIsCreated(testPartner1);
         testUser1.setType(UserUpdateDto.UserType.PARTNER);

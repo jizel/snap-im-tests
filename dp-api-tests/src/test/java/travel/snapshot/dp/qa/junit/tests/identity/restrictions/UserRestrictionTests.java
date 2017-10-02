@@ -32,7 +32,7 @@ public class UserRestrictionTests extends CommonRestrictionTest{
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdUserId = commonHelpers.entityIsCreated(testUser1);
     }

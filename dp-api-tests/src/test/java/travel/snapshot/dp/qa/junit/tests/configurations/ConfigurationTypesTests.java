@@ -38,7 +38,7 @@ public class ConfigurationTypesTests extends CommonTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         testConfigurationType1 = new ConfigurationTypeDto();
         testConfigurationType1.setIdentifier(CONF1_IDENTIFIER);
         testConfigurationType1.setDescription(CONF1_DESCRIPTION);

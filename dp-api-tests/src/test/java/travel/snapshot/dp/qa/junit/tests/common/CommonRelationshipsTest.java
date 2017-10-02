@@ -83,7 +83,7 @@ public class CommonRelationshipsTest extends CommonTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
     }
 

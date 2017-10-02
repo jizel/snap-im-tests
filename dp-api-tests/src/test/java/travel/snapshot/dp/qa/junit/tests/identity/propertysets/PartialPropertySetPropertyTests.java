@@ -27,7 +27,7 @@ public class PartialPropertySetPropertyTests extends CommonTest {
     private static UUID createdPropertySetId;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         UserCustomerRelationshipPartialDto relation = new UserCustomerRelationshipPartialDto();
         relation.setCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);

@@ -30,7 +30,7 @@ public class CommercialSubscriptionHelpers extends CommercialSubscriptionSteps {
         return getSessionResponse().as(CommercialSubscriptionDto.class).getId();
     }
 
-    public CommercialSubscriptionCreateDto constrcutCommercialSubscriptionDto(UUID applicationId, UUID customerId, UUID propertyId){
+    public static CommercialSubscriptionCreateDto constructCommercialSubscriptionDto(UUID applicationId, UUID customerId, UUID propertyId){
         CommercialSubscriptionCreateDto commercialSubscriptionDto = new CommercialSubscriptionCreateDto();
         commercialSubscriptionDto.setApplicationId(applicationId);
         commercialSubscriptionDto.setCustomerId(customerId);

@@ -34,7 +34,7 @@ public class UserNotificationTest extends CommonTest {
     private Map<String, Object> receivedNotification;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdUserId = commonHelpers.entityIsCreated(testUser1);
         user2 = entitiesLoader.getUserDtos().get("user2");

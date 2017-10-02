@@ -41,7 +41,7 @@ public class ParametersCustomer extends CommonTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
     }
 

@@ -28,7 +28,7 @@ public class ConfigurationRecordNotificationTests extends CommonTest{
     private Map<String, Object> receivedNotification;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         testConfigurationType1 = new ConfigurationTypeDto();
         testConfigurationType1.setIdentifier("NotificationTestConfType");

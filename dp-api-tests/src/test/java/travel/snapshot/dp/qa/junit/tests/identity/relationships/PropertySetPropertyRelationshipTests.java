@@ -29,7 +29,7 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
     private PropertySetPropertyRelationshipCreateDto testPropertySetPropertyRelationship;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
         createdPropertySetId = commonHelpers.entityIsCreated(testPropertySet1);

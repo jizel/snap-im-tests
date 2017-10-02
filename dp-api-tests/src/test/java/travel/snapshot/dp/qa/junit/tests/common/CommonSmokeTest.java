@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests.common;
 
+import static junit.framework.TestCase.fail;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
@@ -46,14 +47,18 @@ public class CommonSmokeTest extends CommonTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // To clean after normal tests we first remove all test entities
         dbStepDefs.defaultEntitiesAreDeleted();
         dbStepDefs.defaultEntitiesAreCreated();
         EntitiesLoader loader = entitiesLoader.getInstance();
         loadDefaultTestEntities();
         Map<String, Object> testClient1 = loader.getClients().get("client1");
-        keycloakHelpers.createClient(testClient1);
+        try {
+            keycloakHelpers.createClient(testClient1);
+        } catch (Exception e) {
+            fail("Exception during client creation: " + e.getMessage());
+        }
         String clientId = (String) testClient1.get("clientId");
         String clientSecret = (String) testClient1.get("secret");
         authorizationHelpers.getToken(DEFAULT_SNAPSHOT_USER_NAME, DEFAULT_PASSWORD, clientId, clientSecret);
@@ -66,7 +71,6 @@ public class CommonSmokeTest extends CommonTest {
         removeCreatedEntities(Serenity.sessionVariableCalled(ENTITIES_TO_DELETE));
         dbStepDefs.defaultEntitiesAreDeleted();
     }
-
 
 
     private void removeCreatedEntities(Map<String, List<UUID>> registry) {

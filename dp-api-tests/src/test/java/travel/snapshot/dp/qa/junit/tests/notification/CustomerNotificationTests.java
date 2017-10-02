@@ -26,7 +26,7 @@ public class CustomerNotificationTests extends CommonTest {
     private UUID createdCustomerId;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         super.setUp();
         createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
     }

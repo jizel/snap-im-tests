@@ -20,6 +20,7 @@ application_versions:
   app_version3: !applicationVersion {
     <<: *BASIC_VERSION,
     id: 04000000-0000-4444-8888-000000000003,
+    applicationId: 03000000-0000-4444-8888-000000000003,
     apiManagerId: d75f360a-b947-4078-b3b0-4c1f793844a3,
     name: version3,
     status: UNDER_REVIEW
