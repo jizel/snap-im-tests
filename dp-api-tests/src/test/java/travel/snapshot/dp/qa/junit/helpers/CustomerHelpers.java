@@ -52,7 +52,7 @@ public class CustomerHelpers extends CustomerSteps {
         } catch (JsonProcessingException e) {
             fail(e.getMessage());
         }
-        Response createResponse = authorizationHelpers.createEntity(CUSTOMERS_PATH, jsonCustomer.toString());
+        Response createResponse = authorizationHelpers.createEntity(jsonCustomer.toString());
         setSessionResponse(createResponse);
     }
 

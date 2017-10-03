@@ -43,21 +43,4 @@ public class UserSmokeTests extends CommonSmokeTest {
         authorizationHelpers.entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationId);
         authorizationHelpers.entityIsDeleted(USERS_PATH, userId);
     }
-
-/*
-// DPIM-41
-    @Test
-    public void assignRoleToUserCustomer() {
-        // Create role
-        UUID roleId = roleHelpers.customerRoleIsCreatedWithAuth(testCustomerRole1);
-        // Assign role to relation
-        UUID relationRoleId = relationshipsHelpers.userCustomerRoleRelationIsCreatedWithAuth(userCustomerRelationId, roleId);
-        // get relation role
-        authorizationHelpers.getEntity(USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH, relationRoleId);
-        responseCodeIs(SC_OK);
-        // update for role relationships is not supported
-        // delete
-        authorizationHelpers.entityIsDeleted(USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH, relationRoleId);
-    }
-*/
 }

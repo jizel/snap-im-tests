@@ -19,6 +19,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.setupRequestDefaults;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -43,6 +44,7 @@ import travel.snapshot.dp.qa.cucumber.helpers.NullStringObjectValueConverter;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.helpers.SalesforceIdStdSerializer;
 import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
+import travel.snapshot.dp.qa.junit.helpers.CommonHelpers;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -138,36 +140,11 @@ public class BasicSteps {
     public static final String USER_PROPERTYSETS = "user_propertysets";
     public static final String ADDRESS_LINE1_PATTERN = "CoreQA";
     public static final String EXAMPLE_NULL = "/null";
-
     protected RequestSpecification spec = null;
 
     public BasicSteps() {
-
-        RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
-                new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> OBJECT_MAPPER));
-
-        RequestSpecBuilder builder = new RequestSpecBuilder();
-
-        String responseLogLevel = PropertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL);
-        String requestLogLevel = PropertiesHelper.getProperty(CONFIGURATION_REQUEST_HTTP_LOG_LEVEL);
-
-        if (isNotBlank(responseLogLevel)) {
-            builder.log(LogDetail.valueOf(requestLogLevel));
-        }
-
-        if (isNotBlank(responseLogLevel)) {
-            RestAssured.replaceFiltersWith(
-                    new ResponseLoggingFilter(
-                            LogDetail.valueOf(responseLogLevel),
-                            true,
-                            System.out,
-                            not(isOneOf(PropertiesHelper.getListOfInt(CONFIGURATION_RESPONSE_HTTP_LOG_STATUS)))));
-        }
-
-        builder.setContentType("application/json; charset=UTF-8");
-        spec = builder.build();
+        spec = setupRequestDefaults();
     }
-
 
     public void setAccessTokenParamFromSession() {
         String token = getSessionVariable(OAUTH_PARAMETER_NAME);

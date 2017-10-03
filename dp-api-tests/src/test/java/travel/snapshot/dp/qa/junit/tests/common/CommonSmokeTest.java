@@ -9,6 +9,9 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_ASSIGNMENTS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_PERMISSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLES_PATH;
@@ -26,6 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 
@@ -45,6 +49,7 @@ import java.util.UUID;
 @Category(Categories.Authorization.class)
 public class CommonSmokeTest extends CommonTest {
 
+    protected static final AuthorizationSteps authorizationSteps = new AuthorizationSteps();
 
     @Before
     public void setUp() {
@@ -61,7 +66,7 @@ public class CommonSmokeTest extends CommonTest {
         }
         String clientId = (String) testClient1.get("clientId");
         String clientSecret = (String) testClient1.get("secret");
-        authorizationHelpers.getToken(DEFAULT_SNAPSHOT_USER_NAME, DEFAULT_PASSWORD, clientId, clientSecret);
+        authorizationSteps.getToken(DEFAULT_SNAPSHOT_USER_NAME, DEFAULT_PASSWORD, clientId, clientSecret);
         Map<String, List<String>> thingsToDelete = new HashMap<>();
         Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(thingsToDelete);
     }
@@ -78,6 +83,7 @@ public class CommonSmokeTest extends CommonTest {
         List<UUID> commercialSubscriptionIds = registry.getOrDefault(COMMERCIAL_SUBSCRIPTIONS_PATH, new ArrayList<UUID>());
         List<UUID> customerRoleIds = registry.getOrDefault(USER_CUSTOMER_ROLES_PATH, new ArrayList<UUID>());
         List<UUID> propertyRoleIds = registry.getOrDefault(USER_PROPERTY_ROLES_PATH, new ArrayList<UUID>());
+        List<UUID> roleIds = registry.getOrDefault(ROLES_PATH, new ArrayList<UUID>());
         List<UUID> userGroupIds = registry.getOrDefault(USER_GROUPS_PATH, new ArrayList<UUID>());
         List<UUID> userPropertySetIds = registry.getOrDefault(USER_PROPERTY_SET_RELATIONSHIPS_PATH, new ArrayList<UUID>());
         List<UUID> userPropertyIds = registry.getOrDefault(USER_PROPERTY_RELATIONSHIPS_PATH, new ArrayList<UUID>());
@@ -90,9 +96,14 @@ public class CommonSmokeTest extends CommonTest {
         List<UUID> userIds = registry.getOrDefault(USERS_PATH, new ArrayList<UUID>());
         List<UUID> applicationIds = registry.getOrDefault(APPLICATIONS_PATH, new ArrayList<UUID>());
         List<UUID> appVersionIds = registry.getOrDefault(APPLICATION_VERSIONS_PATH, new ArrayList<UUID>());
+        List<UUID> roleAssignmentIds = registry.getOrDefault(ROLE_ASSIGNMENTS_PATH, new ArrayList<UUID>());
+        List<UUID> rolePermissionIds = registry.getOrDefault(ROLE_PERMISSIONS_PATH, new ArrayList<UUID>());
 
+        roleAssignmentIds.forEach(dbSteps::deleteRoleAssignment);
+        rolePermissionIds.forEach(dbSteps::deleteRolePermission);
         customerRoleIds.forEach(dbSteps::deleteRole);
-        propertyRoleIds.forEach(dbSteps::deleteRole);
+        customerRoleIds.forEach(dbSteps::deleteRole);
+        roleIds.forEach(dbSteps::deleteRole);
         commercialSubscriptionIds.forEach(dbSteps::deleteCommercialSubscription);
         appVersionIds.forEach(dbSteps::deleteAppVersion);
         applicationIds.forEach(dbSteps::deleteApplication);
