@@ -261,8 +261,11 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_APPLICATION_VERSIONS);
         dbHelper.identityDb().update(DELETE_APPLICATION);
         dbHelper.identityDb().update(DELETE_USER_PROPERTY);
-        dbHelper.ttiDb().update(DELETE_TTI_CROSSREFERENCES);
         dbHelper.identityDb().update(DELETE_PARTNER);
+    }
+
+    public void cleanTtiDatabase() {
+        dbHelper.ttiDb().update(DELETE_TTI_CROSSREFERENCES);
     }
 
 
