@@ -12,6 +12,7 @@ application_versions:
   app_version2: !applicationVersion {
     <<: *BASIC_VERSION,
     id: 04000000-0000-4444-8888-000000000002,
+    applicationId: 03000000-0000-4444-8888-000000000001,
     apiManagerId: d75f360a-b947-4078-b3b0-4c1f793844a2,
     name: version2,
     status: INACTIVE

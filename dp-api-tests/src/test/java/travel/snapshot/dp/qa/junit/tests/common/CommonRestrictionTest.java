@@ -3,6 +3,9 @@ package travel.snapshot.dp.qa.junit.tests.common;
 import static travel.snapshot.dp.api.identity.model.ApplicationVersionStatus.CERTIFIED;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.EFFECTIVE_PERMISSIONS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.constructCommercialSubscriptionDto;
 
 import org.junit.Before;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
@@ -49,7 +52,8 @@ public abstract class CommonRestrictionTest extends CommonTest {
     @Before
     public void setUp() {
         super.setUp();
-        restrictedApp = commonHelpers.entityIsCreatedAs(ApplicationDto.class, testApplication1);
+        restrictedApp = commonHelpers.entityIsCreatedAs(ApplicationDto.class, testApplication3);
+        commonHelpers.entityIsCreated(constructCommercialSubscriptionDto(restrictedApp.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID));
         createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());
     }
 
