@@ -6,7 +6,6 @@ import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 import static travel.snapshot.dp.api.type.HttpMethod.DELETE;
 import static travel.snapshot.dp.api.type.HttpMethod.GET;
 import static travel.snapshot.dp.api.type.HttpMethod.POST;
@@ -112,15 +111,6 @@ public class UserRestrictionTests extends CommonRestrictionTest{
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_USER_CUSTOMERS_ROLES_ENDPOINT, GET);
         userHelpers.listRolesForRelationByUserForApp(createdUserId, createdAppVersion.getId(), createdUserId, CUSTOMERS_RESOURCE, DEFAULT_SNAPSHOT_CUSTOMER_ID);
-        responseCodeIs(SC_OK);
-
-//        Property Set roles
-        UUID createdPropertySetId = commonHelpers.entityIsCreated(testPropertySet1);
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructUserPropertySetRelationshipDto(createdUserId, testPropertySet1.getId(), true));
-        userHelpers.listRolesForRelationByUserForApp(createdUserId, createdAppVersion.getId(), createdUserId, PROPERTY_SETS_RESOURCE, createdPropertySetId);
-        responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_USER_PROPERTY_SETS_ROLES_ENDPOINT, GET);
-        userHelpers.listRolesForRelationByUserForApp(createdUserId, createdAppVersion.getId(), createdUserId, PROPERTY_SETS_RESOURCE, createdPropertySetId);
         responseCodeIs(SC_OK);
     }
 }

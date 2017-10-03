@@ -1,7 +1,7 @@
 package travel.snapshot.dp.qa.junit.tests.identity.restrictions;
 
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
-import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
@@ -65,7 +65,7 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_SINGLE_PROPERTY_ENDPOINT, DELETE);
         commonHelpers.deleteEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH, testProperty1.getId());
-        responseCodeIs(SC_NO_CONTENT);
+        responseCodeIs(SC_CONFLICT);
     }
 
     @Test

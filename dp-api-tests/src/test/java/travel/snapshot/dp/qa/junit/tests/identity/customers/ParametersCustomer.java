@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.helpers.AddressUtils.createRandomAddress;
@@ -15,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
@@ -51,7 +53,7 @@ public class ParametersCustomer extends CommonTest {
     }
 
 
-//    TODO: This test should be rather defined in CustomerCommercialSubscriptionTests class but since it requires JUnit params
+    //    TODO: This test should be rather defined in CustomerCommercialSubscriptionTests class but since it requires JUnit params
     @FileParameters(COMM_SUBSCRIPTIONS_ERROR_EXAMPLES)
     @Test
     public void checkErrorCodesForGettingListOfCustomerCommercialSubscriptionsUsingParams(String limit,
@@ -70,25 +72,28 @@ public class ParametersCustomer extends CommonTest {
 
     @FileParameters(CORRECT_REGION_EXAMPLES)
     @Test
+    @Jira("DPIM-137")
     public void validateCustomerRegionsBelongToCorrectCountry(String country,
                                                               String region,
                                                               String vatId) {
         AddressDto address = createRandomAddress(5, 5, 6, country, region);
         testCustomer1.setAddress(address);
         testCustomer1.setVatId(vatId);
-        customerHelpers.createRandomCustomer(testCustomer1);
-        responseCodeIs(SC_CREATED);
-        bodyContainsEntityWith("vat_id", vatId);
+        commonHelpers.createEntity(testCustomer1)
+                .then()
+                .statusCode(SC_CREATED)
+                .body("vat_id", is(vatId));
     }
 
     @FileParameters(INVALID_VAT_ID_EXAMPLES)
     @Test
-    public void validateCustomerHasInvalidVatId(String country, String vatId) throws Throwable {
+    public void validateCustomerHasInvalidVatId(String country, String vatId) {
         AddressDto address = createRandomAddress(5, 5, 6, country, null);
         testCustomer1.setAddress(address);
         testCustomer1.setVatId(vatId);
-        customerHelpers.createRandomCustomer(testCustomer1);
-        responseCodeIs(SC_UNPROCESSABLE_ENTITY);
+        commonHelpers.createEntity(testCustomer1)
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY);
     }
 
     @FileParameters(VALID_VAT_ID_EXAMPLES)
@@ -97,14 +102,15 @@ public class ParametersCustomer extends CommonTest {
         AddressDto address = createRandomAddress(5, 5, 6, country, null);
         testCustomer1.setAddress(address);
         testCustomer1.setVatId(vatId);
-        customerHelpers.createRandomCustomer(testCustomer1);
-        responseCodeIs(SC_CREATED);
+        commonHelpers.createEntity(testCustomer1)
+                .then()
+                .statusCode(SC_CREATED);
     }
 
     @FileParameters(INVALID_REGIONS_EXAMPLES)
     @Test
     public void checkErrorCodesForRegions(String country, String region) throws Exception {
-        AddressDto address = createRandomAddress(10, 10, 5,country, region);
+        AddressDto address = createRandomAddress(10, 10, 5, country, region);
         testCustomer1.setAddress(address);
         commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer1);
         responseIsReferenceDoesNotExist();
