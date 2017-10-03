@@ -7,8 +7,10 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_PERMISSIONS_PATH;
+import static travel.snapshot.dp.api.type.HttpMethod.GET;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_APPLICATIONS_ENDPOINT;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -27,7 +29,7 @@ public class ApplicationPermissionsCRUD extends CommonTest {
     private ApplicationPermissionCreateDto testApplicationPermission;
     private UUID createdApplicationId;
 
-    private static final UUID TEST_PLATFORM_OPERATION_ID = UUID.fromString("94e20801-4c09-4b8e-ab1c-7b3f6b3cf912");
+    private static final UUID TEST_PLATFORM_OPERATION_ID = dbSteps.getApplicationPermissionId(RESTRICTIONS_APPLICATIONS_ENDPOINT, GET);
 
     @Override
     @Before

@@ -39,6 +39,7 @@ public class UserCustomerRelationshipTests extends CommonTest{
         super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
         createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
+        userHelpers.deleteExistingUserCustomerRelationship(createdUser1.getId());
         testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(createdUser1.getId(),
                 createdCustomerId, true, true);
     }

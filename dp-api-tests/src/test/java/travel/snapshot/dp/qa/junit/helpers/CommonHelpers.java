@@ -7,9 +7,9 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.isOneOf;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_PERMISSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
@@ -104,8 +104,7 @@ public class CommonHelpers {
             USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH,
             USER_GROUP_USER_RELATIONSHIPS_PATH,
             PLATFORM_OPERATIONS_PATH,
-            APPLICATION_PERMISSIONS_PATH,
-            EFFECTIVE_PERMISSIONS_PATH
+            APPLICATION_PERMISSIONS_PATH
     );
 
 

@@ -3,7 +3,6 @@ package travel.snapshot.dp.qa.junit.helpers;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -84,6 +83,13 @@ public class UserHelpers extends UsersSteps {
     public void getPartnersForUserByUserForApp(UUID userId, UUID requestorId, UUID appVersionId) {
         Response response = getSecondLevelEntitiesByUserForApp(requestorId, appVersionId, userId, PARTNERS_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
+    }
+
+    public void deleteExistingUserCustomerRelationship(UUID userId) {
+        UUID existingRelationshipId = commonHelpers.getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class,
+                buildQueryParamMapForPaging(null, null, "user_id==" + userId.toString(), null, null, null))
+                .get(0).getId();
+        commonHelpers.entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, existingRelationshipId);
     }
 
 }

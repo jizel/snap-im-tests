@@ -273,8 +273,12 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(POPULATE_APPLICATION_PERMISSION, applicationId);
     }
 
+    public UUID getApplicationPermissionId(String endpoint, HttpMethod method){
+        return dbHelper.identityDb().queryForObject(SELECT_PERMISSION_ID, UUID.class, endpoint, method.toString());
+    }
+
     public void addApplicationPermission(UUID applicationId, String endpoint, HttpMethod method) {
-        UUID permissionId = dbHelper.identityDb().queryForObject(SELECT_PERMISSION_ID, UUID.class, endpoint, method.toString());
+        UUID permissionId = getApplicationPermissionId(endpoint, method);
         dbHelper.identityDb().update(ADD_APPLICATION_PERMISSION, randomUUID(), applicationId, permissionId);
     }
 

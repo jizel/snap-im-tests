@@ -4,20 +4,16 @@ import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_SALESFORCE_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.constructCommercialSubscriptionDto;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
 
 import org.junit.Before;
 import org.junit.Test;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
@@ -100,9 +96,7 @@ public class AttributesHidingTests extends CommonTest {
      * or the user/app version pair will not see any data.
      */
     private void setUserCustomerRights(UUID userId, UUID customerId) {
-        UUID existingRelationshipId = commonHelpers.getEntitiesAsTypeByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
-                USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, emptyQueryParams()).get(0).getId();
-        commonHelpers.entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, existingRelationshipId);
+        userHelpers.deleteExistingUserCustomerRelationship(userId);
         commonHelpers.entityIsCreated(relationshipsHelpers.constructUserCustomerRelationshipDto(
                 userId, customerId, true, true));
         commonHelpers.entityIsCreated(constructCommercialSubscriptionDto(externalApplicationId, customerId, DEFAULT_PROPERTY_ID));

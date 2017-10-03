@@ -58,8 +58,9 @@ public class CustomerCodeTests extends CommonTest{
 
     @Test
     @FileParameters(EXAMPLES + "correctGeneratedCustomerCodeTestExamples.csv")
-    public void correctCustomerCodeIsReturnedBasedOnAddress(String name, String line1, String city, String zipCode, String countryCode, String resultCode) throws Exception {
+    public void correctCustomerCodeIsReturnedBasedOnAddress(String name, String line1, String city, String zipCode, String countryCode, String region, String resultCode) {
         AddressDto address = commonHelpers.constructAddressDto(line1, city, zipCode, countryCode);
+        address.setRegionCode(transformNull(region));
         testCustomer1.setName(name);
         testCustomer1.setVatId(null);
         testCustomer1.setAddress(address);
