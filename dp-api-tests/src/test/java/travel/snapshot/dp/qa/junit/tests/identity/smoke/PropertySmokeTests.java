@@ -30,7 +30,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
     public void propertyCRUD() {
         // create
         testProperty1.setIsActive(false);
-        UUID propertyId = authorizationHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
+        UUID propertyId = authorizationHelpers.entityIsCreated(testProperty1);
         // request
         authorizationHelpers.getEntity(PROPERTIES_PATH, propertyId);
         responseCodeIs(SC_OK);
@@ -55,10 +55,10 @@ public class PropertySmokeTests extends CommonSmokeTest {
     @Test
     public void propertyPropertySetCRUD() {
         // create PS
-        UUID propertySetId = authorizationHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
+        UUID propertySetId = authorizationHelpers.entityIsCreated(testPropertySet1);
         // create propertyset-property relation
         PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers.constructPropertySetPropertyRelationship(propertySetId, DEFAULT_PROPERTY_ID, true);
-        UUID relationId = authorizationHelpers.entityIsCreated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relation);
+        UUID relationId = authorizationHelpers.entityIsCreated(relation);
         // request
         authorizationHelpers.getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);
@@ -79,7 +79,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
         UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         // create property-user relation
         UserPropertyRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
-        UUID relationId = authorizationHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, relation);
+        UUID relationId = authorizationHelpers.entityIsCreated(relation);
         // request
         authorizationHelpers.getEntity(USER_PROPERTY_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);

@@ -23,7 +23,7 @@ public class PropertySetSmokeTests extends CommonSmokeTest {
     @Test
     public void propertySetCRUD() {
         // create
-        UUID propertySetId = authorizationHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
+        UUID propertySetId = authorizationHelpers.entityIsCreated(testPropertySet1);
         // request
         authorizationHelpers.getEntity(PROPERTY_SETS_PATH, propertySetId);
         responseCodeIs(SC_OK);
@@ -50,10 +50,10 @@ public class PropertySetSmokeTests extends CommonSmokeTest {
         // create user
         UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         // create PS
-        UUID propertySetId = authorizationHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
+        UUID propertySetId = authorizationHelpers.entityIsCreated(testPropertySet1);
         // create relation
         UserPropertySetRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertySetRelationshipDto(userId, propertySetId, true);
-        UUID relationId = authorizationHelpers.entityIsCreated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relation);
+        UUID relationId = authorizationHelpers.entityIsCreated(relation);
         // request
         authorizationHelpers.getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);

@@ -110,6 +110,10 @@ public class CommonHelpers {
      * tests are gone and should not inherit from it. However some functionality is similar.
      */
     public CommonHelpers() {
+        spec = setupRequestDefaults();
+    }
+
+    public static RequestSpecification setupRequestDefaults() {
         RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
                 new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> OBJECT_MAPPER));
 
@@ -130,7 +134,7 @@ public class CommonHelpers {
                             not(isOneOf(PropertiesHelper.getListOfInt(CONFIGURATION_RESPONSE_HTTP_LOG_STATUS)))));
         }
 
-        spec = builder.build().baseUri(getBaseUriForModule("identity")).contentType("application/json; charset=UTF-8");
+        return builder.build().baseUri(getBaseUriForModule("identity")).contentType("application/json; charset=UTF-8");
     }
 
     public static <DTO> List<DTO> parseResponseAsListOfObjects(Class<DTO> clazz) {
@@ -439,7 +443,7 @@ public class CommonHelpers {
         return response.as(endpointDtoMap.get(basePath));
     }
 
-    private static <DTO> String getCreateBasePath(DTO entity) {
+    public static <DTO> String getCreateBasePath(DTO entity) {
         assertThat("There is no key " + entity.getClass() + " in entityCreateDtoEndpointMap. Are you sure it is a createDto? If so then it should probably be added.",
                 entityCreateDtoEndpointMap.containsKey(entity.getClass()), is(true));
 

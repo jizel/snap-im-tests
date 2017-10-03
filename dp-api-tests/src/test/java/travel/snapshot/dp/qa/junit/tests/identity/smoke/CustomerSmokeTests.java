@@ -43,7 +43,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         ArrayList<UUID> customerIds = new ArrayList<UUID>();
         //create
         customerDtos.values().forEach(customer -> {
-            customerIds.add(authorizationHelpers.entityIsCreated(CUSTOMERS_PATH, customer));
+            customerIds.add(authorizationHelpers.entityIsCreated(customer));
             responseCodeIs(SC_CREATED);
             bodyContainsEntityWith("name");
         });
@@ -71,7 +71,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
                 CHAIN,
                 LocalDate.parse("2015-01-01"),
                 LocalDate.parse("2020-01-01"));
-        UUID relationId = authorizationHelpers.entityIsCreated(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relation);
+        UUID relationId = authorizationHelpers.entityIsCreated(relation);
 
         // get
         authorizationHelpers.getEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId);
@@ -92,14 +92,14 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         // create a user
         UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         // create a customer
-        UUID customerId = authorizationHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        UUID customerId = authorizationHelpers.entityIsCreated(testCustomer1);
         // create relation
         UserCustomerRelationshipCreateDto relation = relationshipsHelpers.constructUserCustomerRelationshipDto(
                 userId,
                 customerId,
                 true,
                 false);
-        UUID relationId = authorizationHelpers.entityIsCreated(USER_CUSTOMER_RELATIONSHIPS_PATH, relation);
+        UUID relationId = authorizationHelpers.entityIsCreated(relation);
         // get relation
         authorizationHelpers.getEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);

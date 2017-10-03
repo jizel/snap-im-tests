@@ -47,6 +47,8 @@ public class DbUtilsSteps {
     static final String DELETE_SINGLE_USER_PROPERTY = "delete from user_property where id = '%s';";
     static final String DELETE_SINGLE_USER_PROPERTYSET = "delete from user_propertyset where id = '%s';";
     static final String DELETE_SINGLE_ROLE = "delete from Role where id = '%s';";
+    static final String DELETE_SINGLE_ROLE_ASSIGNMENT = "delete from roleassignment where id = '%s';";
+    static final String DELETE_SINGLE_ROLE_PERMISSION = "delete from rolepermission where id = '%s';";
 
 
     static final String DELETE_CUSTOMER_PROPERTY = "delete  from Customer_Property";
@@ -169,11 +171,20 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_ROLE, id));
     }
 
+    public void deleteRoleAssignment(UUID id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_ROLE_ASSIGNMENT, id));
+    }
+
+    public void deleteRolePermission(UUID id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_ROLE_PERMISSION, id));
+    }
+
     public void deleteAddress() {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_ADDRESS, ADDRESS_LINE1_PATTERN));
     }
 
     public void deleteApplication(UUID id) {
+        dbHelper.identityDb().update(String.format(REVOKE_APP_PERMISSIONS, id));
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_APPLICATION, id));
     }
 

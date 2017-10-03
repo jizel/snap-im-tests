@@ -6,26 +6,34 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_AUTHORIZATION;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_ETAG;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_IF_MATCH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SESSION_TOKEN;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENTITIES_TO_DELETE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getCreateBasePath;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.setupRequestDefaults;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class AuthorizationHelpers extends AuthorizationSteps {
+public class AuthorizationHelpers {
 
     private final CommonHelpers commonHelpers = new CommonHelpers();
+    protected RequestSpecification spec = null;
 
     public AuthorizationHelpers() {
-        super();
+        spec = setupRequestDefaults();
     }
 
     public void updateRegistryOfDeletables(String basePath, UUID id) {
@@ -63,7 +71,8 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         return parseResponseAsListOfObjects(clazz);
     }
 
-    public Response createEntity(String basePath, Object entity) {
+    public <CDTO> Response createEntity(CDTO entity) {
+        String basePath = getCreateBasePath(entity);
         RequestSpecification specification = constructRequestSpecification(basePath, null);
         Response response = specification
                 .body(entity)
@@ -73,12 +82,13 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         return response;
     }
 
-    public UUID entityIsCreated(String basePath, Object entity) {
-        Response response = createEntity(basePath, entity);
-        responseCodeIs(SC_CREATED);
+    public <DTO> UUID entityIsCreated(DTO entity) {
+        String basePath = getCreateBasePath(entity);
+        createEntity(entity)
+            .then().statusCode(SC_CREATED);
         UUID result = null;
         try {
-            result = commonHelpers.getDtoFromResponse(response, basePath).getId();
+            result = commonHelpers.getDtoFromResponse(getSessionResponse(), basePath).getId();
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -88,11 +98,12 @@ public class AuthorizationHelpers extends AuthorizationSteps {
 
 
     public void entityIsUpdated(String basePath, UUID entityId, Object data) {
-        updateEntity(basePath, entityId, data);
-        responseCodeIs(SC_NO_CONTENT);
+        updateEntity(basePath, entityId, data)
+                .then()
+                .statusCode(SC_NO_CONTENT);
     }
 
-    public void updateEntity(String basePath, UUID entityId, Object data) {
+    public Response updateEntity(String basePath, UUID entityId, Object data) {
         String etag = getEntityEtag(basePath, entityId);
         RequestSpecification specification = constructRequestSpecification(basePath, etag);
         Response response = specification
@@ -100,6 +111,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
                 .when()
                 .post("/{id}", entityId);
         setSessionResponse(response);
+        return response;
     }
 
     public Response deleteEntity(String basePath, UUID entityId) {
@@ -113,11 +125,13 @@ public class AuthorizationHelpers extends AuthorizationSteps {
 
     public void entityIsDeleted(String basePath, UUID entityId) {
         // delete entity
-        deleteEntity(basePath, entityId);
-        responseCodeIs(SC_NO_CONTENT);
+        deleteEntity(basePath, entityId)
+                .then()
+                .statusCode(SC_NO_CONTENT);
         // verify it's not there
-        getEntity(basePath, entityId);
-        responseCodeIs(SC_NOT_FOUND);
+        getEntity(basePath, entityId)
+                .then()
+                .statusCode(SC_NOT_FOUND);
     }
 
     public String getEntityEtag(String basePath, UUID entityId) {
@@ -144,31 +158,6 @@ public class AuthorizationHelpers extends AuthorizationSteps {
                 .post("/" + firstLevelId + "/" + secondLevelName);
         setSessionResponse(response);
         return response;
-    }
-
-    public void createThirdLevelRelation(String basePath, UUID firstLevelId, String secondLevelName, UUID secondLevelId, String thirdLevelName, Object jsonBody) {
-        RequestSpecification specification = constructRequestSpecification(basePath, null);
-        Response response = specification
-                .body(jsonBody)
-                .post("/" + firstLevelId + "/" + secondLevelName + "/" + secondLevelId + "/" + thirdLevelName);
-        setSessionResponse(response);
-    }
-
-    public void thirdLevelRelationIsCreated(String basePath, UUID firstLevelId, String secondLevelName, UUID secondLevelId, String thirdLevelName, Object jsonBody) {
-        createThirdLevelRelation(basePath, firstLevelId, secondLevelName, secondLevelId, thirdLevelName, jsonBody);
-        responseCodeIs(SC_CREATED);
-    }
-
-    public void deleteThirdLevelRelation(String basePath, UUID firstLevelId, String secondLevelName, UUID secondLevelId, String thirdLevelName, UUID thirdLevelId) {
-        RequestSpecification specification = constructRequestSpecification(basePath, null);
-        Response response = specification
-                .delete("/" + firstLevelId + "/" + secondLevelName + "/" + secondLevelId + "/" + thirdLevelName + "/" + thirdLevelId);
-        setSessionResponse(response);
-    }
-
-    public void thirdLevelRelationIsDeleted(String basePath, UUID firstLevelId, String secondLevelName, UUID secondLevelId, String thirdLevelName, UUID thirdLevelId) {
-        deleteThirdLevelRelation(basePath, firstLevelId, secondLevelName, secondLevelId, thirdLevelName, thirdLevelId);
-        responseCodeIs(SC_NO_CONTENT);
     }
 
     public String getSecondLevelEntityEtag(String basePath, UUID firstLevelId, String secondLevelObjectName, UUID secondLevelId) {
