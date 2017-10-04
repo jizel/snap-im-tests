@@ -16,6 +16,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICA
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.EFFECTIVE_PERMISSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PLATFORM_OPERATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
@@ -69,6 +70,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -104,8 +106,19 @@ public class CommonHelpers {
             USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH,
             USER_GROUP_USER_RELATIONSHIPS_PATH,
             PLATFORM_OPERATIONS_PATH,
-            APPLICATION_PERMISSIONS_PATH
+            APPLICATION_PERMISSIONS_PATH,
+            EFFECTIVE_PERMISSIONS_PATH
     );
+
+    public static final List<String> READONLY_ENDPOINTS = asList(
+            EFFECTIVE_PERMISSIONS_PATH
+    );
+
+    public List<String> readWriteEndpoints() {
+        List<String> endpoints = new ArrayList<>(ALL_ENDPOINTS);
+        endpoints.removeAll(READONLY_ENDPOINTS);
+        return endpoints;
+    }
 
 
     /**
