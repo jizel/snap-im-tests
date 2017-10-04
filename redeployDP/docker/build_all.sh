@@ -29,6 +29,6 @@ docker build --force-rm=true -t snapshot/nonpms_integrations nonpms_integrations
 tag_image snapshot/nonpms_integrations latest
 tag_image snapshot/nonpms_integrations 1.37
 
-# docker build --force-rm=true -t snapshot/dataplatform_builder builder
-# tag_image snapshot/dataplatform_builder latest
-# tag_image snapshot/dataplatform_builder 1.37
+docker build --force-rm=true -t snapshot/dataplatform_builder builder
+tag_image snapshot/dataplatform_builder latest
+tag_image snapshot/dataplatform_builder 1.37
