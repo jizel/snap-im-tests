@@ -13,13 +13,12 @@ import java.util.Properties;
  * Created by sedlacek on 9/30/2015.
  */
 public class PropertiesHelper {
+    public Properties properties = null;
 
-    private static boolean initializedFromFile = false;
-
-    public static String getProperty(String key) {
+    public PropertiesHelper() {
         String apiTestsConfigProperty = System.getProperty("api-tests-config");
 
-        Properties props = new Properties();
+        properties = new Properties();
         InputStream stream = null;
         if (StringUtils.isNotEmpty(apiTestsConfigProperty)) {
             try {
@@ -35,15 +34,18 @@ public class PropertiesHelper {
         }
 
         try {
-            props.load(stream);
+            properties.load(stream);
         } catch (IOException e) {
 
             e.printStackTrace();
         }
-        return props.getProperty(key);
     }
 
-    public static Integer[] getListOfInt(String key) {
+    public String getProperty(String key) {
+        return properties.getProperty(key);
+    }
+
+    public Integer[] getListOfInt(String key) {
         String arrayString = getProperty(key);
 
         return Arrays.stream(arrayString.split(",")).filter(s -> s != null && !"".equals(s)).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);

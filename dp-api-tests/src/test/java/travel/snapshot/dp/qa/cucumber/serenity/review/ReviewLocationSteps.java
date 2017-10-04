@@ -7,7 +7,6 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import travel.snapshot.dp.api.review.model.LocationDto;
 import travel.snapshot.dp.api.review.model.LocationPropertyDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.analytics.AnalyticsBaseSteps;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
     private static final String BASE_PATH_LOCATIONS = "/review/locations";
 
     public ReviewLocationSteps() {
-        spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(REVIEW_BASE_URI));
         spec.basePath(BASE_PATH_LOCATIONS);
     }
 

@@ -8,7 +8,6 @@ import net.thucydides.core.annotations.Step;
 import java.util.HashMap;
 import java.util.Map;
 
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -23,7 +22,7 @@ public class OAuthSteps extends BasicSteps {
 
     public OAuthSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
         spec.basePath(BASE_PATH__OAUTH);
     }
 

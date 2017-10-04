@@ -17,7 +17,6 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PartnerUpdateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.util.List;
@@ -31,7 +30,7 @@ public class PartnerSteps extends BasicSteps {
 
     public PartnerSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
         spec.basePath(PARTNERS_PATH);
     }
 

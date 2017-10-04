@@ -20,7 +20,6 @@ import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleCreateBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.helpers.RoleType;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
@@ -41,7 +40,7 @@ public class RoleBaseSteps extends BasicSteps {
 
     public RoleBaseSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
     }
 
     public void setRolesPathCustomer() {

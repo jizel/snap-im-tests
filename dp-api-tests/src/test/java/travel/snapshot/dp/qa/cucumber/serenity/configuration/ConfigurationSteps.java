@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
 import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
+
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class ConfigurationSteps extends BasicSteps {
     private static final String RECORDS_RESOURCE = "records";
 
     public ConfigurationSteps() {
-        spec.baseUri(PropertiesHelper.getProperty(CONFIGURATION_BASE_URI)).basePath(CONFIGURATION_BASE_PATH);
+        spec.baseUri(propertiesHelper.getProperty(CONFIGURATION_BASE_URI)).basePath(CONFIGURATION_BASE_PATH);
     }
 
     private ConfigurationTypeDto getConfigurationTypeFromString(String jsonData) {

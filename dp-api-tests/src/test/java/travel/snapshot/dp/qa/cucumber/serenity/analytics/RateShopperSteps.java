@@ -8,7 +8,7 @@ import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
+
 import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
 
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ public class RateShopperSteps extends AnalyticsBaseSteps {
 
     public RateShopperSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(RATE_SHOPPER_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(RATE_SHOPPER_BASE_URI));
     }
 
     public void emptyGetRequest(String url) {

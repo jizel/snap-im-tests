@@ -16,7 +16,6 @@ import travel.snapshot.dp.api.analytics.model.SingleStatsDto;
 import travel.snapshot.dp.api.webperformance.model.PeriodAverageStatsDto;
 import travel.snapshot.dp.api.webperformance.model.ReferralStatsDto;
 import travel.snapshot.dp.qa.cucumber.helpers.LegacyReferralStatsDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
 
 import java.time.LocalDate;
@@ -34,7 +33,7 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
 
     public WebPerformanceSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(WEB_PERFORMANCE_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(WEB_PERFORMANCE_BASE_URI));
     }
 
     // GET Requests

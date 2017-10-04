@@ -78,6 +78,7 @@ public class CommonHelpers {
 
     protected RequestSpecification spec;
     private BasicSteps basicSteps = new BasicSteps();
+    protected static PropertiesHelper propertiesHelper = new PropertiesHelper();
 
     public static final String ENTITIES_TO_DELETE = "deleteThese";
 
@@ -121,8 +122,8 @@ public class CommonHelpers {
                 new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> OBJECT_MAPPER));
 
         RequestSpecBuilder builder = new RequestSpecBuilder();
-        String responseLogLevel = PropertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL);
-        String requestLogLevel = PropertiesHelper.getProperty(CONFIGURATION_REQUEST_HTTP_LOG_LEVEL);
+        String responseLogLevel = propertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL);
+        String requestLogLevel = propertiesHelper.getProperty(CONFIGURATION_REQUEST_HTTP_LOG_LEVEL);
 
         if (isNotBlank(responseLogLevel)) {
             builder.log(LogDetail.valueOf(requestLogLevel));
@@ -134,7 +135,7 @@ public class CommonHelpers {
                             LogDetail.valueOf(responseLogLevel),
                             true,
                             System.out,
-                            not(isOneOf(PropertiesHelper.getListOfInt(CONFIGURATION_RESPONSE_HTTP_LOG_STATUS)))));
+                            not(isOneOf(propertiesHelper.getListOfInt(CONFIGURATION_RESPONSE_HTTP_LOG_STATUS)))));
         }
 
         return builder.build().baseUri(getBaseUriForModule("identity")).contentType("application/json; charset=UTF-8");

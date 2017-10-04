@@ -24,7 +24,6 @@ import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipPar
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipUpdateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
@@ -41,7 +40,7 @@ public class UserGroupsSteps extends BasicSteps {
 
     public UserGroupsSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
         spec.basePath(USER_GROUPS_PATH);
     }
 

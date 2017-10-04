@@ -33,7 +33,6 @@ import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.io.IOException;
@@ -59,7 +58,7 @@ public class PropertySteps extends BasicSteps {
 
     public PropertySteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath(BASE_PATH__PROPERTIES);
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath(BASE_PATH__PROPERTIES);
     }
 
     public void followingPropertiesExist(List<PropertyDto> properties, UUID userId) throws IOException {

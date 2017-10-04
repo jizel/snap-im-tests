@@ -36,7 +36,7 @@ import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
+
 import travel.snapshot.dp.qa.cucumber.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
@@ -65,7 +65,7 @@ public class CustomerSteps extends BasicSteps {
 
     public CustomerSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
         spec.basePath(CUSTOMERS_PATH);
     }
 

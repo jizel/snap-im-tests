@@ -17,7 +17,6 @@ import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
-import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.setupRequestDefaults;
 
@@ -25,12 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.config.ObjectMapperConfig;
-import com.jayway.restassured.config.RestAssuredConfig;
-import com.jayway.restassured.filter.log.LogDetail;
-import com.jayway.restassured.filter.log.ResponseLoggingFilter;
+
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -44,7 +38,6 @@ import travel.snapshot.dp.qa.cucumber.helpers.NullStringObjectValueConverter;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.helpers.SalesforceIdStdSerializer;
 import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
-import travel.snapshot.dp.qa.junit.helpers.CommonHelpers;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -141,6 +134,7 @@ public class BasicSteps {
     public static final String ADDRESS_LINE1_PATTERN = "CoreQA";
     public static final String EXAMPLE_NULL = "/null";
     protected RequestSpecification spec = null;
+    protected static PropertiesHelper propertiesHelper = new PropertiesHelper();
 
     public BasicSteps() {
         spec = setupRequestDefaults();
@@ -251,43 +245,43 @@ public class BasicSteps {
         String baseUri = "";
         switch (module) {
             case "identity": {
-                baseUri = PropertiesHelper.getProperty(IDENTITY_BASE_URI);
+                baseUri = propertiesHelper.getProperty(IDENTITY_BASE_URI);
                 break;
             }
             case "configurations": {
-                baseUri = (PropertiesHelper.getProperty(CONFIGURATION_BASE_URI));
+                baseUri = (propertiesHelper.getProperty(CONFIGURATION_BASE_URI));
                 break;
             }
             case "social_media": {
-                baseUri = (PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
+                baseUri = (propertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
                 break;
             }
             case "facebook": {
-                baseUri = (PropertiesHelper.getProperty(FACEBOOK_BASE_URI));
+                baseUri = (propertiesHelper.getProperty(FACEBOOK_BASE_URI));
                 break;
             }
             case "instagram": {
-                baseUri = (PropertiesHelper.getProperty(INSTAGRAM_BASE_URI));
+                baseUri = (propertiesHelper.getProperty(INSTAGRAM_BASE_URI));
                 break;
             }
             case "twitter": {
-                baseUri = (PropertiesHelper.getProperty(TWITTER_BASE_URI));
+                baseUri = (propertiesHelper.getProperty(TWITTER_BASE_URI));
                 break;
             }
             case "rate_shopper": {
-                baseUri = (PropertiesHelper.getProperty(RATE_SHOPPER_BASE_URI));
+                baseUri = (propertiesHelper.getProperty(RATE_SHOPPER_BASE_URI));
                 break;
             }
             case "web_performance": {
-                baseUri = (PropertiesHelper.getProperty(WEB_PERFORMANCE_BASE_URI));
+                baseUri = (propertiesHelper.getProperty(WEB_PERFORMANCE_BASE_URI));
                 break;
             }
             case "review": {
-                baseUri = (PropertiesHelper.getProperty(REVIEW_BASE_URI));
+                baseUri = (propertiesHelper.getProperty(REVIEW_BASE_URI));
                 break;
             }
             case "authorization": {
-                baseUri = (PropertiesHelper.getProperty(AUTHORIZATION_BASE_URI));
+                baseUri = (propertiesHelper.getProperty(AUTHORIZATION_BASE_URI));
                 break;
             }
             default:
