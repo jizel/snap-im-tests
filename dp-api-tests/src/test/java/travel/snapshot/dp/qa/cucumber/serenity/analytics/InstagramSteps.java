@@ -12,7 +12,7 @@ import travel.snapshot.dp.api.analytics.model.MetricDto;
 import travel.snapshot.dp.api.analytics.model.MetricName;
 import travel.snapshot.dp.api.analytics.model.RecordDto;
 import travel.snapshot.dp.qa.cucumber.helpers.MetricNameDeserializer;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class InstagramSteps extends AnalyticsBaseSteps {
 
 
     public InstagramSteps() {
-        spec.baseUri(PropertiesHelper.getProperty(INSTAGRAM_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(INSTAGRAM_BASE_URI));
     }
 
 

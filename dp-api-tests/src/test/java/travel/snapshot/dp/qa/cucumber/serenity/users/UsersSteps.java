@@ -44,7 +44,7 @@ public class UsersSteps extends BasicSteps {
 
     public UsersSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
         spec.basePath(USERS_PATH);
     }
 

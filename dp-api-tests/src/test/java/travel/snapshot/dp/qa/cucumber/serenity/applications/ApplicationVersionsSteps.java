@@ -12,7 +12,6 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionUpdateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class ApplicationVersionsSteps extends BasicSteps {
 
     public ApplicationVersionsSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
         spec.basePath(APPLICATIONS_VERSIONS_PATH);
     }
 

@@ -2,7 +2,6 @@ package travel.snapshot.dp.qa.cucumber.serenity.review;
 
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +13,7 @@ public class ReviewTravelersSteps extends ReviewSteps {
     private static final String BASE_PATH_LOCATIONS = "/review/analytics/";
 
     public ReviewTravelersSteps() {
-        spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(REVIEW_BASE_URI));
         spec.basePath(BASE_PATH_LOCATIONS);
     }
 

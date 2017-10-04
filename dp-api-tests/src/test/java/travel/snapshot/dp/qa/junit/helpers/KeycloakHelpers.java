@@ -6,7 +6,6 @@ import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.junit.Assert.*;
-import static travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper.getProperty;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.KEYCLOAK_TOKEN;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
@@ -16,6 +15,7 @@ import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import org.codehaus.jackson.map.ObjectMapper;
+import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 
 /**
  * Created by ofayans on 7/23/17.
@@ -23,11 +23,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 public class KeycloakHelpers {
 
     protected RequestSpecification spec = null;
+    protected static PropertiesHelper propertiesHelper = new PropertiesHelper();
 
     public KeycloakHelpers() {
         RequestSpecBuilder builder = new RequestSpecBuilder();
         builder.setContentType("application/json; charset=UTF-8");
-        builder.setBaseUri(getProperty("keyCloakURI"));
+        builder.setBaseUri(propertiesHelper.getProperty("keyCloakURI"));
         spec = builder.build();
         spec.log().all();
         spec.relaxedHTTPSValidation();
@@ -59,8 +60,8 @@ public class KeycloakHelpers {
         String token = given().spec(spec)
                 .contentType("application/x-www-form-urlencoded")
                 .parameter("client_id", "admin-cli")
-                .parameter("username", getProperty("keyCloakUsername"))
-                .parameter("password", getProperty("keyCloakPassword"))
+                .parameter("username", propertiesHelper.getProperty("keyCloakUsername"))
+                .parameter("password", propertiesHelper.getProperty("keyCloakPassword"))
                 .parameter("grant_type", "password")
                 .when().post("/realms/master/protocol/openid-connect/token")
                 .path("access_token");

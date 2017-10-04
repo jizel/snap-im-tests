@@ -7,7 +7,7 @@ import net.thucydides.core.annotations.Step;
 import java.util.HashMap;
 import java.util.List;
 
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
+
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,7 +18,7 @@ public class TwitterSteps extends AnalyticsBaseSteps {
 
     public TwitterSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(TWITTER_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(TWITTER_BASE_URI));
     }
 
     @Step

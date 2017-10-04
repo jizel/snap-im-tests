@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.cucumber.helpers.FieldType;
 import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
+
 import travel.snapshot.dp.qa.cucumber.helpers.ResponseEntry;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class CommonObjectSteps extends BasicSteps {
 
     public CommonObjectSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
         factory = new JsonNodeFactory(false);
 
     }

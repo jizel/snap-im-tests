@@ -25,7 +25,6 @@ import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.util.Iterator;
@@ -38,16 +37,14 @@ import java.util.UUID;
  */
 public class PropertySetSteps extends BasicSteps {
 
-    private static final String SERENITY_SESSION__PROPERTY_SETS = "property_sets";
     private static final String SERENITY_SESSION__CREATED_PROPERTY_SET = "created_property_set";
     private static final String SERENITY_SESSION__PROPERTY_SET_ID = "property_set_id";
-    private static final String PROPERTY_ID_KEY = "property_id";
 
     private static final String BASE_PATH__PROPERTY_SETS = "/property_sets";
 
     public PropertySetSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
         spec.basePath(BASE_PATH__PROPERTY_SETS);
     }
 

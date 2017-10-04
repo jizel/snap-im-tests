@@ -10,7 +10,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
+
 import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
 
 import java.time.DayOfWeek;
@@ -28,14 +28,14 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
 
     public SocialMediaSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
     }
 
     @Step
     public void verifySumOfMetricFromSocialMedia(String metric, String granularity, String property, String since, String until) {
         RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
         List<Integer> facebookValues = requestSpecification
-                .baseUri(PropertiesHelper.getProperty(FACEBOOK_BASE_URI))
+                .baseUri(propertiesHelper.getProperty(FACEBOOK_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
                 .param("since", since)
@@ -44,7 +44,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         int facebookSum = facebookValues.stream().mapToInt(i -> i).sum();
 
         List<Integer> twitterValues = requestSpecification
-                .baseUri(PropertiesHelper.getProperty(TWITTER_BASE_URI))
+                .baseUri(propertiesHelper.getProperty(TWITTER_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
                 .param("since", since)
@@ -53,7 +53,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         int twitterSum = twitterValues.stream().mapToInt(i -> i).sum();
 
         List<Integer> instagramValues = requestSpecification
-                .baseUri(PropertiesHelper.getProperty(INSTAGRAM_BASE_URI))
+                .baseUri(propertiesHelper.getProperty(INSTAGRAM_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
                 .param("since", since)
@@ -62,7 +62,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         int instagramSum = instagramValues.stream().mapToInt(i -> i).sum();
 
         List<Integer> totalValues = requestSpecification
-                .baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI))
+                .baseUri(propertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
                 .param("since", since)

@@ -31,6 +31,7 @@ public class AuthorizationHelpers {
 
     private final CommonHelpers commonHelpers = new CommonHelpers();
     protected RequestSpecification spec = null;
+    protected static PropertiesHelper propertiesHelper = new PropertiesHelper();
 
     public AuthorizationHelpers() {
         spec = setupRequestDefaults();
@@ -49,7 +50,7 @@ public class AuthorizationHelpers {
     }
 
     private RequestSpecification constructRequestSpecification(String basePath, String etag) {
-        spec.baseUri(PropertiesHelper.getProperty("identity_nginx.baseURI"));
+        spec.baseUri(propertiesHelper.getProperty("identity_nginx.baseURI"));
         spec.basePath(basePath);
         RequestSpecification specification = given().spec(spec);
         specification = specification

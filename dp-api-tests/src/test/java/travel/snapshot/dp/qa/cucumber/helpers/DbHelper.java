@@ -1,6 +1,5 @@
 package travel.snapshot.dp.qa.cucumber.helpers;
 
-import static travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper.getProperty;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -22,13 +21,14 @@ public class DbHelper {
 
     private final JdbcTemplate identityDb;
     private final JdbcTemplate ttiDb;
+    private static PropertiesHelper propertiesHelper = new PropertiesHelper();
 
     public DbHelper() {
-        identityDb = new JdbcTemplate(createDataSource(getProperty("identity.db.connectionString"),
-                getProperty(DB_USERNAME), getProperty(DB_PASSWORD)));
+        identityDb = new JdbcTemplate(createDataSource(propertiesHelper.getProperty("identity.db.connectionString"),
+                propertiesHelper.getProperty(DB_USERNAME), propertiesHelper.getProperty(DB_PASSWORD)));
 
-        ttiDb = new JdbcTemplate(createDataSource(getProperty("tti.db.connectionString"),
-                getProperty(TTI_DB_USERNAME), getProperty(TTI_DB_PASSWORD)));
+        ttiDb = new JdbcTemplate(createDataSource(propertiesHelper.getProperty("tti.db.connectionString"),
+                propertiesHelper.getProperty(TTI_DB_USERNAME), propertiesHelper.getProperty(TTI_DB_PASSWORD)));
     }
 
     public JdbcTemplate identityDb() {

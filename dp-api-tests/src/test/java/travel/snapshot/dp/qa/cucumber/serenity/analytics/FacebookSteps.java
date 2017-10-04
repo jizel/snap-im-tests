@@ -7,7 +7,7 @@ import static travel.snapshot.dp.qa.cucumber.helpers.StringUtil.parseDate;
 
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
+
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -16,7 +16,7 @@ public class FacebookSteps extends AnalyticsBaseSteps {
 
 
     public FacebookSteps() {
-        spec.baseUri(PropertiesHelper.getProperty(FACEBOOK_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(FACEBOOK_BASE_URI));
     }
 
     /**

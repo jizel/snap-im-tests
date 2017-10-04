@@ -1,7 +1,6 @@
 package travel.snapshot.dp.qa.cucumber.serenity.api_subscriptions;
 
 import com.jayway.restassured.response.Response;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.util.UUID;
@@ -19,7 +18,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
 
     public ApiSubscriptionSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
         spec.basePath(BASE_PATH_API_SUBSCRIPTIONS);
     }
 

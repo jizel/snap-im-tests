@@ -40,7 +40,7 @@ import java.util.UUID;
 public class RelationshipsHelpers extends BasicSteps {
 
     public RelationshipsHelpers() {
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(IDENTITY_BASE_URI));
     }
 
     private final PlatformOperationHelpers platformOperationHelpers = new PlatformOperationHelpers();

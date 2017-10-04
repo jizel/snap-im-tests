@@ -6,7 +6,6 @@ import net.thucydides.core.annotations.Step;
 
 import java.util.ArrayList;
 
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.analytics.AnalyticsBaseSteps;
 
 import static org.junit.Assert.assertEquals;
@@ -14,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class ReviewSteps extends AnalyticsBaseSteps {
 
     public ReviewSteps() {
-        spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
+        spec.baseUri(propertiesHelper.getProperty(REVIEW_BASE_URI));
     }
 
     @Step

@@ -7,7 +7,6 @@ import com.jayway.restassured.path.json.JsonPath;
 import lombok.NoArgsConstructor;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.nio.charset.Charset;
@@ -38,7 +37,7 @@ public class JmsSteps extends BasicSteps {
 
 
     public void start() throws Exception {
-        connectionFactory = new ActiveMQConnectionFactory(PropertiesHelper.getProperty("broker.url"));
+        connectionFactory = new ActiveMQConnectionFactory(propertiesHelper.getProperty("broker.url"));
         connection = connectionFactory.createConnection();
         connection.setClientID("testClientId");
         connection.start();
