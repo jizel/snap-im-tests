@@ -67,7 +67,7 @@ public class AuthorizationSteps extends BasicSteps {
         getIdentityData(url, access_token);
     }
 
-    public void getToken(String username, String password, String clientId, String clientSecret) {
+    public Response getToken(String username, String password, String clientId, String clientSecret) {
         RequestSpecification requestSpecification = given()
                 .baseUri(propertiesHelper.getProperty(AUTHORIZATION_BASE_URI))
                 .parameter("client_id", clientId)
@@ -85,5 +85,6 @@ public class AuthorizationSteps extends BasicSteps {
         } else {
             log.warning("Failed to receive oauth token");
         }
+        return response;
     }
 }

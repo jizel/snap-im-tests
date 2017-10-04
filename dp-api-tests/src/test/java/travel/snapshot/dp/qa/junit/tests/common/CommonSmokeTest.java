@@ -50,6 +50,9 @@ import java.util.UUID;
 public class CommonSmokeTest extends CommonTest {
 
     protected static final AuthorizationSteps authorizationSteps = new AuthorizationSteps();
+    protected String clientId = null;
+    protected String clientSecret = null;
+
 
     @Before
     public void setUp() {
@@ -64,8 +67,8 @@ public class CommonSmokeTest extends CommonTest {
         } catch (Exception e) {
             fail("Exception during client creation: " + e.getMessage());
         }
-        String clientId = (String) testClient1.get("clientId");
-        String clientSecret = (String) testClient1.get("secret");
+        clientId = (String) testClient1.get("clientId");
+        clientSecret = (String) testClient1.get("secret");
         authorizationSteps.getToken(DEFAULT_SNAPSHOT_USER_NAME, DEFAULT_PASSWORD, clientId, clientSecret);
         Map<String, List<String>> thingsToDelete = new HashMap<>();
         Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(thingsToDelete);
