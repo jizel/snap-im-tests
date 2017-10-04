@@ -5,7 +5,6 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.helpers.AddressUtils.createRandomAddress;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 
@@ -18,12 +17,10 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
+import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
 import travel.snapshot.dp.qa.junit.helpers.CommonHelpers;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-
-import java.util.UUID;
 
 /**
  * GET, filtering, sorting etc. tests for Customer entity. 50+ customers created for testing (pagination)
@@ -33,10 +30,14 @@ import java.util.UUID;
 public class CustomerGetTests extends CommonTest{
 
     private static final String FILTERING_CUSTOMERS_EXAMPLES = "src/test/resources/csv/customers/filteringCustomers.csv";
+    private static DbStepDefs dbStepDefs;
+    private static CommonHelpers commonHelpers;
 
     @BeforeClass
     public static void createTestCustomers() throws Exception {
 //        Create 50+ test customers but only once for all tests!
+        dbStepDefs = new DbStepDefs();
+        commonHelpers = new CommonHelpers();
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
         loadDefaultTestEntities();
             range(0, 52).forEachOrdered(n -> {

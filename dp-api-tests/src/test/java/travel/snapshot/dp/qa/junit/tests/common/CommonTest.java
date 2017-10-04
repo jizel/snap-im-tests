@@ -3,8 +3,8 @@ package travel.snapshot.dp.qa.junit.tests.common;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
@@ -71,29 +71,29 @@ public abstract class CommonTest {
     protected static EntitiesLoader entitiesLoader;
 
     //    Steps
-    protected static DbStepDefs dbStepDefs = new DbStepDefs();
-    protected static final JmsSteps jmsSteps = new JmsSteps();
-    protected static final ConfigurationSteps configurationSteps = new ConfigurationSteps();
-    protected static final DbUtilsSteps dbSteps = new DbUtilsSteps();
+    protected DbStepDefs dbStepDefs = new DbStepDefs();
+    protected final JmsSteps jmsSteps = new JmsSteps();
+    protected final ConfigurationSteps configurationSteps = new ConfigurationSteps();
+    protected final DbUtilsSteps dbSteps = new DbUtilsSteps();
 
-    private static final BasicSteps basicSteps = new BasicSteps();
+    private final BasicSteps basicSteps = new BasicSteps();
 
     //    Helpers
-    protected static final CustomerHelpers customerHelpers = new CustomerHelpers();
-    protected static final PropertyHelpers propertyHelpers = new PropertyHelpers();
-    protected static final PropertySetHelpers propertySetHelpers = new PropertySetHelpers();
-    protected static final UserHelpers userHelpers = new UserHelpers();
-    protected static final RoleHelpers roleHelpers = new RoleHelpers();
-    protected static final PartnerHelpers partnerHelpers = new PartnerHelpers();
-    protected static final RelationshipsHelpers relationshipsHelpers = new RelationshipsHelpers();
-    protected static final ApplicationHelpers applicationHelpers = new ApplicationHelpers();
-    protected static final CommercialSubscriptionHelpers commercialSubscriptionHelpers = new CommercialSubscriptionHelpers();
-    protected static final ConfigurationHelpers configurationHelpers = new ConfigurationHelpers();
-    protected static final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
-    protected static final KeycloakHelpers keycloakHelpers = new KeycloakHelpers();
-    protected static final CommonHelpers commonHelpers = new CommonHelpers();
-    protected static final PlatformOperationHelpers platformOperationHelpers = new PlatformOperationHelpers();
-    protected static final PermissionHelpers permissionHelpers= new PermissionHelpers();
+    protected final CustomerHelpers customerHelpers = new CustomerHelpers();
+    protected final PropertyHelpers propertyHelpers = new PropertyHelpers();
+    protected final PropertySetHelpers propertySetHelpers = new PropertySetHelpers();
+    protected final UserHelpers userHelpers = new UserHelpers();
+    protected final RoleHelpers roleHelpers = new RoleHelpers();
+    protected final PartnerHelpers partnerHelpers = new PartnerHelpers();
+    protected final RelationshipsHelpers relationshipsHelpers = new RelationshipsHelpers();
+    protected final ApplicationHelpers applicationHelpers = new ApplicationHelpers();
+    protected final CommercialSubscriptionHelpers commercialSubscriptionHelpers = new CommercialSubscriptionHelpers();
+    protected final ConfigurationHelpers configurationHelpers = new ConfigurationHelpers();
+    protected final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
+    protected final KeycloakHelpers keycloakHelpers = new KeycloakHelpers();
+    protected final CommonHelpers commonHelpers = new CommonHelpers();
+    protected final PlatformOperationHelpers platformOperationHelpers = new PlatformOperationHelpers();
+    protected final PermissionHelpers permissionHelpers= new PermissionHelpers();
 
 
     //    Custom codes
@@ -307,10 +307,6 @@ public abstract class CommonTest {
 
     protected static void contentTypeIs(String contentType) {
         BasicSteps.contentTypeIs(contentType);
-    }
-
-    protected static void entityDoesNotExist(String basePath, UUID entityId){
-        assertThat(commonHelpers.getEntity(basePath, entityId).getStatusCode(), is(SC_NOT_FOUND));
     }
 
     protected String getAttributeValue(String attributeName) {
