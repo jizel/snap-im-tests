@@ -36,7 +36,7 @@ public class CommonPlatformOperationTest extends CommonTest{
         deletePlatformOperationIfExists(createdPlatformOperation.getId());
     }
 
-    protected static void deletePlatformOperationIfExists(UUID platformOperationId) {
+    protected void deletePlatformOperationIfExists(UUID platformOperationId) {
         Response getResponse = commonHelpers.getEntity(PLATFORM_OPERATIONS_PATH, platformOperationId);
         if (getResponse.getStatusCode() == SC_OK) {
             commonHelpers.entityIsDeleted(PLATFORM_OPERATIONS_PATH, platformOperationId);

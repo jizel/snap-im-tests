@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.properties;
 
 import static java.util.Collections.singletonMap;
 import static java.util.UUID.randomUUID;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
@@ -68,7 +69,7 @@ public class PropertyTest extends CommonTest {
         assertThat("Update response body differs from the same user requested by GET ", updateResponseProperty, is(requestedProperty));
         commonHelpers.deleteEntity(PROPERTIES_PATH, createdPropertyId);
         responseCodeIs(SC_NO_CONTENT);
-        entityDoesNotExist(PROPERTIES_PATH, createdPropertyId);
+        commonHelpers.getEntity(PROPERTIES_PATH, createdPropertyId).then().statusCode(SC_NOT_FOUND);
     }
 
     @Test

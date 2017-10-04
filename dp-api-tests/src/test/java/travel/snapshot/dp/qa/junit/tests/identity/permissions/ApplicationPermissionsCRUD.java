@@ -29,7 +29,7 @@ public class ApplicationPermissionsCRUD extends CommonTest {
     private ApplicationPermissionCreateDto testApplicationPermission;
     private UUID createdApplicationId;
 
-    private static final UUID TEST_PLATFORM_OPERATION_ID = dbSteps.getApplicationPermissionId(RESTRICTIONS_APPLICATIONS_ENDPOINT, GET);
+    private final UUID TEST_PLATFORM_OPERATION_ID = dbSteps.getApplicationPermissionId(RESTRICTIONS_APPLICATIONS_ENDPOINT, GET);
 
     @Override
     @Before
