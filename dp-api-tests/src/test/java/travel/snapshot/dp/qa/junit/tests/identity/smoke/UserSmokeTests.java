@@ -2,8 +2,11 @@ package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ENCRYPTED_PASSWORD;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -42,5 +45,16 @@ public class UserSmokeTests extends CommonSmokeTest {
         responseCodeIs(SC_CONFLICT);
         authorizationHelpers.entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationId);
         authorizationHelpers.entityIsDeleted(USERS_PATH, userId);
+    }
+
+    @Test
+    public void loginWithPlus() {
+        String username = "test+1@snapshot.travel";
+        testUser1.setUsername(username);
+        userId = userHelpers.userIsCreatedWithAuth(testUser1);
+        dbSteps.setUserPassword(userId, DEFAULT_ENCRYPTED_PASSWORD);
+        authorizationSteps.getToken(username, DEFAULT_PASSWORD, clientId, clientSecret)
+                .then()
+                .statusCode(SC_OK);
     }
 }
