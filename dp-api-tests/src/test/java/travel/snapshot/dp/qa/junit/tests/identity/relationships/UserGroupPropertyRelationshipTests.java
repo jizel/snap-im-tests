@@ -8,6 +8,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -33,52 +39,52 @@ public class UserGroupPropertyRelationshipTests extends CommonTest {
     @Before
     public void setUp() {
         super.setUp();
-        createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
-        createdUserGroupId = commonHelpers.entityIsCreated(testUserGroup1);
+        createdPropertyId = entityIsCreated(testProperty1);
+        createdUserGroupId = entityIsCreated(testUserGroup1);
         testUserGroupPropertyRelationship = relationshipsHelpers.constructUserGroupPropertyRelationship(createdUserGroupId, createdPropertyId, true);
     }
 
     @Test
     public void createUserGroupPropertyRelationship() {
-        Response response = commonHelpers.createEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, testUserGroupPropertyRelationship);
+        Response response = createEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, testUserGroupPropertyRelationship);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("id");
         UserGroupPropertyRelationshipCreateDto returnedRelationship = response.as(UserGroupPropertyRelationshipDto.class);
         assertThat(returnedRelationship.getPropertyId(), is(createdPropertyId));
         assertThat(returnedRelationship.getUserGroupId(), is(createdUserGroupId));
         assertThat(returnedRelationship.getIsActive(), is(true));
-        UserGroupPropertyRelationshipCreateDto requestedRelationship = commonHelpers.getEntityAsType(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, UserGroupPropertyRelationshipDto.class, returnedRelationship.getId());
+        UserGroupPropertyRelationshipCreateDto requestedRelationship = getEntityAsType(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, UserGroupPropertyRelationshipDto.class, returnedRelationship.getId());
         assertThat("Returned relationship is different from sent ", requestedRelationship, is(returnedRelationship));
     }
 
     @Test
     public void createUserGroupPropertyRelationshipErrors() {
         testUserGroupPropertyRelationship = relationshipsHelpers.constructUserGroupPropertyRelationship(NON_EXISTENT_ID, createdPropertyId, true);
-        commonHelpers.createEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, testUserGroupPropertyRelationship);
+        createEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, testUserGroupPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
         testUserGroupPropertyRelationship = relationshipsHelpers.constructUserGroupPropertyRelationship(createdUserGroupId, NON_EXISTENT_ID, true);
-        commonHelpers.createEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, testUserGroupPropertyRelationship);
+        createEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, testUserGroupPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
     }
 
     @Test
     public void updateUserGroupPropertyRelationship() throws Exception {
-        UserGroupPropertyRelationshipCreateDto userGroupPropertyRelationship = commonHelpers.entityIsCreatedAs(UserGroupPropertyRelationshipDto.class, testUserGroupPropertyRelationship);
+        UserGroupPropertyRelationshipCreateDto userGroupPropertyRelationship = entityIsCreatedAs(UserGroupPropertyRelationshipDto.class, testUserGroupPropertyRelationship);
         UserGroupPropertyRelationshipUpdateDto update = relationshipsHelpers.constructUserGroupPropertyRelationshipUpdate(false);
         commonHelpers.updateEntityPost(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, userGroupPropertyRelationship.getId(), update);
         responseCodeIs(SC_NO_CONTENT);
-        UserGroupPropertyRelationshipCreateDto returnedRelationship = commonHelpers.getEntityAsType(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, UserGroupPropertyRelationshipDto.class, userGroupPropertyRelationship.getId());
+        UserGroupPropertyRelationshipCreateDto returnedRelationship = getEntityAsType(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, UserGroupPropertyRelationshipDto.class, userGroupPropertyRelationship.getId());
         assertThat(returnedRelationship.getIsActive(), is(false));
     }
 
     @Test
     public void deleteUserGroupPropertyRelationship(){
-        UserGroupPropertyRelationshipCreateDto userGroupPropertyRelationship = commonHelpers.entityIsCreatedAs(UserGroupPropertyRelationshipDto.class, testUserGroupPropertyRelationship);
-        commonHelpers.deleteEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, userGroupPropertyRelationship.getId());
+        UserGroupPropertyRelationshipCreateDto userGroupPropertyRelationship = entityIsCreatedAs(UserGroupPropertyRelationshipDto.class, testUserGroupPropertyRelationship);
+        deleteEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, userGroupPropertyRelationship.getId());
         responseCodeIs(SC_NO_CONTENT);
-        commonHelpers.getEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, userGroupPropertyRelationship.getId());
+        getEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, userGroupPropertyRelationship.getId());
         responseCodeIs(SC_NOT_FOUND);
     }
 }

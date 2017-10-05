@@ -15,7 +15,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionRespo
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENTITIES_TO_DELETE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getCreateBasePath;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.setupRequestDefaults;
+import static travel.snapshot.dp.qa.junit.utils.RestAssuredConfig.setupRequestDefaults;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;

@@ -5,6 +5,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.PROPERTY_CODE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 
 import com.google.gson.Gson;
 import org.apache.commons.collections.map.SingletonMap;
@@ -21,9 +24,9 @@ public class PropertyCodeTests extends CommonTest{
     public void whenPropertyCodeIsNotUniqueTheSmallestPossibleIntegerIsConcatenatedToIt() {
         testProperty1.setId(null);
         testProperty1.setCode(null);
-        commonHelpers.entityIsCreated(testProperty1);
+        entityIsCreated(testProperty1);
         String propertyCode1 = getAttributeValue(PROPERTY_CODE);
-        commonHelpers.entityIsCreated(testProperty1);
+        entityIsCreated(testProperty1);
         String propertyCode2 = getAttributeValue(PROPERTY_CODE);
         assertThat(propertyCode1, is("CZBRQPRO"));
         assertThat(propertyCode2, is("CZBRQPRO1"));
@@ -33,8 +36,8 @@ public class PropertyCodeTests extends CommonTest{
     public void propertyCodeHasToBeUnique() {
         testProperty1.setId(null);
         testProperty1.setCode("ليونيكود");
-        commonHelpers.entityIsCreated(testProperty1);
-        commonHelpers.createEntity(PROPERTIES_PATH, testProperty1);
+        entityIsCreated(testProperty1);
+        createEntity(PROPERTIES_PATH, testProperty1);
         responseCodeIs(SC_CONFLICT);
         customCodeIs(CC_CONFLICT_CODE);
     }
@@ -43,19 +46,19 @@ public class PropertyCodeTests extends CommonTest{
     public void maximumPropertyCodeLengthIs50Characters() {
         testProperty1.setId(null);
         testProperty1.setCode(StringUtils.repeat("A", 50));
-        commonHelpers.entityIsCreated(testProperty1);
+        entityIsCreated(testProperty1);
         testProperty1.setCode(StringUtils.repeat("A", 51));
-        commonHelpers.createEntity(PROPERTIES_PATH, testProperty1);
+        createEntity(PROPERTIES_PATH, testProperty1);
         responseIsUnprocessableEntity();
     }
 
     @Test
     public void propertyCodeCanNotBeUpdated() {
-        UUID createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
+        UUID createdPropertyId = entityIsCreated(testProperty1);
         PropertyUpdateDto update = new PropertyUpdateDto();
         SingletonMap map = new SingletonMap("property_code", "BRQ1234567");
         Gson gsone = new Gson();
-        commonHelpers.updateEntity(PROPERTIES_PATH, createdPropertyId, gsone.toJson(map));
+        updateEntity(PROPERTIES_PATH, createdPropertyId, gsone.toJson(map));
         responseIsUnprocessableEntity();
     }
 }

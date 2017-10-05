@@ -7,6 +7,8 @@ import static travel.snapshot.dp.qa.cucumber.helpers.AddressUtils.createRandomAd
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -45,7 +47,7 @@ public class CustomerGetTests extends CommonTest{
                 testCustomer1.setEmail(String.format("customer-%d@snapshot.travel", n));
                 testCustomer1.setWebsite(String.format("http://www.customer%d.snapshot.travel", n));
                 testCustomer1.setId(null);
-                commonHelpers.entityIsCreated(testCustomer1);
+                entityIsCreated(testCustomer1);
             });
         // The following is needed to test customer filtering/sorting by address.country DPIM-116
         AddressDto address = createRandomAddress(5, 5, 6, "CZ", null);
@@ -66,7 +68,7 @@ public class CustomerGetTests extends CommonTest{
     @FileParameters(FILTERING_CUSTOMERS_EXAMPLES)
     @Test
     public void filteringCustomers(String limit, String cursor, Integer returned, Integer total, String filter, String sort, String sortDesc, String linkHeader) {
-        commonHelpers.getEntities(CUSTOMERS_PATH, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
+        getEntities(CUSTOMERS_PATH, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(CustomerDto.class, returned);
         headerIs("X-Total-Count", String.valueOf(total));

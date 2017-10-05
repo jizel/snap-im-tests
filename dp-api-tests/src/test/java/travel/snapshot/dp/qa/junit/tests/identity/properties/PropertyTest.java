@@ -21,6 +21,14 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.VALID_FROM_VALUE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.VALID_TO_VALUE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -52,7 +60,7 @@ public class PropertyTest extends CommonTest {
 
     @Test
     public void propertyCRUD() throws Exception {
-        createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
+        createdPropertyId = entityIsCreated(testProperty1);
         bodyContainsEntityWith(PROPERTY_CODE, "property1code");
         bodyContainsEntityWith("name", "Property 1");
         bodyContainsEntityWith("website", "http://www.snapshot.travel");
@@ -62,40 +70,40 @@ public class PropertyTest extends CommonTest {
         propertyUpdate.setIsDemo(false);
         propertyUpdate.setTtiId(123456);
         propertyUpdate.setTimezone("Europe/London");
-        Response updateResponse = commonHelpers.updateEntity(PROPERTIES_PATH, createdPropertyId, propertyUpdate);
+        Response updateResponse = updateEntity(PROPERTIES_PATH, createdPropertyId, propertyUpdate);
         responseCodeIs(SC_OK);
         PropertyDto updateResponseProperty = updateResponse.as(PropertyDto.class);
-        PropertyDto requestedProperty = commonHelpers.getEntityAsType(PROPERTIES_PATH, PropertyDto.class, createdPropertyId);
+        PropertyDto requestedProperty = getEntityAsType(PROPERTIES_PATH, PropertyDto.class, createdPropertyId);
         assertThat("Update response body differs from the same user requested by GET ", updateResponseProperty, is(requestedProperty));
-        commonHelpers.deleteEntity(PROPERTIES_PATH, createdPropertyId);
+        deleteEntity(PROPERTIES_PATH, createdPropertyId);
         responseCodeIs(SC_NO_CONTENT);
-        commonHelpers.getEntity(PROPERTIES_PATH, createdPropertyId).then().statusCode(SC_NOT_FOUND);
+        getEntity(PROPERTIES_PATH, createdPropertyId).then().statusCode(SC_NOT_FOUND);
     }
 
     @Test
     public void invalidUpdateProperty() throws Exception {
-        createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
+        createdPropertyId = entityIsCreated(testProperty1);
         Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
-        commonHelpers.updateEntity(PROPERTIES_PATH, createdPropertyId, invalidUpdate);
+        updateEntity(PROPERTIES_PATH, createdPropertyId, invalidUpdate);
         responseIsUnprocessableEntity();
 
         invalidUpdate = singletonMap("email", "invalid_value");
-        commonHelpers.updateEntity(PROPERTIES_PATH, createdPropertyId, invalidUpdate);
+        updateEntity(PROPERTIES_PATH, createdPropertyId, invalidUpdate);
         responseIsUnprocessableEntity();
 
-        commonHelpers.updateEntity(PROPERTIES_PATH, randomUUID(), invalidUpdate);
+        updateEntity(PROPERTIES_PATH, randomUUID(), invalidUpdate);
         responseIsEntityNotFound();
     }
 
     @Test
     public void propertyActivateDeactivate() {
-        createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
+        createdPropertyId = entityIsCreated(testProperty1);
         PropertyUpdateDto update = new PropertyUpdateDto();
         update.setIsActive(false);
-        commonHelpers.entityIsUpdated(PROPERTIES_PATH, createdPropertyId, update);
+        entityIsUpdated(PROPERTIES_PATH, createdPropertyId, update);
         bodyContainsEntityWith(IS_ACTIVE, "false");
         update.setIsActive(true);
-        commonHelpers.entityIsUpdated(PROPERTIES_PATH, createdPropertyId, update);
+        entityIsUpdated(PROPERTIES_PATH, createdPropertyId, update);
         bodyContainsEntityWith(IS_ACTIVE, "true");
     }
 
@@ -110,23 +118,23 @@ public class PropertyTest extends CommonTest {
     @Test
     public void timezoneParameterIsMandatory() {
         testProperty1.setTimezone(null);
-        commonHelpers.createEntity(PROPERTIES_PATH,testProperty1);
+        createEntity(PROPERTIES_PATH,testProperty1);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
     }
 
     @Test
     public void sendPostRequestWithEmptyBodyToAllPropertyUrls() {
-        createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
+        createdPropertyId = entityIsCreated(testProperty1);
         sendBlankPost(String.format("%s/%s", PROPERTIES_PATH, createdPropertyId), "identity");
         responseIsUnprocessableEntity();
 
         sendBlankPost(String.format("%s/%s/users", PROPERTIES_PATH, createdPropertyId), "identity");
         responseIsUnprocessableEntity();
 
-        UUID userId = commonHelpers.entityIsCreated(testUser1);
+        UUID userId = entityIsCreated(testUser1);
         UserPropertyRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, createdPropertyId, true);
-        commonHelpers.entityIsCreated(relation);
+        entityIsCreated(relation);
 
         sendBlankPost(String.format("%s/%s/users/%s", PROPERTIES_PATH, createdPropertyId, userId), "identity");
         responseIsUnprocessableEntity();
@@ -134,19 +142,19 @@ public class PropertyTest extends CommonTest {
 
     @Test
     public void creatingDuplicatePropertyReturnsCorrectError() {
-        commonHelpers.entityIsCreated(testProperty1);
-        commonHelpers.createEntity(PROPERTIES_PATH, testProperty1);
+        entityIsCreated(testProperty1);
+        createEntity(PROPERTIES_PATH, testProperty1);
         responseIsConflictId();
 
         testProperty1.setId(null);
-        commonHelpers.createEntity(PROPERTIES_PATH, testProperty1);
+        createEntity(PROPERTIES_PATH, testProperty1);
         responseIsConflictField();
     }
 
     @Test
     public void propertyCannotBeDeletedIfItHasRelationshipWithExistingCustomer() {
         for (CustomerPropertyRelationshipType type : CustomerPropertyRelationshipType.values()) {
-            createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
+            createdPropertyId = entityIsCreated(testProperty1);
             CustomerPropertyRelationshipCreateDto relation = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
                     DEFAULT_SNAPSHOT_CUSTOMER_ID,
                     createdPropertyId,
@@ -155,40 +163,40 @@ public class PropertyTest extends CommonTest {
                     LocalDate.parse(VALID_FROM_VALUE),
                     LocalDate.parse(VALID_TO_VALUE)
             );
-            UUID relationId = commonHelpers.entityIsCreated(relation);
-            commonHelpers.deleteEntity(PROPERTIES_PATH, createdPropertyId);
+            UUID relationId = entityIsCreated(relation);
+            deleteEntity(PROPERTIES_PATH, createdPropertyId);
             responseIsEntityReferenced();
-            commonHelpers.entityIsDeleted(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId);
-            commonHelpers.entityIsDeleted(PROPERTIES_PATH, createdPropertyId);
+            entityIsDeleted(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId);
+            entityIsDeleted(PROPERTIES_PATH, createdPropertyId);
         }
     }
 
     @Test
     public void propertyCannotBeDeletedWhenItBelongsToAnyPropertySet() {
-        createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
-        UUID psId = commonHelpers.entityIsCreated(testPropertySet1);
+        createdPropertyId = entityIsCreated(testProperty1);
+        UUID psId = entityIsCreated(testPropertySet1);
         PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers.constructPropertySetPropertyRelationship(psId, createdPropertyId, true);
-        UUID relationId = commonHelpers.entityIsCreated(relation);
-        commonHelpers.deleteEntity(PROPERTIES_PATH, createdPropertyId);
+        UUID relationId = entityIsCreated(relation);
+        deleteEntity(PROPERTIES_PATH, createdPropertyId);
         responseIsEntityReferenced();
-        commonHelpers.deleteEntity(PROPERTY_SETS_PATH, psId);
+        deleteEntity(PROPERTY_SETS_PATH, psId);
         responseIsEntityReferenced();
-        commonHelpers.entityIsDeleted(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
-        commonHelpers.entityIsDeleted(PROPERTIES_PATH, createdPropertyId);
-        commonHelpers.entityIsDeleted(PROPERTY_SETS_PATH, psId);
+        entityIsDeleted(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
+        entityIsDeleted(PROPERTIES_PATH, createdPropertyId);
+        entityIsDeleted(PROPERTY_SETS_PATH, psId);
     }
 
     @Test
     public void propertyCannotBeDeletedWhenItHasARelationshipWithSomeUser() {
-        createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
-        UUID userId = commonHelpers.entityIsCreated(testUser1);
+        createdPropertyId = entityIsCreated(testProperty1);
+        UUID userId = entityIsCreated(testUser1);
         UserPropertyRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, createdPropertyId, true);
-        UUID relationId = commonHelpers.entityIsCreated(relation);
-        commonHelpers.deleteEntity(PROPERTIES_PATH, createdPropertyId);
+        UUID relationId = entityIsCreated(relation);
+        deleteEntity(PROPERTIES_PATH, createdPropertyId);
         responseIsEntityReferenced();
-        commonHelpers.deleteEntity(USERS_PATH, userId);
+        deleteEntity(USERS_PATH, userId);
         responseIsEntityReferenced();
-        commonHelpers.entityIsDeleted(USER_PROPERTY_RELATIONSHIPS_PATH, relationId);
-        commonHelpers.entityIsDeleted(PROPERTIES_PATH, createdPropertyId);
+        entityIsDeleted(USER_PROPERTY_RELATIONSHIPS_PATH, relationId);
+        entityIsDeleted(PROPERTIES_PATH, createdPropertyId);
     }
 }

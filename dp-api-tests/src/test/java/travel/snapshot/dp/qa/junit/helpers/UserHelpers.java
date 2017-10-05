@@ -4,6 +4,8 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -21,7 +23,6 @@ import java.util.UUID;
 public class UserHelpers extends UsersSteps {
 
     private final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
-    private final CommonHelpers commonHelpers = new CommonHelpers();
     private final RelationshipsHelpers relationshipHelpers = new RelationshipsHelpers();
 
     public UserHelpers() {
@@ -86,10 +87,10 @@ public class UserHelpers extends UsersSteps {
     }
 
     public void deleteExistingUserCustomerRelationship(UUID userId) {
-        UUID existingRelationshipId = commonHelpers.getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class,
+        UUID existingRelationshipId = getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class,
                 buildQueryParamMapForPaging(null, null, "user_id==" + userId.toString(), null, null, null))
                 .get(0).getId();
-        commonHelpers.entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, existingRelationshipId);
+        entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, existingRelationshipId);
     }
 
 }

@@ -14,6 +14,11 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTypeByUserForApp;
+import static travel.snapshot.dp.qa.junit.helpers.PermissionHelpers.constructAppPermission;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -46,7 +51,7 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
     public void setUp() {
         super.setUp();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_EFFECTIVE_PERMISSIONS, GET);
-        createdUserId = commonHelpers.entityIsCreated(testUser1);
+        createdUserId = entityIsCreated(testUser1);
         pathParams = new HashMap<>();
         pathParams.put(USER_ID, createdUserId.toString());
         pathParams.put(APP_VERSION_ID, createdAppVersion.getId().toString());
@@ -90,14 +95,14 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
     @Jira({"DPIM-127", "DPIM-130"})
     public void userPermissionsAreReturnedWhenAppRoleIsDefined() {
         //        Prepare data
-        commonHelpers.entityIsCreated(permissionHelpers.constructAppPermission(
+        entityIsCreated(constructAppPermission(
                 restrictedApp.getId(),
                 platformOperationHelpers.getPlatformOperationId(GET, RESTRICTIONS_ALL_USERS_ENDPOINT, false))
         );
         testRole1.setApplicationId(restrictedApp.getId());
-        UUID createdRoleId = commonHelpers.entityIsCreated(testRole1);
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_EFFECTIVE_PERMISSIONS, false));
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId));
+        UUID createdRoleId = entityIsCreated(testRole1);
+        entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_EFFECTIVE_PERMISSIONS, false));
+        entityIsCreated(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId));
         pathParams.put(USER_ID, createdUserId.toString());
 
         //        Test with inactive role
@@ -122,8 +127,8 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
     @Test
     public void appPermissionMustExistBeforeRolePermission() {
         testRole1.setApplicationId(restrictedApp.getId());
-        UUID createdRoleId = commonHelpers.entityIsCreated(testRole1);
-        commonHelpers.createEntity(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_ALL_CUSTOMERS_ENDPOINT, false))
+        UUID createdRoleId = entityIsCreated(testRole1);
+        createEntity(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_ALL_CUSTOMERS_ENDPOINT, false))
                 .then()
                 .statusCode(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(42203);
@@ -135,7 +140,7 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
         effectivePermissions = getEffectivePermissionsByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, pathParams);
 
         testRole1.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
-        commonHelpers.entityIsCreated(testRole1);
+        entityIsCreated(testRole1);
         List<EffectivePermissionDto> effectivePermissionsAfterRoleIsCreated = getEffectivePermissionsByUserForApp(
                 DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, pathParams
         );
@@ -143,7 +148,7 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
     }
 
     private Response getAllEffectivePermissionsWithParams(Map<String, String> params) {
-        return commonHelpers.getEntities(EFFECTIVE_PERMISSIONS_PATH,
+        return getEntities(EFFECTIVE_PERMISSIONS_PATH,
                 buildQueryParamMapForPaging(null, null, null, null, null, params));
     }
 
@@ -155,7 +160,7 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
     }
 
     private List<EffectivePermissionDto> getEffectivePermissionsByUserForApp(UUID userId, UUID applicationVersionId, Map<String, String> params) {
-        return commonHelpers.getEntitiesAsTypeByUserForApp(
+        return getEntitiesAsTypeByUserForApp(
                 userId,
                 applicationVersionId,
                 EFFECTIVE_PERMISSIONS_PATH,

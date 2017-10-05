@@ -5,6 +5,8 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.type.HttpMethod.POST;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.assertIfNotNull;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 
 import com.jayway.restassured.response.Response;
 import junitparams.FileParameters;
@@ -50,9 +52,9 @@ public class CustomerParametersCRUDTests extends CommonTest{
     @Test
     @FileParameters(EXAMPLES + "updateEachField.csv")
     public void updateCustomerEachField(String name, String email, String vatId, String phone, String website, String notes, String timezone) {
-        UUID createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
+        UUID createdCustomerId = entityIsCreated(testCustomer1);
         CustomerUpdateDto customerUpdate = customerHelpers.constructCustomerUpdate(name, email, vatId, phone, website, notes , timezone);
-        Response updateResponse = commonHelpers.updateEntity(CUSTOMERS_PATH, createdCustomerId, customerUpdate);
+        Response updateResponse = updateEntity(CUSTOMERS_PATH, createdCustomerId, customerUpdate);
         responseCodeIs(SC_OK);
 
         CustomerDto updatedCustomer = updateResponse.as(CustomerDto.class);

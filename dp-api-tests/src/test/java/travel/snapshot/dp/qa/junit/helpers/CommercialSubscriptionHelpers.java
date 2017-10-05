@@ -21,7 +21,7 @@ public class CommercialSubscriptionHelpers extends CommercialSubscriptionSteps {
         subscription.setApplicationId(applicationId);
         subscription.setCustomerId(customerId);
         subscription.setPropertyId(propertyId);
-        commonHelpers.createEntity(COMMERCIAL_SUBSCRIPTIONS_PATH, subscription);
+        createEntity(subscription);
     }
 
     public UUID commercialSubscriptionIsCreated(UUID customerId, UUID propertyId, UUID applicationId) {

@@ -10,6 +10,15 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICA
 import static travel.snapshot.dp.api.type.HttpMethod.GET;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesByUserForApp;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
+import static travel.snapshot.dp.qa.junit.helpers.PermissionHelpers.constructAppPermission;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_APPLICATIONS_ENDPOINT;
 
 import com.jayway.restassured.response.Response;
@@ -35,41 +44,41 @@ public class ApplicationPermissionsCRUD extends CommonTest {
     @Before
     public void setUp() {
         super.setUp();
-        createdApplicationId = commonHelpers.entityIsCreated(testApplication1);
-        testApplicationPermission = permissionHelpers.constructAppPermission(createdApplicationId, TEST_PLATFORM_OPERATION_ID);
+        createdApplicationId = entityIsCreated(testApplication1);
+        testApplicationPermission = constructAppPermission(createdApplicationId, TEST_PLATFORM_OPERATION_ID);
     }
 
     @Test
     public void createAndGetAppPermission() {
-        Response response = commonHelpers.createEntity(testApplicationPermission);
+        Response response = createEntity(testApplicationPermission);
         responseCodeIs(SC_CREATED);
         ApplicationPermissionDto createdAppPermission = response.as(ApplicationPermissionDto.class);
 
-        ApplicationPermissionDto returnedAppPermission = commonHelpers.getEntityAsType(APPLICATION_PERMISSIONS_PATH, ApplicationPermissionDto.class, createdAppPermission.getId());
+        ApplicationPermissionDto returnedAppPermission = getEntityAsType(APPLICATION_PERMISSIONS_PATH, ApplicationPermissionDto.class, createdAppPermission.getId());
         assertThat(returnedAppPermission, is(createdAppPermission));
     }
 
     @Test
     public void deleteAppPermission() {
-        UUID createdAppPermissionId = commonHelpers.entityIsCreated(testApplicationPermission);
+        UUID createdAppPermissionId = entityIsCreated(testApplicationPermission);
 
-        commonHelpers.deleteEntity(APPLICATION_PERMISSIONS_PATH, createdAppPermissionId);
+        deleteEntity(APPLICATION_PERMISSIONS_PATH, createdAppPermissionId);
         responseCodeIs(SC_NO_CONTENT);
         assertThat("Deleted App permission is still visible",
-                commonHelpers.getEntity(APPLICATION_PERMISSIONS_PATH, createdAppPermissionId).getStatusCode(), is(SC_NOT_FOUND));
+                getEntity(APPLICATION_PERMISSIONS_PATH, createdAppPermissionId).getStatusCode(), is(SC_NOT_FOUND));
     }
 
     @Test
     public void appPermissionsFilteringSorting() {
-        UUID createdAppPermissionId = commonHelpers.entityIsCreated(testApplicationPermission);
+        UUID createdAppPermissionId = entityIsCreated(testApplicationPermission);
 
-        commonHelpers.getEntities(APPLICATION_PERMISSIONS_PATH, buildQueryParamMapForPaging("10", null,
+        getEntities(APPLICATION_PERMISSIONS_PATH, buildQueryParamMapForPaging("10", null,
                 "id==" + createdAppPermissionId, "application_id", null, null))
                 .then()
                 .statusCode(SC_OK)
                 .header(TOTAL_COUNT_HEADER, "1");
 
-        commonHelpers.getEntities(APPLICATION_PERMISSIONS_PATH, buildQueryParamMapForPaging("10", null,
+        getEntities(APPLICATION_PERMISSIONS_PATH, buildQueryParamMapForPaging("10", null,
                 "application_id==" + testApplicationPermission.getApplicationId(), null, "id", null))
                 .then()
                 .statusCode(SC_OK)
@@ -78,15 +87,15 @@ public class ApplicationPermissionsCRUD extends CommonTest {
 
     @Test
     public void appPermissionsAccessCheck() {
-        UUID createdAppPermissionId = commonHelpers.entityIsCreated(testApplicationPermission);
+        UUID createdAppPermissionId = entityIsCreated(testApplicationPermission);
 
-        UUID userWithoutPermissionsID = commonHelpers.entityIsCreated(testUser2);
-        commonHelpers.getEntityByUserForApplication(userWithoutPermissionsID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
+        UUID userWithoutPermissionsID = entityIsCreated(testUser2);
+        getEntityByUserForApplication(userWithoutPermissionsID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
                 APPLICATION_PERMISSIONS_PATH, createdAppPermissionId)
                 .then()
                 .statusCode(SC_NOT_FOUND);
 
-        commonHelpers.getEntitiesByUserForApp(userWithoutPermissionsID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, APPLICATION_PERMISSIONS_PATH,
+        getEntitiesByUserForApp(userWithoutPermissionsID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, APPLICATION_PERMISSIONS_PATH,
                 buildQueryParamMapForPaging(null, null, "id==" + createdAppPermissionId, null, null, null))
                 .then()
                 .statusCode(SC_OK)

@@ -18,8 +18,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.setupRequestDefaults;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.stripSlash;
+import static travel.snapshot.dp.qa.junit.utils.RestAssuredConfig.setupRequestDefaults;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;

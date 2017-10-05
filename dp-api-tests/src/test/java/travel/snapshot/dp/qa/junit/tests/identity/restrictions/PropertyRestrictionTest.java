@@ -14,6 +14,11 @@ import static travel.snapshot.dp.api.type.HttpMethod.POST;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUserForApplication;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntityByUserForApp;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesByUserForApp;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 
 import org.junit.Test;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
@@ -29,42 +34,42 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
     @Test
     public void getPropertyRestrictionTest(){
 
-        commonHelpers.getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH,
+        getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH,
                 buildQueryParamMapForPaging(null, null,"name==*", null, "name", null));
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_ALL_PROPERTIES_ENDPOINT, GET);
-        commonHelpers.getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH,
+        getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH,
                 buildQueryParamMapForPaging(null, null,"name==*", null, "name", null));
         responseCodeIs(SC_OK);
 
-        commonHelpers.getEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(),PROPERTIES_PATH, DEFAULT_PROPERTY_ID);
+        getEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(),PROPERTIES_PATH, DEFAULT_PROPERTY_ID);
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_SINGLE_PROPERTY_ENDPOINT, GET);
-        commonHelpers.getEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID);
+        getEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID);
         responseCodeIs(SC_OK);
     }
 
     @Test
     public void crudPropertyRestrictionTest(){
 //        Create
-        commonHelpers.createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1);
+        createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1);
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_ALL_PROPERTIES_ENDPOINT, POST);
-        commonHelpers.createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1);
+        createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1);
         responseCodeIs(SC_CREATED);
 //        Update
         PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
         propertyUpdate.setName("Updated Name");
-        commonHelpers.updateEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH, testProperty1.getId(), propertyUpdate);
+        updateEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH, testProperty1.getId(), propertyUpdate);
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_SINGLE_PROPERTY_ENDPOINT, PATCH);
-        commonHelpers.updateEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(),PROPERTIES_PATH, testProperty1.getId(), propertyUpdate);
+        updateEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(),PROPERTIES_PATH, testProperty1.getId(), propertyUpdate);
         responseCodeIs(SC_OK);
 //        Delete
-        commonHelpers.deleteEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH, testProperty1.getId());
+        deleteEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH, testProperty1.getId());
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_SINGLE_PROPERTY_ENDPOINT, DELETE);
-        commonHelpers.deleteEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH, testProperty1.getId());
+        deleteEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), PROPERTIES_PATH, testProperty1.getId());
         responseCodeIs(SC_CONFLICT);
     }
 

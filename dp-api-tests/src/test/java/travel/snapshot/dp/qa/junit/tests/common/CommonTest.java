@@ -3,8 +3,6 @@ package travel.snapshot.dp.qa.junit.tests.common;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
@@ -43,10 +41,8 @@ import travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers;
 import travel.snapshot.dp.qa.junit.helpers.RoleHelpers;
 import travel.snapshot.dp.qa.junit.helpers.UserHelpers;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
-import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
+import travel.snapshot.dp.qa.junit.utils.NonNullMapDecorator;
 import travel.snapshot.dp.qa.junit.utils.issueKeeperJiraCredentials.JiraCredentialsClient;
-
-import java.util.UUID;
 
 
 /**
@@ -112,14 +108,14 @@ public abstract class CommonTest {
     protected static final int CC_INVALID_ETAG = 41202;
 
     //    Basic test entities
-    protected static EntityNonNullMap<String, CustomerCreateDto> customerDtos;
-    protected static EntityNonNullMap<String, UserCreateDto> userDtos;
-    protected static EntityNonNullMap<String, PropertyCreateDto> propertyDtos;
-    protected static EntityNonNullMap<String, PropertySetCreateDto> propertySetDtos;
-    protected static EntityNonNullMap<String, PartnerCreateDto> partnerDtos;
-    protected static EntityNonNullMap<String, ApplicationCreateDto> applicationDtos;
-    protected static EntityNonNullMap<String, ApplicationVersionCreateDto> applicationVersionDtos;
-    protected static EntityNonNullMap<String, RoleCreateDto> roleDtos;
+    protected static NonNullMapDecorator<String, CustomerCreateDto> customerDtos;
+    protected static NonNullMapDecorator<String, UserCreateDto> userDtos;
+    protected static NonNullMapDecorator<String, PropertyCreateDto> propertyDtos;
+    protected static NonNullMapDecorator<String, PropertySetCreateDto> propertySetDtos;
+    protected static NonNullMapDecorator<String, PartnerCreateDto> partnerDtos;
+    protected static NonNullMapDecorator<String, ApplicationCreateDto> applicationDtos;
+    protected static NonNullMapDecorator<String, ApplicationVersionCreateDto> applicationVersionDtos;
+    protected static NonNullMapDecorator<String, RoleCreateDto> roleDtos;
     protected static UserCreateDto testUser1;
     protected static UserCreateDto testUser2;
     protected static UserCreateDto testUser3;

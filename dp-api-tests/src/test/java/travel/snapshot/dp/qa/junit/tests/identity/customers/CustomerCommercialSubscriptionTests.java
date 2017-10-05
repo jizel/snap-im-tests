@@ -11,6 +11,9 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.constructCommercialSubscriptionDto;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -36,14 +39,14 @@ public class CustomerCommercialSubscriptionTests extends CommonTest{
     @Before
     public void setUp(){
         super.setUp();
-        createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
-        createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
+        createdCustomerId = entityIsCreated(testCustomer1);
+        createdPropertyId = entityIsCreated(testProperty1);
         testCommercialSubscription = constructCommercialSubscriptionDto(DEFAULT_SNAPSHOT_APPLICATION_ID, createdCustomerId, createdPropertyId);
     }
 
     @Test
     public void getCustomerCommSubscriptionTest() throws Exception {
-        commonHelpers.entityIsCreated(testCommercialSubscription);
+        entityIsCreated(testCommercialSubscription);
         Response getResponse = commonHelpers.getRelationships(CUSTOMERS_PATH, createdCustomerId, COMMERCIAL_SUBSCRIPTIONS_RESOURCE, null);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(CommercialSubscriptionDto.class, 1);
@@ -55,12 +58,12 @@ public class CustomerCommercialSubscriptionTests extends CommonTest{
 
     @Test
     public void customerWithSubscriptionCannotBeDeleted() throws Exception {
-        UUID createdCommSubscriptionId = commonHelpers.entityIsCreated(testCommercialSubscription);
+        UUID createdCommSubscriptionId = entityIsCreated(testCommercialSubscription);
 
-        commonHelpers.deleteEntity(CUSTOMERS_PATH, createdCustomerId);
+        deleteEntity(CUSTOMERS_PATH, createdCustomerId);
         responseIsEntityReferenced();
-        commonHelpers.entityIsDeleted(COMMERCIAL_SUBSCRIPTIONS_PATH, createdCommSubscriptionId);
-        commonHelpers.deleteEntity(CUSTOMERS_PATH, createdCustomerId);
+        entityIsDeleted(COMMERCIAL_SUBSCRIPTIONS_PATH, createdCommSubscriptionId);
+        deleteEntity(CUSTOMERS_PATH, createdCustomerId);
         responseCodeIs(SC_NO_CONTENT);
     }
 }

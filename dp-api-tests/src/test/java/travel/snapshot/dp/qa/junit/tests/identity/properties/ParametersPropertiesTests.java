@@ -22,6 +22,9 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -58,7 +61,7 @@ public class ParametersPropertiesTests extends CommonTest {
         testProperty1.setName(name);
         testProperty1.setId(null);
         testProperty1.setCode(null);
-        commonHelpers.entityIsCreated(testProperty1);
+        entityIsCreated(testProperty1);
         String propertyCode = getAttributeValue(PROPERTY_CODE);
         assertFalse("Property code is empty", propertyCode.isEmpty());
         assertFalse("Property code contains whitespaces", propertyCode.matches("\\s"));
@@ -86,7 +89,7 @@ public class ParametersPropertiesTests extends CommonTest {
         testProperty1.setId(null);
         testProperty1.setCode(null);
         testProperty1.setAddress(address);
-        commonHelpers.entityIsCreated(testProperty1);
+        entityIsCreated(testProperty1);
         String propertyCode = getAttributeValue(PROPERTY_CODE);
         assertThat("Passed and returned property code mismatch", resultingPropertyCode, is(propertyCode));
     }
@@ -96,7 +99,7 @@ public class ParametersPropertiesTests extends CommonTest {
     public void propertyCodeCanBeFilledManually(String code) throws IOException {
         testProperty1.setId(null);
         testProperty1.setCode(code);
-        commonHelpers.entityIsCreated(testProperty1);
+        entityIsCreated(testProperty1);
         String propertyCode = getAttributeValue(PROPERTY_CODE);
         assertThat("Passed and returned property code mismatch", propertyCode, is(code));
     }
@@ -114,16 +117,16 @@ public class ParametersPropertiesTests extends CommonTest {
             testCustomer1.setId(null);
             testCustomer1.setName(String.format("Some_customer_%d", n));
             testCustomer1.setEmail(String.format("customer_%d@snapshot.travel", n));
-            UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
+            UUID customerId = entityIsCreated(testCustomer1);
             customerIds.add(customerId);
             CustomerPropertyRelationshipCreateDto relation = relationshipsHelpers
                     .constructCustomerPropertyRelationshipDto(customerId, DEFAULT_PROPERTY_ID, true, OWNER,
                             LocalDate.parse(VALID_FROM_VALUE),
                             LocalDate.parse(VALID_TO_VALUE));
-            commonHelpers.entityIsCreated(relation);
+            entityIsCreated(relation);
         });
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, String.format(filter, customerIds.get(0).toString()), null, null, null);
-        commonHelpers.getEntities(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, params);
+        getEntities(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, params);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(CustomerPropertyRelationshipDto.class, Integer.valueOf(returned));
         headerIs("X-Total-Count", total);
@@ -136,7 +139,7 @@ public class ParametersPropertiesTests extends CommonTest {
         address.setCountryCode(country);
         address.setRegionCode(region);
         testProperty1.setAddress(address);
-        commonHelpers.entityIsCreated(testProperty1);
+        entityIsCreated(testProperty1);
         bodyContainsEntityWith("address.region", region);
     }
 
@@ -169,16 +172,16 @@ public class ParametersPropertiesTests extends CommonTest {
             testProperty1.setName(String.format("prop_name_%d", n));
             testProperty1.setId(null);
             testProperty1.setCode(null);
-            commonHelpers.entityIsCreated(testProperty1);
+            entityIsCreated(testProperty1);
         });
         // The following is needed to test customer filtering/sorting by address.country DPIM-116
         AddressDto address = createRandomAddress(5, 5, 6, "DE", null);
         testProperty1.setAddress(address);
         testProperty1.setName("prop_name_59");
         testProperty1.setId(null);
-        commonHelpers.entityIsCreated(testProperty1);
+        entityIsCreated(testProperty1);
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, null, null);
-        commonHelpers.getEntities(PROPERTIES_PATH, params);
+        getEntities(PROPERTIES_PATH, params);
         numberOfEntitiesInResponse(PropertyDto.class, Integer.parseInt(returned));
         headerIs("X-Total-Count", total);
         if (!linkHeader.equals("/null")) {
@@ -194,13 +197,13 @@ public class ParametersPropertiesTests extends CommonTest {
         range(0, 30).forEachOrdered(n -> {
             testPropertySet1.setId(null);
             testPropertySet1.setName(String.format("New_set_%d", n));
-            UUID psId = commonHelpers.entityIsCreated(testPropertySet1);
+            UUID psId = entityIsCreated(testPropertySet1);
             PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers
                     .constructPropertySetPropertyRelationship(psId, DEFAULT_PROPERTY_ID, true);
-            commonHelpers.entityIsCreated(relation);
+            entityIsCreated(relation);
         });
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, null, null, null, null);
-        commonHelpers.getEntities(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, params);
+        getEntities(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, params);
         numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, Integer.parseInt(returned));
         headerIs("X-Total-Count", total);
     }
@@ -217,14 +220,14 @@ public class ParametersPropertiesTests extends CommonTest {
         range(0, 12).forEachOrdered(n -> {
             testPropertySet1.setId(null);
             testPropertySet1.setName(String.format("New_set_%d", n));
-            UUID psId = commonHelpers.entityIsCreated(testPropertySet1);
+            UUID psId = entityIsCreated(testPropertySet1);
             PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers
                     .constructPropertySetPropertyRelationship(psId, DEFAULT_PROPERTY_ID, true);
-            commonHelpers.entityIsCreated(relation);
+            entityIsCreated(relation);
         });
 
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, null, null, null);
-        commonHelpers.getEntities(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, params);
+        getEntities(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, params);
         numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, Integer.parseInt(returned));
         headerIs("X-Total-Count", total);
     }
@@ -258,17 +261,17 @@ public class ParametersPropertiesTests extends CommonTest {
             testUser1.setLastName(String.format("LastName%d", n));
             testUser1.setUsername(String.format("UserName%d", n));
             testUser1.setEmail(String.format("username%d@snapshot.travel", n));
-            UUID userId = commonHelpers.entityIsCreated(testUser1);
+            UUID userId = entityIsCreated(testUser1);
             userIds.add(userId);
             UserPropertyRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
-            commonHelpers.entityIsCreated(relation);
+            entityIsCreated(relation);
         });
         String filter = "/null";
         if (!listPosition.equals("/null")) {
             filter = String.format("user_id==%s", String.valueOf(userIds.get(Integer.valueOf(listPosition))));
         }
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, null, null, null);
-        commonHelpers.getEntities(USER_PROPERTY_RELATIONSHIPS_PATH, params);
+        getEntities(USER_PROPERTY_RELATIONSHIPS_PATH, params);
         numberOfEntitiesInResponse(UserPropertyRelationshipDto.class, Integer.parseInt(returned));
         headerIs("X-Total-Count", total);
     }

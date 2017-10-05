@@ -13,6 +13,11 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTypeByUserForApp;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsTypeByUserForApp;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_APPLICATIONS_ENDPOINT;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_SINGLE_APPLICATION_ENDPOINT;
 
@@ -44,20 +49,20 @@ public class ApplicationsTests extends CommonTest {
         ApplicationVersionCreateDto externalAppVersion = testAppVersion3;
         externalAppVersion.setApplicationId(externalAppId);
         externalAppVersion.setIsNonCommercial(true);
-        UUID externalAppVersionId = commonHelpers.entityIsCreated(externalAppVersion);
+        UUID externalAppVersionId = entityIsCreated(externalAppVersion);
 //        Get all apps with internal context app
-        List<ApplicationDto> applications = commonHelpers.getEntitiesAsType(APPLICATIONS_PATH, ApplicationDto.class, null);
+        List<ApplicationDto> applications = getEntitiesAsType(APPLICATIONS_PATH, ApplicationDto.class, null);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(ApplicationDto.class, 2);
         applications.forEach(app -> assertThat(app.getPartnerId(), not(nullValue())));
 //        Get all apps with external context app
-        applications = commonHelpers.getEntitiesAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
+        applications = getEntitiesAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(ApplicationDto.class, 2);
         applications.forEach(app -> assertNull(app.getPartnerId()));
 //        Check external commercial applications too
         externalAppVersion.setIsNonCommercial(false);
-        applications = commonHelpers.getEntitiesAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
+        applications = getEntitiesAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(ApplicationDto.class, 2);
         applications.forEach(app -> assertNull(app.getPartnerId()));
@@ -72,38 +77,38 @@ public class ApplicationsTests extends CommonTest {
         ApplicationVersionCreateDto externalAppVersion = testAppVersion3;
         externalAppVersion.setApplicationId(externalAppId);
         externalAppVersion.setIsNonCommercial(true);
-        UUID externalAppVersionId = commonHelpers.entityIsCreated(externalAppVersion);
+        UUID externalAppVersionId = entityIsCreated(externalAppVersion);
 
 //        Get single app with internal context app
-        assertThat(commonHelpers.getEntityAsType(APPLICATIONS_PATH, ApplicationDto.class, externalAppId).getPartnerId(),
+        assertThat(getEntityAsType(APPLICATIONS_PATH, ApplicationDto.class, externalAppId).getPartnerId(),
                 is(testApplication3.getPartnerId()));
-        assertThat(commonHelpers.getEntityAsType(APPLICATIONS_PATH, ApplicationDto.class, DEFAULT_SNAPSHOT_APPLICATION_ID).getPartnerId(),
+        assertThat(getEntityAsType(APPLICATIONS_PATH, ApplicationDto.class, DEFAULT_SNAPSHOT_APPLICATION_ID).getPartnerId(),
                 is(DEFAULT_SNAPSHOT_PARTNER_ID));
 //        Get single app with external context app
         assertNull(
-                commonHelpers.getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, externalAppId)
+                getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, externalAppId)
                         .getPartnerId());
         assertNull(
-                commonHelpers.getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, DEFAULT_SNAPSHOT_APPLICATION_ID)
+                getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, DEFAULT_SNAPSHOT_APPLICATION_ID)
                         .getPartnerId());
 //        Check external commercial applications too
         externalAppVersion.setIsNonCommercial(true);
         assertNull(
-                commonHelpers.getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, externalAppId)
+                getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, externalAppId)
                         .getPartnerId());
         assertNull(
-                commonHelpers.getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, DEFAULT_SNAPSHOT_APPLICATION_ID)
+                getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, DEFAULT_SNAPSHOT_APPLICATION_ID)
                         .getPartnerId());
     }
 
     //    Help methods
     private void prepareExternalAppPermissionsAndRelations(ApplicationCreateDto application) {
-        externalAppId = commonHelpers.entityIsCreated(application);
+        externalAppId = entityIsCreated(application);
         dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_APPLICATIONS_ENDPOINT, HttpMethod.GET);
         dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_SINGLE_APPLICATION_ENDPOINT, HttpMethod.GET);
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructUserCustomerRelationshipDto(
+        entityIsCreated(relationshipsHelpers.constructUserCustomerRelationshipDto(
                 DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true));
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(
+        entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(
                 DEFAULT_SNAPSHOT_USER_ID, DEFAULT_PROPERTY_ID, true));
         commercialSubscriptionHelpers.commercialSubscriptionIsCreated(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID, externalAppId);
     }

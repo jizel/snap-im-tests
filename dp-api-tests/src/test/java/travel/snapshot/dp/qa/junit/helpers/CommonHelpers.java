@@ -2,13 +2,11 @@ package travel.snapshot.dp.qa.junit.helpers;
 
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.isOneOf;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_PERMISSIONS_PATH;
@@ -35,9 +33,6 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.CONFIGURATION_REQUEST_HTTP_LOG_LEVEL;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.CONFIGURATION_RESPONSE_HTTP_LOG_STATUS;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
@@ -45,27 +40,24 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_IF_MATCH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_USER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.IDENTITY_BASE_URI;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getBaseUriForModule;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.transformNull;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping.endpointDtoMap;
 import static travel.snapshot.dp.qa.junit.utils.EntityEndpointMapping.entityCreateDtoEndpointMap;
+import static travel.snapshot.dp.qa.junit.utils.RestAssuredConfig.setupRequestDefaults;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.config.ObjectMapperConfig;
 import com.jayway.restassured.config.RestAssuredConfig;
-import com.jayway.restassured.filter.log.LogDetail;
-import com.jayway.restassured.filter.log.ResponseLoggingFilter;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.model.EntityDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping;
 
@@ -81,9 +73,8 @@ public class CommonHelpers {
     public static final String RESPONSE_MESSAGE = "message";
     public static final String RESPONSE_DETAILS = "details";
 
-    protected RequestSpecification spec;
-    private BasicSteps basicSteps;
-    private PropertiesHelper propertiesHelper;
+    protected static RequestSpecification spec;
+    private BasicSteps basicSteps = new BasicSteps();
 
     public static final String ENTITIES_TO_DELETE = "deleteThese";
 
@@ -129,58 +120,18 @@ public class CommonHelpers {
      * Restassured initialization is copied from BasicSteps. This class should replace basic steps once all cucumber
      * tests are gone and should not inherit from it. However some functionality is similar.
      */
-    public CommonHelpers() {
+    static {
         spec = setupRequestDefaults();
-        basicSteps = new BasicSteps();
-        propertiesHelper = new PropertiesHelper();
-    }
-
-    public static RequestSpecification setupRequestDefaults() {
-        PropertiesHelper propertiesHelper = new PropertiesHelper();
-        RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
-                new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> OBJECT_MAPPER));
-
-        RequestSpecBuilder builder = new RequestSpecBuilder();
-        String responseLogLevel = propertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL);
-        String requestLogLevel = propertiesHelper.getProperty(CONFIGURATION_REQUEST_HTTP_LOG_LEVEL);
-
-        if (isNotBlank(responseLogLevel)) {
-            builder.log(LogDetail.valueOf(requestLogLevel));
-        }
-
-        if (isNotBlank(responseLogLevel)) {
-            RestAssured.replaceFiltersWith(
-                    new ResponseLoggingFilter(
-                            LogDetail.valueOf(responseLogLevel),
-                            true,
-                            System.out,
-                            not(isOneOf(propertiesHelper.getListOfInt(CONFIGURATION_RESPONSE_HTTP_LOG_STATUS)))));
-        }
-
-        return builder.build().baseUri(getBaseUriForModule("identity")).contentType("application/json; charset=UTF-8");
-    }
-
-    public static <DTO> List<DTO> parseResponseAsListOfObjects(Class<DTO> clazz) {
-        Response response = getSessionResponse();
-        List<DTO> objects = null;
-        try {
-            objects = OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
-        return objects;
     }
 
     // Get all
 
-    public Response getEntities(String basePath, Map<String, String> queryParams) {
+    public static Response getEntities(String basePath, Map<String, String> queryParams) {
         return getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, queryParams);
     }
 
-    public Response getEntitiesByUserForApp(UUID userId, UUID appId, String basePath, Map<String, String> queryParams) {
-        if (userId == null) {
-            fail("User ID to be send in request header is null.");
-        }
+    public static Response getEntitiesByUserForApp(UUID userId, UUID appId, String basePath, Map<String, String> queryParams) {
+        assertThat("User ID to be send in request header is null.", userId, is(notNullValue()));
         spec.basePath(basePath);
         RequestSpecification requestSpecification = givenContext(userId, appId).spec(spec);
         if (queryParams != null) requestSpecification.parameters(queryParams);
@@ -189,23 +140,23 @@ public class CommonHelpers {
         return response;
     }
 
-    public <DTO> List<DTO> getEntitiesAsType(String basePath, Class<DTO> clazz, Map<String, String> queryParams) {
+    public static <DTO> List<DTO> getEntitiesAsType(String basePath, Class<DTO> clazz, Map<String, String> queryParams) {
         setSessionResponse(getEntities(basePath, queryParams));
         return parseResponseAsListOfObjects(clazz);
     }
 
-    public <DTO> List<DTO> getEntitiesAsTypeByUserForApp(UUID userId, UUID appId, String basePath, Class<DTO> clazz, Map<String, String> queryParams) {
+    public static <DTO> List<DTO> getEntitiesAsTypeByUserForApp(UUID userId, UUID appId, String basePath, Class<DTO> clazz, Map<String, String> queryParams) {
         setSessionResponse(getEntitiesByUserForApp(userId, appId, basePath, queryParams));
         return parseResponseAsListOfObjects(clazz);
     }
 
     // Get
 
-    public Response getEntity(String basePath, UUID entityId) {
+    public static Response getEntity(String basePath, UUID entityId) {
         return getEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
-    public Response getEntityByUserForApplication(UUID userId, UUID applicationId, String basePath, UUID entityId) {
+    public static Response getEntityByUserForApplication(UUID userId, UUID applicationId, String basePath, UUID entityId) {
         spec.basePath(basePath);
         RequestSpecification requestSpecification = givenContext(userId, applicationId).spec(spec);
         assertNotNull("User ID to be send in request header is null.", userId);
@@ -215,11 +166,11 @@ public class CommonHelpers {
         return response;
     }
 
-    public <DTO> DTO getEntityAsType(String basePath, Class<DTO> type, UUID entityId) {
+    public static <DTO> DTO getEntityAsType(String basePath, Class<DTO> type, UUID entityId) {
         return getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, type, entityId);
     }
 
-    public <DTO> DTO getEntityAsTypeByUserForApp(UUID userId, UUID appVersionId, String basePath, Class<DTO> type, UUID entityId) {
+    public static <DTO> DTO getEntityAsTypeByUserForApp(UUID userId, UUID appVersionId, String basePath, Class<DTO> type, UUID entityId) {
         Response response = getEntityByUserForApplication(userId, appVersionId, basePath, entityId);
         assertThat(String.format("%s entity with id %s does not exist. Response is: %s", basePath, entityId, response.toString()),
                 response.getStatusCode(), is(SC_OK));
@@ -229,14 +180,10 @@ public class CommonHelpers {
 
     // Get etag
 
-    public String getEntityEtag(String basePath, UUID entityId) {
-        return getEntityEtagByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
-    }
-
-    public String getEntityEtagByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId) {
+    public static String getEntityEtag(String basePath, UUID entityId) {
         spec.basePath(basePath);
 
-        return givenContext(userId, applicationVersionId)
+        return givenContext(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .spec(spec)
                 .head("/{id}", entityId)
                 .getHeader(HEADER_ETAG);
@@ -245,7 +192,7 @@ public class CommonHelpers {
 
     // Create
 
-    public <DTO> UUID entityIsCreated(DTO entity) {
+    public static <DTO> UUID entityIsCreated(DTO entity) {
         Response response = createEntity(entity)
                 .then()
                 .statusCode(SC_CREATED)
@@ -254,7 +201,7 @@ public class CommonHelpers {
         return getDtoFromResponse(response, basePath).getId();
     }
 
-    public <DTO, CDTO> DTO entityIsCreatedAs(Class<DTO> type, CDTO entity) {
+    public static <DTO, CDTO> DTO entityIsCreatedAs(Class<DTO> type, CDTO entity) {
         Response response = createEntity(entity)
                 .then()
                 .statusCode(SC_CREATED)
@@ -262,14 +209,14 @@ public class CommonHelpers {
         return response.as(type);
     }
 
-    public <CDTO> Response createEntity(CDTO entity) {
+    public static <CDTO> Response createEntity(CDTO entity) {
         return createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entity);
     }
 
     /**
      * Specify context user and application for access check testing.
      */
-    public <CDTO> Response createEntityByUserForApplication(UUID userId, UUID applicationVersionId, CDTO entity) {
+    public static <CDTO> Response createEntityByUserForApplication(UUID userId, UUID applicationVersionId, CDTO entity) {
         spec.basePath(getCreateBasePath(entity));
         Response response = givenContext(userId, applicationVersionId)
                 .spec(spec)
@@ -284,7 +231,7 @@ public class CommonHelpers {
      * Create entity with with path specified. This method is useful for negative test scenaries, i.e. enables sending
      * Map<String, Object> as entity with invalid values to any endpoint.
      */
-    public Response createEntity(String basePath, Object entity) {
+    public static Response createEntity(String basePath, Object entity) {
         spec.basePath(basePath);
         Response response = givenContext(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).spec(spec)
                 .body(entity)
@@ -308,7 +255,7 @@ public class CommonHelpers {
         if (userId == null) {
             fail("User ID to be send in request header is null.");
         }
-        String etag = getEntityEtagByUserForApp(userId, applicationVersionId, basePath, entityId);
+        String etag = getEntityEtag(basePath, entityId);
         Response response = givenContext(userId, applicationVersionId)
                 .spec(spec)
                 .basePath(basePath)
@@ -321,36 +268,16 @@ public class CommonHelpers {
         return response;
     }
 
-
-    /**
-     * Update any IM entity via REST api using PATCH method. Verify that the response code is 200 - OK
-     *
-     * @param basePath - endpoint corresponding to the entity
-     * @param data     - entity update object, i.e. CustomerUpdateDto
-     */
-    public void entityIsUpdated(String basePath, UUID entityId, Object data) {
+    public static void entityIsUpdated(String basePath, UUID entityId, Object data) {
         updateEntity(basePath, entityId, data);
         responseCodeIs(SC_OK);
     }
 
-    /**
-     * Update any IM entity via REST api using PATCH method. Default snapshot type user and application version is used.
-     *
-     * @param basePath - endpoint corresponding to the entity
-     * @param data     - entity update object, i.e. CustomerUpdateDto
-     * @return Restassured Response type. Response should contain the updated object body according to DPIM-28.
-     */
-    public Response updateEntity(String basePath, UUID entityId, Object data) {
+    public static Response updateEntity(String basePath, UUID entityId, Object data) {
         return updateEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, data);
     }
 
-    /**
-     * Update of any IM entity using defined user and application. Should be used for update access check testing.
-     *
-     * @param userId               - context user, user performing the update
-     * @param applicationVersionId - context application
-     */
-    public Response updateEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId, Object data) {
+    public static Response updateEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId, Object data) {
         if (userId == null) {
             fail("User ID to be send in request header is null.");
         }
@@ -369,7 +296,7 @@ public class CommonHelpers {
         return response;
     }
 
-    public Response updateEntityWithEtag(String basePath, UUID entityId, Object data, String etag) {
+    public static Response updateEntityWithEtag(String basePath, UUID entityId, Object data, String etag) {
         RequestSpecification requestSpecification = givenContext(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .spec(spec)
                 .basePath(basePath);
@@ -387,15 +314,15 @@ public class CommonHelpers {
 
     // Delete
 
-    public void entityIsDeleted(String basePath, UUID entityId) {
+    public static void entityIsDeleted(String basePath, UUID entityId) {
         deleteEntity(basePath, entityId).then().statusCode(SC_NO_CONTENT);
     }
 
-    public Response deleteEntity(String basePath, UUID entityId) {
+    public static Response deleteEntity(String basePath, UUID entityId) {
         return deleteEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
-    public Response deleteEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId) {
+    public static Response deleteEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId) {
         assertNotNull("User ID to be send in request header is blank.", userId);
         Response response = givenContext(userId, applicationVersionId)
                 .spec(spec)
@@ -460,7 +387,7 @@ public class CommonHelpers {
 
 //    Help methods
 
-    EntityDto getDtoFromResponse(Response response, String basePath) {
+    static EntityDto getDtoFromResponse(Response response, String basePath) {
         assertThat("There is no key " + basePath + " in " + EndpointEntityMapping.class.getCanonicalName() + ". It should probably be added.",
                 endpointDtoMap.containsKey(basePath), is(true));
         return response.as(endpointDtoMap.get(basePath));
@@ -489,7 +416,7 @@ public class CommonHelpers {
      *
      * THIS METHOD SHOULD BE USED FOR ALL SECOND LEVEL RESOURCES!
      */
-    public static  String stripSlash(String string) {
+    public static String stripSlash(String string) {
         return (string.startsWith("/")) ? string.substring(1) : string;
     }
 
@@ -499,7 +426,7 @@ public class CommonHelpers {
         }
     }
 
-    private RequestSpecification givenContext(UUID userId, UUID applicationId) {
+    private static RequestSpecification givenContext(UUID userId, UUID applicationId) {
         return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
     }
 
@@ -510,6 +437,16 @@ public class CommonHelpers {
 
     public static Map<String, String> emptyQueryParams() {
         return buildQueryParamMapForPaging(null, null, null, null, null, null);
+    }
+
+    public static <DTO> List<DTO> parseResponseAsListOfObjects(Class<DTO> clazz) {
+        Response response = getSessionResponse();
+        try {
+            return OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+        return null;
     }
 
 }

@@ -15,7 +15,7 @@ import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.RoleCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupCreateDto;
-import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
+import travel.snapshot.dp.qa.junit.utils.NonNullMapDecorator;
 
 import java.util.Map;
 
@@ -29,20 +29,18 @@ import java.util.Map;
 @Getter
 public class EntitiesLoader {
 
-    private static EntitiesLoader instance = null;
-
-    private EntityNonNullMap<String, CustomerCreateDto> customerDtos;
-    private EntityNonNullMap<String, UserCreateDto> userDtos;
-    private EntityNonNullMap<String, UserCreateDto> snapshotUserDtos;
-    private EntityNonNullMap<String, PropertyCreateDto> propertyDtos;
-    private EntityNonNullMap<String, PropertySetCreateDto> propertySetDtos;
-    private EntityNonNullMap<String, RoleCreateDto> roleDtos;
-    private EntityNonNullMap<String, CustomerRoleCreateDto> customerRoleDtos;
-    private EntityNonNullMap<String, PropertyRoleCreateDto> propertyRoleDtos;
-    private EntityNonNullMap<String, PartnerCreateDto> partnerDtos;
-    private EntityNonNullMap<String, UserGroupCreateDto> userGroupDtos;
-    private EntityNonNullMap<String, ApplicationCreateDto> applicationDtos;
-    private EntityNonNullMap<String, ApplicationVersionCreateDto> applicationVersionDtos;
+    private NonNullMapDecorator<String, CustomerCreateDto> customerDtos;
+    private NonNullMapDecorator<String, UserCreateDto> userDtos;
+    private NonNullMapDecorator<String, UserCreateDto> snapshotUserDtos;
+    private NonNullMapDecorator<String, PropertyCreateDto> propertyDtos;
+    private NonNullMapDecorator<String, PropertySetCreateDto> propertySetDtos;
+    private NonNullMapDecorator<String, RoleCreateDto> roleDtos;
+    private NonNullMapDecorator<String, CustomerRoleCreateDto> customerRoleDtos;
+    private NonNullMapDecorator<String, PropertyRoleCreateDto> propertyRoleDtos;
+    private NonNullMapDecorator<String, PartnerCreateDto> partnerDtos;
+    private NonNullMapDecorator<String, UserGroupCreateDto> userGroupDtos;
+    private NonNullMapDecorator<String, ApplicationCreateDto> applicationDtos;
+    private NonNullMapDecorator<String, ApplicationVersionCreateDto> applicationVersionDtos;
     private Map<String, Map<String, Object>> clients;
 
     private EntitiesLoader() {
@@ -70,54 +68,54 @@ public class EntitiesLoader {
 
     private void loadCustomers() {
         Map<String, Object> yamlCustomers = loadEntities(String.format(YAML_DATA_PATH, "entities/customers.yaml"));
-        customerDtos = new EntityNonNullMap<>((Map<String, CustomerCreateDto>) yamlCustomers.get("customers"));
+        customerDtos = NonNullMapDecorator.of((Map<String, CustomerCreateDto>) yamlCustomers.get("customers"));
 
     }
 
     private void loadUsers() {
         Map<String, Object> yamlUsers = loadEntities(String.format(YAML_DATA_PATH, "entities/users.yaml"));
-        userDtos = new EntityNonNullMap<>((Map<String, UserCreateDto>) yamlUsers.get("users"));
+        userDtos = NonNullMapDecorator.of((Map<String, UserCreateDto>) yamlUsers.get("users"));
     }
 
     private void loadSnapshotUsers() {
         Map<String, Object> yamlCustomers = loadEntities(String.format(YAML_DATA_PATH, "entities/users.yaml"));
-        snapshotUserDtos = new EntityNonNullMap<>((Map<String, UserCreateDto>) yamlCustomers.get("snapshotUsers"));
+        snapshotUserDtos = NonNullMapDecorator.of((Map<String, UserCreateDto>) yamlCustomers.get("snapshotUsers"));
     }
 
     private void loadProperties() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/properties.yaml"));
-        propertyDtos = new EntityNonNullMap<>((Map<String, PropertyCreateDto>) yamlProperties.get("properties"));
+        propertyDtos = NonNullMapDecorator.of((Map<String, PropertyCreateDto>) yamlProperties.get("properties"));
     }
 
     private void loadPropertySets() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/property_sets.yaml"));
-        propertySetDtos = new EntityNonNullMap<>((Map<String, PropertySetCreateDto>) yamlProperties.get("propertySets"));
+        propertySetDtos = NonNullMapDecorator.of((Map<String, PropertySetCreateDto>) yamlProperties.get("propertySets"));
     }
 
     private void loadRoles() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/roles.yaml"));
-        roleDtos = new EntityNonNullMap<>((Map<String, RoleCreateDto>) yamlProperties.get("roles"));
-        customerRoleDtos = new EntityNonNullMap<>((Map<String, CustomerRoleCreateDto>) yamlProperties.get("customerRoles"));
-        propertyRoleDtos = new EntityNonNullMap<>((Map<String, PropertyRoleCreateDto>) yamlProperties.get("propertyRoles"));
+        roleDtos = NonNullMapDecorator.of((Map<String, RoleCreateDto>) yamlProperties.get("roles"));
+        customerRoleDtos = NonNullMapDecorator.of((Map<String, CustomerRoleCreateDto>) yamlProperties.get("customerRoles"));
+        propertyRoleDtos = NonNullMapDecorator.of((Map<String, PropertyRoleCreateDto>) yamlProperties.get("propertyRoles"));
     }
 
     private void loadPartners() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/partners.yaml"));
-        partnerDtos = new EntityNonNullMap<>((Map<String, PartnerCreateDto>) yamlProperties.get("partners"));
+        partnerDtos = NonNullMapDecorator.of((Map<String, PartnerCreateDto>) yamlProperties.get("partners"));
     }
 
     private void loadUserGroups() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/user_groups.yaml"));
-        userGroupDtos = new EntityNonNullMap<>((Map<String, UserGroupCreateDto>) yamlProperties.get("user_groups"));
+        userGroupDtos = NonNullMapDecorator.of((Map<String, UserGroupCreateDto>) yamlProperties.get("user_groups"));
     }
 
     private void loadApplications() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/applications.yaml"));
-        applicationDtos = new EntityNonNullMap<>((Map<String, ApplicationCreateDto>) yamlProperties.get("applications"));
+        applicationDtos = NonNullMapDecorator.of((Map<String, ApplicationCreateDto>) yamlProperties.get("applications"));
     }
 
     private void loadApplicationVersions() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/application_versions.yaml"));
-        applicationVersionDtos = new EntityNonNullMap<>((Map<String, ApplicationVersionCreateDto>) yamlProperties.get("application_versions"));
+        applicationVersionDtos = NonNullMapDecorator.of((Map<String, ApplicationVersionCreateDto>) yamlProperties.get("application_versions"));
     }
 }

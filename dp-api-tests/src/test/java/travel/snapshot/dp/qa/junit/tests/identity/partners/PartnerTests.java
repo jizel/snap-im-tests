@@ -14,6 +14,11 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -44,10 +49,10 @@ public class PartnerTests extends CommonTest{
     @Before
     public void setUp() {
         super.setUp();
-        createdPartner1Id = commonHelpers.entityIsCreated(testPartner1);
+        createdPartner1Id = entityIsCreated(testPartner1);
         testUser1.setType(UserUpdateDto.UserType.PARTNER);
         testUser1.setUserCustomerRelationship(null);
-        createdUserId = commonHelpers.entityIsCreated(testUser1);
+        createdUserId = entityIsCreated(testUser1);
     }
 
     @Test
@@ -57,24 +62,24 @@ public class PartnerTests extends CommonTest{
         partnerUpdate.setEmail("updated@snapshot.travel");
         partnerUpdate.setWebsite("http://www.updated.partner.com");
         partnerUpdate.setIsActive(false);
-        Response updateResponse = commonHelpers.updateEntity(PARTNERS_PATH, createdPartner1Id, partnerUpdate);
+        Response updateResponse = updateEntity(PARTNERS_PATH, createdPartner1Id, partnerUpdate);
         responseCodeIs(SC_OK);
         PartnerDto updateResponsePartner = updateResponse.as(PartnerDto.class);
-        PartnerDto requestedPartner = commonHelpers.getEntityAsType(PARTNERS_PATH, PartnerDto.class, createdPartner1Id);
+        PartnerDto requestedPartner = getEntityAsType(PARTNERS_PATH, PartnerDto.class, createdPartner1Id);
         assertThat("Update response body differs from the same partner requested by GET ", updateResponsePartner, is(requestedPartner));
     }
 
     @Test
     public void invalidUpdatePartner() throws Exception {
         Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
-        commonHelpers.updateEntity(PARTNERS_PATH, createdPartner1Id, invalidUpdate);
+        updateEntity(PARTNERS_PATH, createdPartner1Id, invalidUpdate);
         responseIsUnprocessableEntity();
 
         invalidUpdate = singletonMap("email", "invalid_value");
-        commonHelpers.updateEntity(PARTNERS_PATH, createdPartner1Id, invalidUpdate);
+        updateEntity(PARTNERS_PATH, createdPartner1Id, invalidUpdate);
         responseIsUnprocessableEntity();
 
-        commonHelpers.updateEntity(PARTNERS_PATH, randomUUID(), invalidUpdate);
+        updateEntity(PARTNERS_PATH, randomUUID(), invalidUpdate);
         responseIsEntityNotFound();
     }
 
@@ -96,38 +101,38 @@ public class PartnerTests extends CommonTest{
         // make user belong to the correct partner
         UUID userId = createdUserId;
         UserPartnerRelationshipCreateDto relation = relationshipsHelpers.constructUserPartnerRelationshipDto(userId, DEFAULT_SNAPSHOT_PARTNER_ID, true);
-        commonHelpers.entityIsCreated(relation);
-        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        entityIsCreated(relation);
+        getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_NOT_FOUND);
         UserCustomerRelationshipCreateDto userCustomerRelation = relationshipsHelpers.constructUserCustomerRelationshipDto(userId, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true);
-        commonHelpers.entityIsCreated(userCustomerRelation);
-        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        entityIsCreated(userCustomerRelation);
+        getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_NOT_FOUND);
         UserPropertyRelationshipCreateDto userPropertyRelation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
-        commonHelpers.entityIsCreated(userPropertyRelation);
-        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        entityIsCreated(userPropertyRelation);
+        getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);
         CommercialSubscriptionUpdateDto update = new CommercialSubscriptionUpdateDto();
         update.setIsActive(false);
-        commonHelpers.entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, update);
-        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, update);
+        getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);
     }
 
     @Test
     @Jira("DPIM-31")
     public void treatCommercialSubscriptionsAsRelationshipCustomerUser() throws IOException {
-        UUID userId = commonHelpers.entityIsCreated(testUser2);
-        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        UUID userId = entityIsCreated(testUser2);
+        getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_NOT_FOUND);
         UserPropertyRelationshipCreateDto userPropertyRelation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
-        commonHelpers.entityIsCreated(userPropertyRelation);
-        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        entityIsCreated(userPropertyRelation);
+        getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);
         CommercialSubscriptionUpdateDto update = new CommercialSubscriptionUpdateDto();
         update.setIsActive(false);
-        commonHelpers.entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, update);
-        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, update);
+        getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);
     }
 }

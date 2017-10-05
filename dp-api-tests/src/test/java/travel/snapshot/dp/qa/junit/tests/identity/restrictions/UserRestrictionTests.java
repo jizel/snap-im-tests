@@ -11,6 +11,8 @@ import static travel.snapshot.dp.api.type.HttpMethod.GET;
 import static travel.snapshot.dp.api.type.HttpMethod.POST;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +35,7 @@ public class UserRestrictionTests extends CommonRestrictionTest{
     @Before
     public void setUp() {
         super.setUp();
-        createdUserId = commonHelpers.entityIsCreated(testUser1);
+        createdUserId = entityIsCreated(testUser1);
     }
 
     @Test
@@ -98,8 +100,8 @@ public class UserRestrictionTests extends CommonRestrictionTest{
     @Test
     public void getUserRolesRestrictionTest() throws Exception{
 //        Property roles
-        PropertyDto createdProperty1 = commonHelpers.entityIsCreatedAs(PropertyDto.class, testProperty1);
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(createdUserId, testProperty1.getId(), true));
+        PropertyDto createdProperty1 = entityIsCreatedAs(PropertyDto.class, testProperty1);
+        entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(createdUserId, testProperty1.getId(), true));
         userHelpers.listRolesForRelationByUserForApp(createdUserId, createdAppVersion.getId(), createdUserId, PROPERTIES_RESOURCE, createdProperty1.getId());
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_USER_PROPERTIES_ROLES_ENDPOINT, GET);
