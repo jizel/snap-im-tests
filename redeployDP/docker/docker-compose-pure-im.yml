@@ -24,9 +24,9 @@ services:
     ## 2. dedicated folder for container's tmp
     ## 3. Folder where *.properties file resides
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+            - $COREQA_BASE/redeployDP/docker_shared:/data:ro
             - $BASE_FOLDER/shared:/tmp:rw
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+            - $COREQA_BASE/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
     ## The same applies to all non-pms-integration images
  
     postgresql:
@@ -34,7 +34,7 @@ services:
         environment:
             - POSTGRES_PASSWORD=secret
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/sql:/docker-entrypoint-initdb.d
+            - $COREQA_BASE/redeployDP/docker_shared/sql:/docker-entrypoint-initdb.d
         ports:
             - "5432:5432"
         networks:

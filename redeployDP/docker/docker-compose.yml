@@ -33,9 +33,9 @@ services:
     ## 2. dedicated folder for container's tmp
     ## 3. Folder where *.properties file resides
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+            - $COREQA_BASE/redeployDP/docker_shared:/data:ro
             - $BASE_FOLDER/shared:/tmp:rw
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+            - $COREQA_BASE/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
     ## The same applies to all non-pms-integration images
     twitter_api:
         image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
@@ -53,9 +53,9 @@ services:
         networks:
             - main
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+            - $COREQA_BASE/redeployDP/docker_shared:/data:ro
             - $BASE_FOLDER/shared:/tmp:rw
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+            - $COREQA_BASE/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
      
     instagram_api:
         image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
@@ -73,9 +73,9 @@ services:
         networks:
             - main
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+            - $COREQA_BASE/redeployDP/docker_shared:/data:ro
             - $BASE_FOLDER/shared:/tmp:rw
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+            - $COREQA_BASE/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
 
     google_api:
         image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
@@ -93,9 +93,9 @@ services:
         networks:
             - main
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+            - $COREQA_BASE/redeployDP/docker_shared:/data:ro
             - $BASE_FOLDER/shared:/tmp:rw
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+            - $COREQA_BASE/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
 
     facebook_api:
         image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
@@ -113,9 +113,9 @@ services:
         networks:
             - main
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+            - $COREQA_BASE/redeployDP/docker_shared:/data:ro
             - $BASE_FOLDER/shared:/tmp:rw
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+            - $COREQA_BASE/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
 
     socialmedia_api:
         image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
@@ -133,9 +133,9 @@ services:
         networks:
             - main
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+            - $COREQA_BASE/redeployDP/docker_shared:/data:ro
             - $BASE_FOLDER/shared:/tmp:rw
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+            - $COREQA_BASE/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
 
     rateshopper:
         image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
@@ -153,9 +153,9 @@ services:
         networks:
             - main
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+            - $COREQA_BASE/redeployDP/docker_shared:/data:ro
             - $BASE_FOLDER/shared:/tmp:rw
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+            - $COREQA_BASE/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
 
     review:
         image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
@@ -173,9 +173,9 @@ services:
         networks:
             - main
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+            - $COREQA_BASE/redeployDP/docker_shared:/data:ro
             - $BASE_FOLDER/shared:/tmp:rw
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+            - $COREQA_BASE/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
 
     configuration:
         image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
@@ -193,9 +193,9 @@ services:
         networks:
             - main
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+            - $COREQA_BASE/redeployDP/docker_shared:/data:ro
             - $BASE_FOLDER/shared:/tmp:rw
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+            - $COREQA_BASE/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
              
     mariadb:
         image: docker.io/mariadb:10.1.22
@@ -211,7 +211,7 @@ services:
         environment:
             - POSTGRES_PASSWORD=secret
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/sql:/docker-entrypoint-initdb.d
+            - $COREQA_BASE/redeployDP/docker_shared/sql:/docker-entrypoint-initdb.d
         ports:
             - "5432:5432"
         networks:
@@ -236,7 +236,7 @@ services:
             - 9991:9990
             - 8788:8787
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/keycloak:/opt/keycloak
+            - $COREQA_BASE/redeployDP/docker_shared/keycloak:/opt/keycloak
         environment:
             - KEYCLOAK_USER=admin
             - KEYCLOAK_PASSWORD=admin
@@ -266,7 +266,7 @@ services:
         ports:
             - 81:80
         volumes:
-            - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/nginx:/usr/local/openresty/nginx/conf.d
+            - $COREQA_BASE/redeployDP/docker_shared/nginx:/usr/local/openresty/nginx/conf.d
         depends_on:
             - identity
             - keycloak
