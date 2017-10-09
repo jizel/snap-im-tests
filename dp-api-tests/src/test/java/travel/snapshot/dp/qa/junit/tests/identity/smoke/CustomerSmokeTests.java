@@ -9,6 +9,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,13 +19,16 @@ import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipCreateD
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
+import java.lang.reflect.MalformedParameterizedTypeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 
 @Category(Categories.Authorization.class)
@@ -93,20 +97,21 @@ public class CustomerSmokeTests extends CommonSmokeTest {
     public void customerUserCRUD() throws Throwable {
         // create a user
         UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
-        // create a customer
-        UUID customerId = authorizationHelpers.entityIsCreated(testCustomer1);
-        // create relation
-        UserCustomerRelationshipCreateDto relation = relationshipsHelpers.constructUserCustomerRelationshipDto(
-                userId,
-                customerId,
-                true,
-                false);
-        UUID relationId = authorizationHelpers.entityIsCreated(relation);
+        // list relations
+        Map<String, String> queryParams = buildQueryParamMapForPaging(
+                null,
+                null,
+                String.format("user_id==%s", userId.toString()),
+                null,
+                null,
+                null);
+        UUID relationId = authorizationHelpers.getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, queryParams)
+                .get(0).getId();
         // get relation
         authorizationHelpers.getEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);
         bodyContainsEntityWith("user_id", userId.toString());
-        bodyContainsEntityWith("customer_id", customerId.toString());
+        bodyContainsEntityWith("customer_id", DEFAULT_SNAPSHOT_CUSTOMER_ID.toString());
         bodyContainsEntityWith("is_active", "true");
         bodyContainsEntityWith("is_primary", "false");
         // update

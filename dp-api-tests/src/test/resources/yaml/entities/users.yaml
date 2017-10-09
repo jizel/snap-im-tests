@@ -5,7 +5,7 @@ users:
     username: johnSmith,
     firstName: John,
     lastName: Smith,
-    email: user1@snapshot.travel,
+    email: dpcoreqa1@dpcoreqa-snapshot.com,
     timezone: Europe/Prague,
     languageCode: cs-CZ,
     userCustomerRelationship: {
@@ -21,7 +21,7 @@ users:
     username: dickJames,
     firstName: Dick,
     lastName: James,
-    email: user2@snapshot.travel
+    email: dpcoreqa2@dpcoreqa-snapshot.com
 }
 
   user3: !user {
@@ -31,7 +31,7 @@ users:
     username: partnerUser,
     firstName: Partner,
     lastName: User,
-    email: partneruser1@snapshot.travel
+    email: dpcoreqa3@dpcoreqa-snapshot.com
 
 }
 
@@ -42,7 +42,7 @@ snapshotUsers:
     username: snapUser1,
     firstName: Snap,
     lastName: User,
-    email: snapuser1@snapshot.travel,
+    email: snapuser_dpcoreqa@dpcoreqa-snapshot.com,
     timezone: Europe/Prague,
     languageCode: cs-CZ
 }
@@ -55,5 +55,5 @@ partnerUsers:
     firstName: Bart,
     lastName: Simpson,
     type: PARTNER,
-    email: partneruser1@snapshot.travel
+    email: partneruser_dpcoreqa@dpcoreqa-snapshot.com
   }
