@@ -167,7 +167,6 @@ public class DbStepDefs {
         customer.setVatId("DEF0000001");
         customer.setWebsite("https://www.defaultCustomerForTests.com");
         dbSteps.createDBCustomer(customer);
-        dbSteps.populateCustomerHierarchyPath(customer.getId());
     }
 
     @Given("^Default property is created$")

@@ -1,5 +1,5 @@
 def serenityVersion = "1.1.26"
-def apiVersion = "1.39.37"
+def apiVersion = "1.39.40"
 
 repositories {
     mavenLocal()

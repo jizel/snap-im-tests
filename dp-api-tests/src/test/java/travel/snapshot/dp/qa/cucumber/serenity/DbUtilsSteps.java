@@ -32,14 +32,12 @@ public class DbUtilsSteps {
     static final String DELETE_SINGLE_PROPERTY = "delete from Property where id = '%s';";
     static final String DELETE_SINGLE_PROPERTYSET = "delete from Propertyset where id = '%s';";
     static final String DELETE_SINGLE_PROPERTYSET_PROPERTY = "delete from Propertyset_Property where id = '%s';";
-    static final String DELETE_SINGLE_PROPERTYSET_HIERARCHY = "delete from PropertysetHierarchyPath where parent_id = '%s';";
     static final String DELETE_SINGLE_CUSTOMER = "delete from Customer where id = '%s';";
     static final String DELETE_SINGLE_COMMERCIAL_SUBSCRIPTION = "delete from CommercialSubscription where id = '%s';";
     static final String REVOKE_APP_PERMISSIONS = "delete from applicationpermission where application_id = '%s';";
     static final String DELETE_SINGLE_APPLICATION = "delete from Application where id = '%s';";
     static final String DELETE_SINGLE_APPLICATION_VERSION = "delete from ApplicationVersion where id = '%s';";
     static final String DELETE_SINGLE_PARTNER = "delete from Partner where id = '%s';";
-    static final String DELETE_SINGLE_CUSTOMER_HIERARCHY = "delete from customerhierarchypath where parent_id = '%s';";
     static final String DELETE_SINGLE_ADDRESS = "delete from Address where line1 = '%s';";
     static final String DELETE_DB_ADDRESS = "delete from Address where id = '%s';";
     static final String DELETE_SINGLE_CUSTOMER_PROPERTY = "delete from customer_property where id = '%s';";
@@ -73,8 +71,6 @@ public class DbUtilsSteps {
     static final String DELETE_USER_GROUPS_USER = "delete from UserGroup_User";
     static final String DELETE_CUSTOMER_PROPERTY_BY_CUSTOMER_ID_PROPERTY_ID = "delete from Customer_Property where customer_id = ? and property_id = ?";
     static final String DELETE_COMMERCIAL_SUBSCRIPTION = "delete from CommercialSubscription";
-    static final String DELETE_CUSTOMER_HIERARCHY_PATH = "delete from CustomerHierarchyPath";
-    static final String DELETE_PROPERTY_SET_HIERARCHY_PATH = "delete from PropertySetHierarchyPath";
     static final String DELETE_USER_PROPERTY_BY_USER_ID_PROPERTY_ID = "delete  from User_Property where user_id = ? and property_id = ?";
     static final String DELETE_TTI_CROSSREFERENCES = "delete  from crossreferences";
     static final String DELETE_PARTNER = "delete from Partner";
@@ -89,7 +85,6 @@ public class DbUtilsSteps {
     static final String CREATE_DB_ADDRESS = "INSERT INTO Address (id, line1, line2, city, zip_code, country_code) VALUES (?, ?, ?, ?, ?, ?);";
     static final String CREATE_DB_PROPERTY = "INSERT INTO Property (id, is_active, salesforce_id, name, email, website, is_demo, address_id, timezone, code, description, customer_id, version, tti_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123');";
     static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO CommercialSubscription (id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_CUSTOMER_HIERARCHY_PATH = "INSERT INTO CustomerHierarchyPath (parent_id, child_id) values (?, ?) ;";
     static final String DELETE_APPLICATION_PERMISSION = "DELETE FROM ApplicationPermission;";
     static final String POPULATE_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (id, application_id, platform_operation_id) SELECT uuid_generate_v4(), ?, id FROM platformoperation;";
     static final String ADD_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (id, application_id, platform_operation_id) VALUES (?, ?, ?);";
@@ -142,12 +137,10 @@ public class DbUtilsSteps {
     }
 
     public void deletePropertySet(UUID id) {
-        dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTYSET_HIERARCHY, id));
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTYSET, id));
     }
 
     public void deleteCustomer(UUID id) {
-        dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER_HIERARCHY, id));
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER, id));
     }
 
@@ -209,10 +202,6 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(CREATE_DB_CUSTOMER, (customer.getId()), customer.getIsActive(), customer.getSalesforceId().toString(), customer.getName(), customer.getPhone(), customer.getEmail(), customer.getWebsite(), customer.getVatId(), customer.getIsDemo(), customer.getNotes(), (DEFAULT_ADDRESS_ID), customer.getTimezone());
     }
 
-    public void populateCustomerHierarchyPath(UUID customerId) {
-        dbHelper.identityDb().update(CREATE_CUSTOMER_HIERARCHY_PATH, customerId, customerId);
-    }
-
     public void createDBProperty(PropertyDto property) {
         dbHelper.identityDb().update(CREATE_DB_PROPERTY, (property.getId()), property.getIsActive(), property.getSalesforceId().toString(), property.getName(), property.getEmail(), property.getWebsite(), property.getIsDemo(), (DEFAULT_ADDRESS_ID), property.getTimezone(), property.getCode(), property.getDescription(), (property.getCustomerId()));
     }
@@ -235,8 +224,6 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_ROLE_PERMISSION);
         dbHelper.identityDb().update(DELETE_ROLE_ASSIGNMENT);
         dbHelper.identityDb().update(DELETE_APPLICATION_PERMISSION);
-        dbHelper.identityDb().update(DELETE_CUSTOMER_HIERARCHY_PATH);
-        dbHelper.identityDb().update(DELETE_PROPERTY_SET_HIERARCHY_PATH);
         dbHelper.identityDb().update(DELETE_CUSTOMER_PROPERTY);
         dbHelper.identityDb().update(DELETE_CUSTOMER_USER);
         dbHelper.identityDb().update(DELETE_PARTNER_USER);
