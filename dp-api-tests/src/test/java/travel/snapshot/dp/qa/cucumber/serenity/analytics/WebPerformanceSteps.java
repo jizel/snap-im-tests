@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.cucumber.serenity.analytics;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
 import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 import com.jayway.restassured.response.Response;
@@ -96,7 +97,7 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
     @Step
     public void valueRecordIsOfValue(int valueNumber, Class valueType, String value, boolean incomplete) throws Exception {
 
-        Object object = createObjectMapper().readValue(getSessionResponse().body().prettyPrint(), valueType);
+        Object object = OBJECT_MAPPER.readValue(getSessionResponse().body().prettyPrint(), valueType);
 
         RecordDto recordDto = null;
 
