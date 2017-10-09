@@ -482,7 +482,7 @@ public class CommonHelpers {
      *
      * THIS METHOD SHOULD BE USED FOR ALL SECOND LEVEL RESOURCES!
      */
-    private String stripSlash(String string) {
+    public static  String stripSlash(String string) {
         return (string.startsWith("/")) ? string.substring(1) : string;
     }
 

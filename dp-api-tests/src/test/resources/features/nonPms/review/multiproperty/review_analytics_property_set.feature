@@ -23,9 +23,7 @@ Feature: Review multiproperty property set
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     Given Relation between property with code "p2_code" and property set with name "ps1_name" exists
     Given Relation between property with code "p3_code" and property set with name "ps1_name" exists
-    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
-    Given Relation between property with code "p2_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
-    Given Relation between property with code "p3_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
+
 
 #------------
 # GET /review/analytics/property_set/{property_set_id}/popularity_index_rank

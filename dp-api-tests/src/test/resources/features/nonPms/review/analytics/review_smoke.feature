@@ -13,7 +13,6 @@ Feature: Review Smoke test feature
     Given The following properties exist with random address and billing address
       | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 06000000-0000-4444-8888-000000000001 |
-    Given Relation between user "snapUser1" and property with code "p1_code" exists
 
   @Smoke
   Scenario Outline: Get specific analytics data from API for a given granularity of more complex endpoints - smoke

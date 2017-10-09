@@ -19,12 +19,12 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.setupRequestDefaults;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.stripSlash;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -460,7 +460,7 @@ public class BasicSteps {
 
     protected Response createSecondLevelRelationshipByUserForApplication(UUID userId, UUID applicationId, UUID firstLevelId, String secondLevelName, Object jsonBody) {
         RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(jsonBody);
-        Response response = requestSpecification.post("/" + firstLevelId + "/" + secondLevelName);
+        Response response = requestSpecification.post("/" + firstLevelId + "/" + stripSlash(secondLevelName));
         setSessionResponse(response);
         return response;
     }
