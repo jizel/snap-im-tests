@@ -75,7 +75,7 @@ public class RoleAssignmentTests extends CommonTest {
             commonHelpers.getEntitiesByUserForApp(createdUserId, createdAppVersionId, endpoint, emptyQueryParams())
                     .then()
                     .statusCode(SC_NOT_FOUND);
-            commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, HttpMethod.GET, String.format("/identity%s", endpoint)));
+            commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, HttpMethod.GET, String.format("/identity%s", endpoint), false));
             commonHelpers.getEntitiesByUserForApp(createdUserId, createdAppVersionId, endpoint, emptyQueryParams())
                     .then()
                     .statusCode(SC_OK);
@@ -93,7 +93,7 @@ public class RoleAssignmentTests extends CommonTest {
 
     @Test
     public void rolePermissionsCRUD() {
-        UUID rolePermissionId = commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, HttpMethod.GET, String.format("/identity%s", PROPERTIES_PATH)));
+        UUID rolePermissionId = commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, HttpMethod.GET, String.format("/identity%s", PROPERTIES_PATH), false));
         RolePermissionDto rolePermission = commonHelpers.getEntityAsType(ROLE_PERMISSIONS_PATH, RolePermissionDto.class, rolePermissionId);
         assertThat(rolePermissionId, is(rolePermission.getId()));
         // Role permissions do not support update, therefore - delete

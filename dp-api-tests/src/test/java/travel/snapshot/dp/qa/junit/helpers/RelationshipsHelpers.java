@@ -207,8 +207,8 @@ public class RelationshipsHelpers extends BasicSteps {
         return assignment;
     }
 
-    public RolePermissionCreateDto constructRolePermission(UUID roleId, HttpMethod method, String uriTemplate) {
-        UUID platformOperationId = platformOperationHelpers.getPlatformOperationId(method, uriTemplate);
+    public RolePermissionCreateDto constructRolePermission(UUID roleId, HttpMethod method, String uriTemplate, Boolean withAuth) {
+        UUID platformOperationId = platformOperationHelpers.getPlatformOperationId(method, uriTemplate, withAuth);
         RolePermissionCreateDto rolePermission = new RolePermissionCreateDto();
         rolePermission.setRoleId(roleId);
         rolePermission.setPlatformOperationId(platformOperationId);

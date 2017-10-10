@@ -51,8 +51,8 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         authorizationHelpers.getEntity(CUSTOMERS_PATH, customerIds.get(0));
         responseCodeIs(SC_OK);
         bodyContainsEntityWith("customer_code");
-        bodyContainsEntityWith("name", "Creation test company1");
-        bodyContainsEntityWith("email", "s1@tenants.biz");
+        bodyContainsEntityWith("name", "Creation test company4");
+        bodyContainsEntityWith("email", "s4@tenants.biz");
         //update
         CustomerUpdateDto update = new CustomerUpdateDto();
         update.setIsActive(false);
@@ -87,6 +87,8 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         authorizationHelpers.entityIsDeleted(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId);
     }
 
+/*
+    Please uncomment the following test once multi-tenance is enabled for user.
     @Test
     public void customerUserCRUD() throws Throwable {
         // create a user
@@ -117,4 +119,5 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         // delete relation
         authorizationHelpers.entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
     }
+*/
 }
