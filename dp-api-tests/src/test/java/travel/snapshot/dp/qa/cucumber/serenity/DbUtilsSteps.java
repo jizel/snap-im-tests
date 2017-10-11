@@ -32,6 +32,7 @@ public class DbUtilsSteps {
     static final String DELETE_SINGLE_PROPERTY = "delete from Property where id = '%s';";
     static final String DELETE_SINGLE_PROPERTYSET = "delete from Propertyset where id = '%s';";
     static final String DELETE_SINGLE_PROPERTYSET_PROPERTY = "delete from Propertyset_Property where id = '%s';";
+    static final String DELETE_ALL_PROPERTIES_OF_CUSTOMER = "delete from Property where customer_id = '%s';";
     static final String DELETE_SINGLE_CUSTOMER = "delete from Customer where id = '%s';";
     static final String DELETE_SINGLE_COMMERCIAL_SUBSCRIPTION = "delete from CommercialSubscription where id = '%s';";
     static final String REVOKE_APP_PERMISSIONS = "delete from applicationpermission where application_id = '%s';";
@@ -141,6 +142,7 @@ public class DbUtilsSteps {
     }
 
     public void deleteCustomer(UUID id) {
+        dbHelper.identityDb().update(String.format(DELETE_ALL_PROPERTIES_OF_CUSTOMER, id));
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER, id));
     }
 

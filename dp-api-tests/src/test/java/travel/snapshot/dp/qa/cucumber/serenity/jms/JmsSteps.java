@@ -37,7 +37,10 @@ public class JmsSteps extends BasicSteps {
 
 
     public void start() throws Exception {
-        connectionFactory = new ActiveMQConnectionFactory(propertiesHelper.getProperty("broker.url"));
+        connectionFactory = new ActiveMQConnectionFactory(
+                propertiesHelper.getProperty("broker.user"),
+                propertiesHelper.getProperty("broker.password"),
+                propertiesHelper.getProperty("broker.url"));
         connection = connectionFactory.createConnection();
         connection.setClientID("testClientId");
         connection.start();
