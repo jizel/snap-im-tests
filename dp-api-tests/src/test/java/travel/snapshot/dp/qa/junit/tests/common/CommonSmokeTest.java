@@ -49,7 +49,7 @@ import java.util.UUID;
 @Category(Categories.Authorization.class)
 public class CommonSmokeTest extends CommonTest {
 
-    protected static final AuthorizationSteps authorizationSteps = new AuthorizationSteps();
+    protected final AuthorizationSteps authorizationSteps = new AuthorizationSteps();
     protected String clientId = null;
     protected String clientSecret = null;
 
