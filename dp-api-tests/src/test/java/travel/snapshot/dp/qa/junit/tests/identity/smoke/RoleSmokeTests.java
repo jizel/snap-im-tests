@@ -57,7 +57,7 @@ public class RoleSmokeTests extends CommonSmokeTest {
 
     @Test
     public void rolePermissionsCRUD() {
-        UUID rolePermissionId = authorizationHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, HttpMethod.GET, String.format("/identity%s", PROPERTIES_PATH)));
+        UUID rolePermissionId = authorizationHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, HttpMethod.GET, String.format("/identity%s", PROPERTIES_PATH), true));
         RolePermissionDto rolePermission = authorizationHelpers.getEntity(ROLE_PERMISSIONS_PATH, rolePermissionId).as(RolePermissionDto.class);
         assertThat(rolePermissionId, is(rolePermission.getId()));
         // Role permissions do not support update, therefore - delete

@@ -92,11 +92,11 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
         //        Prepare data
         commonHelpers.entityIsCreated(permissionHelpers.constructAppPermission(
                 restrictedApp.getId(),
-                platformOperationHelpers.getPlatformOperationId(GET, RESTRICTIONS_ALL_USERS_ENDPOINT))
+                platformOperationHelpers.getPlatformOperationId(GET, RESTRICTIONS_ALL_USERS_ENDPOINT, false))
         );
         testRole1.setApplicationId(restrictedApp.getId());
         UUID createdRoleId = commonHelpers.entityIsCreated(testRole1);
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_EFFECTIVE_PERMISSIONS));
+        commonHelpers.entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_EFFECTIVE_PERMISSIONS, false));
         commonHelpers.entityIsCreated(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId));
         pathParams.put(USER_ID, createdUserId.toString());
 
@@ -123,7 +123,7 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
     public void appPermissionMustExistBeforeRolePermission() {
         testRole1.setApplicationId(restrictedApp.getId());
         UUID createdRoleId = commonHelpers.entityIsCreated(testRole1);
-        commonHelpers.createEntity(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_ALL_CUSTOMERS_ENDPOINT))
+        commonHelpers.createEntity(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_ALL_CUSTOMERS_ENDPOINT, false))
                 .then()
                 .statusCode(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(42203);

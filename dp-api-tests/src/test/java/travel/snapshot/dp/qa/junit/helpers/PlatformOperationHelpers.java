@@ -17,6 +17,7 @@ import java.util.UUID;
 public class PlatformOperationHelpers {
 
     private final CommonHelpers commonHelpers = new CommonHelpers();
+    private final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
 
     public PlatformOperationCreateDto constructPlatformOperation(HttpMethod httpMethod, String uriTemplate) {
         PlatformOperationCreateDto platformOperation = new PlatformOperationCreateDto();
@@ -32,7 +33,7 @@ public class PlatformOperationHelpers {
         assertNotNull(platformOperation.getUriTemplate());
     }
 
-    public UUID getPlatformOperationId(HttpMethod method, String uriTemplate) {
+    public UUID getPlatformOperationId(HttpMethod method, String uriTemplate, Boolean withAuth) {
         Map<String, String> params = buildQueryParamMapForPaging(
                 null,
                 null,
@@ -40,8 +41,15 @@ public class PlatformOperationHelpers {
                 null,
                 null,
                 null);
-        return commonHelpers.getEntitiesAsType(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class, params)
-                .get(0)
-                .getId();
+        if (withAuth.equals(true)) {
+            return authorizationHelpers.getEntitiesAsType(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class, params)
+                    .get(0)
+                    .getId();
+        }
+        else {
+            return commonHelpers.getEntitiesAsType(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class, params)
+                    .get(0)
+                    .getId();
+        }
     }
 }
