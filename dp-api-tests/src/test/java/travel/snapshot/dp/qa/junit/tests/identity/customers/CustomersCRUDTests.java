@@ -18,6 +18,8 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID
 
 import com.jayway.restassured.response.Response;
 import org.junit.Test;
+import qa.tools.ikeeper.annotation.Jira;
+import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerType;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
@@ -87,6 +89,21 @@ public class CustomersCRUDTests extends CommonTest {
     public void createCustomerEmptyBody() throws Exception {
         sendBlankPost(CUSTOMERS_PATH, "identity");
         responseIsUnprocessableEntity();
+    }
+
+    @Jira("DPIM-133")
+    @Test
+    public void updatePropertyCustomerCountry() {
+        UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
+        AddressDto address = new AddressDto();
+        address.setCountryCode("CZ");
+        address.setLine1("CoreQA");
+        address.setZipCode("123456");
+        address.setCity("Brno");
+        CustomerUpdateDto update = new CustomerUpdateDto();
+        update.setVatId("CZ123456789");
+        update.setAddress(address);
+        commonHelpers.entityIsUpdated(CUSTOMERS_PATH, customerId, update);
     }
 
     @Test
