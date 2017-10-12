@@ -118,7 +118,7 @@ public class CustomersCRUDTests extends CommonTest {
     }
 
     @Test
-    public void updateCustomer() throws Exception {
+    public void updateCustomer() {
         UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
         CustomerUpdateDto customerUpdate = new CustomerUpdateDto();
         customerUpdate.setName("Updated name");

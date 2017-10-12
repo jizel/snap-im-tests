@@ -3,11 +3,15 @@ package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.helpers.AddressUtils.createRandomAddress;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_DETAILS;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_MESSAGE;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -112,9 +116,13 @@ public class ParametersCustomer extends CommonTest {
     public void checkErrorCodesForRegions(String country, String region) throws Exception {
         AddressDto address = createRandomAddress(10, 10, 5, country, region);
         testCustomer1.setAddress(address);
-        commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer1);
-        responseIsReferenceDoesNotExist();
-        bodyContainsEntityWith("message", String.format("Reference does not exist. The entity Region with ID %s cannot be found.", region));
+        commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer1)
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS))
+                .body(RESPONSE_MESSAGE, is( "Semantic validation errors in the request body."))
+                .body(RESPONSE_DETAILS, hasItem("The 'region' attribute is invalid for specified country"));
     }
 }
 
