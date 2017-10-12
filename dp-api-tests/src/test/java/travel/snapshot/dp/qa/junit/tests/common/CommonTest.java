@@ -64,7 +64,7 @@ import java.util.UUID;
 @RunWith(SerenityRunner.class)
 public abstract class CommonTest {
     public static final String YAML_DATA_PATH = "src/test/resources/yaml/%s";
-    public static final String NOTIFICATION_CRUD_TOPIC = "Notifications.crud";
+    public static final String NOTIFICATION_CRUD_TOPIC = "VirtualTopic.Notifications.crud";
     public static final String JMS_SUBSCRIPTION_NAME = "Test";
     public static final String TOTAL_COUNT_HEADER = "X-Total-Count";
 

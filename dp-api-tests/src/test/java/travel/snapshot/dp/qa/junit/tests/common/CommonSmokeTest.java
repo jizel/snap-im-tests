@@ -83,44 +83,49 @@ public class CommonSmokeTest extends CommonTest {
 
     private void removeCreatedEntities(Map<String, List<UUID>> registry) {
 
-        List<UUID> commercialSubscriptionIds = registry.getOrDefault(COMMERCIAL_SUBSCRIPTIONS_PATH, new ArrayList<UUID>());
-        List<UUID> customerRoleIds = registry.getOrDefault(USER_CUSTOMER_ROLES_PATH, new ArrayList<UUID>());
-        List<UUID> propertyRoleIds = registry.getOrDefault(USER_PROPERTY_ROLES_PATH, new ArrayList<UUID>());
-        List<UUID> roleIds = registry.getOrDefault(ROLES_PATH, new ArrayList<UUID>());
-        List<UUID> userGroupIds = registry.getOrDefault(USER_GROUPS_PATH, new ArrayList<UUID>());
-        List<UUID> userPropertySetIds = registry.getOrDefault(USER_PROPERTY_SET_RELATIONSHIPS_PATH, new ArrayList<UUID>());
-        List<UUID> userPropertyIds = registry.getOrDefault(USER_PROPERTY_RELATIONSHIPS_PATH, new ArrayList<UUID>());
-        List<UUID> propertySetPropertyIds = registry.getOrDefault(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, new ArrayList<UUID>());
-        List<UUID> propertyIds = registry.getOrDefault(PROPERTIES_PATH, new ArrayList<UUID>());
-        List<UUID> propertySetIds = registry.getOrDefault(PROPERTY_SETS_PATH, new ArrayList<UUID>());
-        List<UUID> customerPropertyIds = registry.getOrDefault(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, new ArrayList<UUID>());
-        List<UUID> customerUserIds = registry.getOrDefault(USER_CUSTOMER_RELATIONSHIPS_PATH, new ArrayList<UUID>());
-        List<UUID> customerIds = registry.getOrDefault(CUSTOMERS_PATH, new ArrayList<UUID>());
-        List<UUID> userIds = registry.getOrDefault(USERS_PATH, new ArrayList<UUID>());
-        List<UUID> applicationIds = registry.getOrDefault(APPLICATIONS_PATH, new ArrayList<UUID>());
-        List<UUID> appVersionIds = registry.getOrDefault(APPLICATION_VERSIONS_PATH, new ArrayList<UUID>());
-        List<UUID> roleAssignmentIds = registry.getOrDefault(ROLE_ASSIGNMENTS_PATH, new ArrayList<UUID>());
-        List<UUID> rolePermissionIds = registry.getOrDefault(ROLE_PERMISSIONS_PATH, new ArrayList<UUID>());
+        if (registry == null) {
+            fail("No test was performed. Most probably the database contains references to some of the test entities. Try to remove them manually");
+        } else {
 
-        roleAssignmentIds.forEach(dbSteps::deleteRoleAssignment);
-        rolePermissionIds.forEach(dbSteps::deleteRolePermission);
-        customerRoleIds.forEach(dbSteps::deleteRole);
-        customerRoleIds.forEach(dbSteps::deleteRole);
-        roleIds.forEach(dbSteps::deleteRole);
-        commercialSubscriptionIds.forEach(dbSteps::deleteCommercialSubscription);
-        appVersionIds.forEach(dbSteps::deleteAppVersion);
-        applicationIds.forEach(dbSteps::deleteApplication);
-        userGroupIds.forEach(dbSteps::deleteUserPropertySet);
-        userPropertySetIds.forEach(dbSteps::deleteUserPropertySet);
-        userPropertyIds.forEach(dbSteps::deleteUserProperty);
-        propertySetPropertyIds.forEach(dbSteps::deletePropertySetProperty);
-        propertySetIds.forEach(dbSteps::deletePropertySet);
-        customerPropertyIds.forEach(dbSteps::deleteCustomerProperty);
-        propertyIds.forEach(dbSteps::deleteProperty);
-        customerUserIds.forEach(dbSteps::deleteCustomerUser);
-        customerIds.forEach(dbSteps::deleteCustomer);
-        userIds.forEach(dbSteps::deleteUser);
-        dbSteps.deleteAddress();
+            List<UUID> commercialSubscriptionIds = registry.getOrDefault(COMMERCIAL_SUBSCRIPTIONS_PATH, new ArrayList<UUID>());
+            List<UUID> customerRoleIds = registry.getOrDefault(USER_CUSTOMER_ROLES_PATH, new ArrayList<UUID>());
+            List<UUID> propertyRoleIds = registry.getOrDefault(USER_PROPERTY_ROLES_PATH, new ArrayList<UUID>());
+            List<UUID> roleIds = registry.getOrDefault(ROLES_PATH, new ArrayList<UUID>());
+            List<UUID> userGroupIds = registry.getOrDefault(USER_GROUPS_PATH, new ArrayList<UUID>());
+            List<UUID> userPropertySetIds = registry.getOrDefault(USER_PROPERTY_SET_RELATIONSHIPS_PATH, new ArrayList<UUID>());
+            List<UUID> userPropertyIds = registry.getOrDefault(USER_PROPERTY_RELATIONSHIPS_PATH, new ArrayList<UUID>());
+            List<UUID> propertySetPropertyIds = registry.getOrDefault(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, new ArrayList<UUID>());
+            List<UUID> propertyIds = registry.getOrDefault(PROPERTIES_PATH, new ArrayList<UUID>());
+            List<UUID> propertySetIds = registry.getOrDefault(PROPERTY_SETS_PATH, new ArrayList<UUID>());
+            List<UUID> customerPropertyIds = registry.getOrDefault(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, new ArrayList<UUID>());
+            List<UUID> customerUserIds = registry.getOrDefault(USER_CUSTOMER_RELATIONSHIPS_PATH, new ArrayList<UUID>());
+            List<UUID> customerIds = registry.getOrDefault(CUSTOMERS_PATH, new ArrayList<UUID>());
+            List<UUID> userIds = registry.getOrDefault(USERS_PATH, new ArrayList<UUID>());
+            List<UUID> applicationIds = registry.getOrDefault(APPLICATIONS_PATH, new ArrayList<UUID>());
+            List<UUID> appVersionIds = registry.getOrDefault(APPLICATION_VERSIONS_PATH, new ArrayList<UUID>());
+            List<UUID> roleAssignmentIds = registry.getOrDefault(ROLE_ASSIGNMENTS_PATH, new ArrayList<UUID>());
+            List<UUID> rolePermissionIds = registry.getOrDefault(ROLE_PERMISSIONS_PATH, new ArrayList<UUID>());
+
+            roleAssignmentIds.forEach(dbSteps::deleteRoleAssignment);
+            rolePermissionIds.forEach(dbSteps::deleteRolePermission);
+            customerRoleIds.forEach(dbSteps::deleteRole);
+            customerRoleIds.forEach(dbSteps::deleteRole);
+            roleIds.forEach(dbSteps::deleteRole);
+            commercialSubscriptionIds.forEach(dbSteps::deleteCommercialSubscription);
+            appVersionIds.forEach(dbSteps::deleteAppVersion);
+            applicationIds.forEach(dbSteps::deleteApplication);
+            userGroupIds.forEach(dbSteps::deleteUserPropertySet);
+            userPropertySetIds.forEach(dbSteps::deleteUserPropertySet);
+            userPropertyIds.forEach(dbSteps::deleteUserProperty);
+            propertySetPropertyIds.forEach(dbSteps::deletePropertySetProperty);
+            propertySetIds.forEach(dbSteps::deletePropertySet);
+            customerPropertyIds.forEach(dbSteps::deleteCustomerProperty);
+            propertyIds.forEach(dbSteps::deleteProperty);
+            customerUserIds.forEach(dbSteps::deleteCustomerUser);
+            customerIds.forEach(dbSteps::deleteCustomer);
+            userIds.forEach(dbSteps::deleteUser);
+            dbSteps.deleteAddress();
+        }
     }
 }
 
