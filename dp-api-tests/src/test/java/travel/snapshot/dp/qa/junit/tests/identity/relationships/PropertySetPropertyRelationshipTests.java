@@ -16,6 +16,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedA
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtag;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationshipUpdate;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -40,7 +42,7 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
         super.setUp();
         createdPropertyId = entityIsCreated(testProperty1);
         createdPropertySetId = entityIsCreated(testPropertySet1);
-        testPropertySetPropertyRelationship = relationshipsHelpers.constructPropertySetPropertyRelationship(
+        testPropertySetPropertyRelationship = constructPropertySetPropertyRelationship(
                 createdPropertySetId, createdPropertyId, true);
     }
 
@@ -60,13 +62,13 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
 
     @Test
     public void createPropertySetPropertyRelationshipErrors() {
-        testPropertySetPropertyRelationship = relationshipsHelpers.constructPropertySetPropertyRelationship(
+        testPropertySetPropertyRelationship = constructPropertySetPropertyRelationship(
                 NON_EXISTENT_ID, createdPropertyId, true);
         createEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, testPropertySetPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
 
-        testPropertySetPropertyRelationship = relationshipsHelpers.constructPropertySetPropertyRelationship(
+        testPropertySetPropertyRelationship = constructPropertySetPropertyRelationship(
                 createdPropertySetId, NON_EXISTENT_ID, true);
         createEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, testPropertySetPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
@@ -76,8 +78,7 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
     @Test
     public void updatePropertySetPropertyRelationship() throws Exception {
         PropertySetPropertyRelationshipDto createdRelationship = entityIsCreatedAs(PropertySetPropertyRelationshipDto.class, testPropertySetPropertyRelationship);
-        PropertySetPropertyRelationshipUpdateDto propertySetPropertyRelationshipUpdate = relationshipsHelpers
-                .constructPropertySetPropertyRelationshipUpdate(false);
+        PropertySetPropertyRelationshipUpdateDto propertySetPropertyRelationshipUpdate = constructPropertySetPropertyRelationshipUpdate(false);
 
         updateEntityWithEtag(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), propertySetPropertyRelationshipUpdate, createdRelationship.getVersion().toString());
         responseCodeIs(SC_OK);

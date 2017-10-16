@@ -10,6 +10,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class PartialPropertySetPropertyTests extends CommonTest {
     public void addRemovePropertyToPropertySet() {
         UUID propertySetId = createdPropertySetId;
         UUID propertyId = createdPropertyId;
-        PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers.constructPropertySetPropertyRelationship(propertySetId, propertyId, true);
+        PropertySetPropertyRelationshipCreateDto relation = constructPropertySetPropertyRelationship(propertySetId, propertyId, true);
         entityIsCreated(relation);
         UUID relationId = getSessionResponse().as(PropertySetPropertyRelationshipDto.class).getId();
         deleteEntity(PROPERTIES_PATH, propertyId);

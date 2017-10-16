@@ -8,6 +8,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class CustomerAccessCheckTests extends CommonTest {
         testAppVersion3.setIsNonCommercial(true);
         entityIsCreated(testAppVersion3);
         // Grant the user access to test property
-        UserPropertyRelationshipCreateDto userPropertyRelationship = relationshipsHelpers.constructUserPropertyRelationshipDto(testUser1.getId(), DEFAULT_PROPERTY_ID, true);
+        UserPropertyRelationshipCreateDto userPropertyRelationship = constructUserPropertyRelationshipDto(testUser1.getId(), DEFAULT_PROPERTY_ID, true);
         entityIsCreated(userPropertyRelationship);
     }
 

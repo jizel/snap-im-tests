@@ -11,6 +11,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsTypeByUserForApp;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +42,7 @@ public class AttributesHidingTests extends CommonTest {
         externalApplicationId = entityIsCreated(testApplication3);
         externalApplicationVersionId = entityIsCreated(testAppVersion3);
         createdUserId = entityIsCreated(testUser1);
-        entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(
+        entityIsCreated(constructUserPropertyRelationshipDto(
                 createdUserId, DEFAULT_PROPERTY_ID, true));
 //        Populate applicationPermission table with all permissions for the new external app so it can "see" all endpoints
         dbSteps.populateApplicationPermissionsTableForApplication(externalApplicationId);
@@ -100,14 +102,14 @@ public class AttributesHidingTests extends CommonTest {
      */
     private void setUserCustomerRights(UUID userId, UUID customerId) {
         userHelpers.deleteExistingUserCustomerRelationship(userId);
-        entityIsCreated(relationshipsHelpers.constructUserCustomerRelationshipDto(
+        entityIsCreated(constructUserCustomerRelationshipDto(
                 userId, customerId, true, true));
         entityIsCreated(constructCommercialSubscriptionDto(externalApplicationId, customerId, DEFAULT_PROPERTY_ID));
     }
 
     private void setUserPropertyRights(UUID propertyId) {
         entityIsCreated(constructCommercialSubscriptionDto(externalApplicationId, DEFAULT_SNAPSHOT_CUSTOMER_ID, propertyId));
-        entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(
+        entityIsCreated(constructUserPropertyRelationshipDto(
                 createdUserId, propertyId, true));
     }
 }

@@ -14,6 +14,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipUpdate;
 
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -46,7 +48,7 @@ public class UserCustomerRelationshipTests extends CommonTest{
         createdUser1 = userHelpers.userIsCreated(testUser1);
         createdCustomerId = entityIsCreated(testCustomer1);
         userHelpers.deleteExistingUserCustomerRelationship(createdUser1.getId());
-        testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(createdUser1.getId(),
+        testUserCustomerRelationship = constructUserCustomerRelationshipDto(createdUser1.getId(),
                 createdCustomerId, true, true);
     }
 
@@ -67,15 +69,15 @@ public class UserCustomerRelationshipTests extends CommonTest{
 
     @Test
     public void createUserCustomerRelationshipErrors() {
-        testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(NON_EXISTENT_ID, createdCustomerId, true, false);
+        testUserCustomerRelationship = constructUserCustomerRelationshipDto(NON_EXISTENT_ID, createdCustomerId, true, false);
         createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
-        testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(createdUser1.getId(), NON_EXISTENT_ID, true, false);
+        testUserCustomerRelationship = constructUserCustomerRelationshipDto(createdUser1.getId(), NON_EXISTENT_ID, true, false);
         createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
-        testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(createdUser1.getId(), createdCustomerId, null, null);
+        testUserCustomerRelationship = constructUserCustomerRelationshipDto(createdUser1.getId(), createdCustomerId, null, null);
         createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
@@ -85,7 +87,7 @@ public class UserCustomerRelationshipTests extends CommonTest{
     @Jira("DPIM-52")
     public void updateUserCustomerRelationship() throws Exception {
         UserCustomerRelationshipCreateDto userCustomerRelationship = entityIsCreatedAs(UserCustomerRelationshipDto.class, testUserCustomerRelationship);
-        UserCustomerRelationshipUpdateDto update = relationshipsHelpers.constructUserCustomerRelationshipUpdate( false, false);
+        UserCustomerRelationshipUpdateDto update = constructUserCustomerRelationshipUpdate( false, false);
         commonHelpers.updateEntityPost(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationship.getId(), update);
         responseCodeIs(SC_NO_CONTENT);
         UserCustomerRelationshipCreateDto returnedRelationship = getEntityAsType(USER_CUSTOMER_RELATIONSHIPS_PATH,
@@ -94,7 +96,7 @@ public class UserCustomerRelationshipTests extends CommonTest{
         assertThat(returnedRelationship.getIsPrimary(), is(false));
 
         //        Errors
-        update = relationshipsHelpers.constructUserCustomerRelationshipUpdate( null, null);
+        update = constructUserCustomerRelationshipUpdate( null, null);
         commonHelpers.updateEntityPost(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationship.getId(), update);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);

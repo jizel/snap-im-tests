@@ -6,6 +6,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import com.jayway.restassured.specification.RequestSpecification;
 import org.junit.Test;
@@ -57,7 +59,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
         // create PS
         UUID propertySetId = authorizationHelpers.entityIsCreated(testPropertySet1);
         // create propertyset-property relation
-        PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers.constructPropertySetPropertyRelationship(propertySetId, DEFAULT_PROPERTY_ID, true);
+        PropertySetPropertyRelationshipCreateDto relation = constructPropertySetPropertyRelationship(propertySetId, DEFAULT_PROPERTY_ID, true);
         UUID relationId = authorizationHelpers.entityIsCreated(relation);
         // request
         authorizationHelpers.getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
@@ -78,7 +80,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
         // create user
         UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         // create property-user relation
-        UserPropertyRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
+        UserPropertyRelationshipCreateDto relation = constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
         UUID relationId = authorizationHelpers.entityIsCreated(relation);
         // request
         authorizationHelpers.getEntity(USER_PROPERTY_RELATIONSHIPS_PATH, relationId);

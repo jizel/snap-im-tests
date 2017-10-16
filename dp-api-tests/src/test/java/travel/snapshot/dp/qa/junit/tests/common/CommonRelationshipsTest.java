@@ -18,6 +18,15 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParam
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupPropertyRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupPropertySetRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupUserRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPartnerRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping.endpointDtoMap;
 
 import com.jayway.restassured.response.Response;
@@ -129,39 +138,39 @@ public class CommonRelationshipsTest extends CommonTest {
         entityIsCreated(testPartner1);
         
 //        Construct DTOs
-        testCustomerPropertyRelationship1 = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
+        testCustomerPropertyRelationship1 = constructCustomerPropertyRelationshipDto(
                 testCustomer1.getId(), testProperty1.getId(), true, ASSET_MANAGEMENT, validFrom, validTo);
-        testCustomerPropertyRelationship2 = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
+        testCustomerPropertyRelationship2 = constructCustomerPropertyRelationshipDto(
                 testCustomer1.getId(), testProperty2.getId(), true, CHAIN, validFrom, validTo);
-        testCustomerPropertyRelationship3 = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
+        testCustomerPropertyRelationship3 = constructCustomerPropertyRelationshipDto(
                 testCustomer2.getId(), testProperty2.getId(), true, MEMBERSHIP, validFrom, validTo);
 
-        testUserPropertySetRelationship1 = relationshipsHelpers.constructUserPropertySetRelationshipDto(testUser1.getId(), testPropertySet1.getId(), true);
-        testUserPropertySetRelationship2 = relationshipsHelpers.constructUserPropertySetRelationshipDto(testUser2.getId(), testPropertySet1.getId(), true);
-        testPropertySetPropertyRelationship1 = relationshipsHelpers.constructPropertySetPropertyRelationship(
+        testUserPropertySetRelationship1 = constructUserPropertySetRelationshipDto(testUser1.getId(), testPropertySet1.getId(), true);
+        testUserPropertySetRelationship2 = constructUserPropertySetRelationshipDto(testUser2.getId(), testPropertySet1.getId(), true);
+        testPropertySetPropertyRelationship1 = constructPropertySetPropertyRelationship(
                 testPropertySet1.getId(), testProperty1.getId(), true);
-        testPropertySetPropertyRelationship2 = relationshipsHelpers.constructPropertySetPropertyRelationship(
+        testPropertySetPropertyRelationship2 = constructPropertySetPropertyRelationship(
                 testPropertySet1.getId(), testProperty2.getId(), true);
 
-        testUserCustomerRelationship1 = relationshipsHelpers.constructUserCustomerRelationshipDto(testUser1.getId(),
+        testUserCustomerRelationship1 = constructUserCustomerRelationshipDto(testUser1.getId(),
                 testCustomer1.getId(), true, true);
-        testUserCustomerRelationship2 = relationshipsHelpers.constructUserCustomerRelationshipDto(testUser1.getId(),
+        testUserCustomerRelationship2 = constructUserCustomerRelationshipDto(testUser1.getId(),
                 testCustomer2.getId(), true, true);
-        testUserCustomerRelationship3 = relationshipsHelpers.constructUserCustomerRelationshipDto(testUser2.getId(),
+        testUserCustomerRelationship3 = constructUserCustomerRelationshipDto(testUser2.getId(),
                 testCustomer1.getId(), true, true);
 
-        testUserGroupPropertySetRelationship = relationshipsHelpers.constructUserGroupPropertySetRelationship(testUserGroup1.getId(), testPropertySet1.getId(), true);
+        testUserGroupPropertySetRelationship = constructUserGroupPropertySetRelationship(testUserGroup1.getId(), testPropertySet1.getId(), true);
 
-        testUserGroupPropertyRelationship1 = relationshipsHelpers.constructUserGroupPropertyRelationship(testUserGroup1.getId(), testProperty1.getId(), true);
-        testUserGroupPropertyRelationship2 = relationshipsHelpers.constructUserGroupPropertyRelationship(testUserGroup1.getId(), testProperty2.getId(), true);
-        testUserGroupUserRelationship1 = relationshipsHelpers.constructUserGroupUserRelationship(testUserGroup1.getId(), testUser1.getId(), true);
+        testUserGroupPropertyRelationship1 = constructUserGroupPropertyRelationship(testUserGroup1.getId(), testProperty1.getId(), true);
+        testUserGroupPropertyRelationship2 = constructUserGroupPropertyRelationship(testUserGroup1.getId(), testProperty2.getId(), true);
+        testUserGroupUserRelationship1 = constructUserGroupUserRelationship(testUserGroup1.getId(), testUser1.getId(), true);
 
-        testUserPropertyRelationship1 = relationshipsHelpers.constructUserPropertyRelationshipDto(testUser1.getId(), testProperty1.getId(), true);
-        testUserPropertyRelationship2 = relationshipsHelpers.constructUserPropertyRelationshipDto(testUser1.getId(), testProperty2.getId(), true);
-        testUserPropertyRelationship3 = relationshipsHelpers.constructUserPropertyRelationshipDto(testUser2.getId(), testProperty1.getId(), true);
-        testUserPropertyRelationship4 = relationshipsHelpers.constructUserPropertyRelationshipDto(testUser2.getId(), testProperty2.getId(), true);
+        testUserPropertyRelationship1 = constructUserPropertyRelationshipDto(testUser1.getId(), testProperty1.getId(), true);
+        testUserPropertyRelationship2 = constructUserPropertyRelationshipDto(testUser1.getId(), testProperty2.getId(), true);
+        testUserPropertyRelationship3 = constructUserPropertyRelationshipDto(testUser2.getId(), testProperty1.getId(), true);
+        testUserPropertyRelationship4 = constructUserPropertyRelationshipDto(testUser2.getId(), testProperty2.getId(), true);
 
-        testUserPartnerRelationship = relationshipsHelpers.constructUserPartnerRelationshipDto(testUser1.getId(), testPartner1.getId(), true);
+        testUserPartnerRelationship = constructUserPartnerRelationshipDto(testUser1.getId(), testPartner1.getId(), true);
 
         //        Relationships - create via api
         entityIsCreated(testCustomerPropertyRelationship1);

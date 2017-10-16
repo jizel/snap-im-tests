@@ -25,6 +25,9 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -119,8 +122,7 @@ public class ParametersPropertiesTests extends CommonTest {
             testCustomer1.setEmail(String.format("customer_%d@snapshot.travel", n));
             UUID customerId = entityIsCreated(testCustomer1);
             customerIds.add(customerId);
-            CustomerPropertyRelationshipCreateDto relation = relationshipsHelpers
-                    .constructCustomerPropertyRelationshipDto(customerId, DEFAULT_PROPERTY_ID, true, OWNER,
+            CustomerPropertyRelationshipCreateDto relation = constructCustomerPropertyRelationshipDto(customerId, DEFAULT_PROPERTY_ID, true, OWNER,
                             LocalDate.parse(VALID_FROM_VALUE),
                             LocalDate.parse(VALID_TO_VALUE));
             entityIsCreated(relation);
@@ -150,7 +152,7 @@ public class ParametersPropertiesTests extends CommonTest {
         address.setCountryCode(country);
         address.setRegionCode(region);
         testProperty1.setAddress(address);
-        commonHelpers.createEntity(PROPERTIES_PATH, testProperty1)
+        createEntity(PROPERTIES_PATH, testProperty1)
                 .then()
                 .statusCode(SC_UNPROCESSABLE_ENTITY)
                 .body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS));
@@ -198,8 +200,7 @@ public class ParametersPropertiesTests extends CommonTest {
             testPropertySet1.setId(null);
             testPropertySet1.setName(String.format("New_set_%d", n));
             UUID psId = entityIsCreated(testPropertySet1);
-            PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers
-                    .constructPropertySetPropertyRelationship(psId, DEFAULT_PROPERTY_ID, true);
+            PropertySetPropertyRelationshipCreateDto relation = constructPropertySetPropertyRelationship(psId, DEFAULT_PROPERTY_ID, true);
             entityIsCreated(relation);
         });
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, null, null, null, null);
@@ -221,8 +222,7 @@ public class ParametersPropertiesTests extends CommonTest {
             testPropertySet1.setId(null);
             testPropertySet1.setName(String.format("New_set_%d", n));
             UUID psId = entityIsCreated(testPropertySet1);
-            PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers
-                    .constructPropertySetPropertyRelationship(psId, DEFAULT_PROPERTY_ID, true);
+            PropertySetPropertyRelationshipCreateDto relation = constructPropertySetPropertyRelationship(psId, DEFAULT_PROPERTY_ID, true);
             entityIsCreated(relation);
         });
 
@@ -263,7 +263,7 @@ public class ParametersPropertiesTests extends CommonTest {
             testUser1.setEmail(String.format("username%d@snapshot.travel", n));
             UUID userId = entityIsCreated(testUser1);
             userIds.add(userId);
-            UserPropertyRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
+            UserPropertyRelationshipCreateDto relation = constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
             entityIsCreated(relation);
         });
         String filter = "/null";

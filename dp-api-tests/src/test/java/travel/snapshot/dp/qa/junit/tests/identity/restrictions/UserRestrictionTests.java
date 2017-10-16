@@ -13,6 +13,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -101,7 +102,7 @@ public class UserRestrictionTests extends CommonRestrictionTest{
     public void getUserRolesRestrictionTest() throws Exception{
 //        Property roles
         PropertyDto createdProperty1 = entityIsCreatedAs(PropertyDto.class, testProperty1);
-        entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(createdUserId, testProperty1.getId(), true));
+        entityIsCreated(constructUserPropertyRelationshipDto(createdUserId, testProperty1.getId(), true));
         userHelpers.listRolesForRelationByUserForApp(createdUserId, createdAppVersion.getId(), createdUserId, PROPERTIES_RESOURCE, createdProperty1.getId());
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_USER_PROPERTIES_ROLES_ENDPOINT, GET);

@@ -10,6 +10,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CU
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -68,7 +69,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
     @Test
     public void customerPropertyCRUD() {
         // create
-        CustomerPropertyRelationshipCreateDto relation = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
+        CustomerPropertyRelationshipCreateDto relation = constructCustomerPropertyRelationshipDto(
                 DEFAULT_SNAPSHOT_CUSTOMER_ID,
                 DEFAULT_PROPERTY_ID,
                 true,

@@ -19,6 +19,9 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPartnerRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -100,15 +103,15 @@ public class PartnerTests extends CommonTest{
     public void treatCommercialSubscriptionsAsRelationshipPartnerUser() throws IOException {
         // make user belong to the correct partner
         UUID userId = createdUserId;
-        UserPartnerRelationshipCreateDto relation = relationshipsHelpers.constructUserPartnerRelationshipDto(userId, DEFAULT_SNAPSHOT_PARTNER_ID, true);
+        UserPartnerRelationshipCreateDto relation = constructUserPartnerRelationshipDto(userId, DEFAULT_SNAPSHOT_PARTNER_ID, true);
         entityIsCreated(relation);
         getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_NOT_FOUND);
-        UserCustomerRelationshipCreateDto userCustomerRelation = relationshipsHelpers.constructUserCustomerRelationshipDto(userId, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true);
+        UserCustomerRelationshipCreateDto userCustomerRelation = constructUserCustomerRelationshipDto(userId, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true);
         entityIsCreated(userCustomerRelation);
         getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_NOT_FOUND);
-        UserPropertyRelationshipCreateDto userPropertyRelation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
+        UserPropertyRelationshipCreateDto userPropertyRelation = constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
         entityIsCreated(userPropertyRelation);
         getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);
@@ -125,7 +128,7 @@ public class PartnerTests extends CommonTest{
         UUID userId = entityIsCreated(testUser2);
         getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_NOT_FOUND);
-        UserPropertyRelationshipCreateDto userPropertyRelation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
+        UserPropertyRelationshipCreateDto userPropertyRelation = constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
         entityIsCreated(userPropertyRelation);
         getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);

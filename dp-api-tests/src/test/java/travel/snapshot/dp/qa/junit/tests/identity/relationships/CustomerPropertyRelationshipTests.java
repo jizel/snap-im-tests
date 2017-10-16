@@ -16,6 +16,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipUpdate;
 
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -46,7 +48,7 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
         super.setUp();
         createdProperty1Id = entityIsCreated(testProperty1);
         createdCustomer1Id = entityIsCreated(testCustomer1);
-        testCustomerPropertyRelationship = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
+        testCustomerPropertyRelationship = constructCustomerPropertyRelationshipDto(
                 createdCustomer1Id, createdProperty1Id, true, ASSET_MANAGEMENT, validFrom, validTo);
     }
 
@@ -70,19 +72,19 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
 
     @Test
     public void createCustomerPropertyRelationshipErrors() {
-        CustomerPropertyRelationshipCreateDto invalidCustomerPropertyRelationship = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
+        CustomerPropertyRelationshipCreateDto invalidCustomerPropertyRelationship = constructCustomerPropertyRelationshipDto(
                 NON_EXISTENT_ID, createdProperty1Id, true, ASSET_MANAGEMENT, validFrom, validTo);
         createEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, invalidCustomerPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
 
-        invalidCustomerPropertyRelationship = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
+        invalidCustomerPropertyRelationship = constructCustomerPropertyRelationshipDto(
                 createdCustomer1Id, NON_EXISTENT_ID, true, ASSET_MANAGEMENT, validFrom, validTo);
         createEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, invalidCustomerPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
 
-        invalidCustomerPropertyRelationship = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
+        invalidCustomerPropertyRelationship = constructCustomerPropertyRelationshipDto(
                 createdCustomer1Id, createdProperty1Id, true, ASSET_MANAGEMENT, validTo, validFrom);
         createEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, invalidCustomerPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
@@ -94,7 +96,7 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
         LocalDate updatedValidFrom = LocalDate.now().minusMonths(5);
         LocalDate updatedValidTo = LocalDate.now();
         CustomerPropertyRelationshipCreateDto createdRelationship = entityIsCreatedAs(CustomerPropertyRelationshipDto.class, testCustomerPropertyRelationship);
-        CustomerPropertyRelationshipUpdateDto update = relationshipsHelpers.constructCustomerPropertyRelationshipUpdate(false, CHAIN, updatedValidFrom, updatedValidTo);
+        CustomerPropertyRelationshipUpdateDto update = constructCustomerPropertyRelationshipUpdate(false, CHAIN, updatedValidFrom, updatedValidTo);
 
         commonHelpers.updateEntityPost(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), update);
         responseCodeIs(SC_NO_CONTENT);
