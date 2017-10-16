@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.properties;
 
 import static java.util.stream.IntStream.range;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
@@ -20,12 +21,10 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParam
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -69,13 +68,13 @@ public class ParametersPropertiesTests extends CommonTest {
     @FileParameters(EXAMPLES + "correctPropertyCodeIsReturnedAccordingToCustomersAddress.csv")
     @Test
     public void correctPropertyCodeIsReturnedAccordingToCustomersAddress(
-        String name,
-        String line1,
-        String city,
-        String zipCode,
-        String countryCode,
-        String regionCode,
-        String resultingPropertyCode
+            String name,
+            String line1,
+            String city,
+            String zipCode,
+            String countryCode,
+            String regionCode,
+            String resultingPropertyCode
     ) throws IOException {
         AddressDto address = new AddressDto();
         address.setCountryCode(countryCode);
@@ -143,26 +142,28 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @FileParameters(EXAMPLES + "checkingErrorCodesForRegions.csv")
     @Test
-    public void checkingErrorCodesForRegions(String country, String region, String errorCode) {
+    public void checkingErrorCodesForRegions(String country, String region) {
         AddressDto address = testProperty1.getAddress();
         address.setCountryCode(country);
         address.setRegionCode(region);
         testProperty1.setAddress(address);
-        commonHelpers.createEntity(PROPERTIES_PATH, testProperty1);
-        customCodeIs(Integer.valueOf(errorCode));
+        commonHelpers.createEntity(PROPERTIES_PATH, testProperty1)
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY)
+                .body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS));
     }
 
     @FileParameters(EXAMPLES + "gettingListOfProperties.csv")
     @Test
     @Category(Categories.SlowTests.class)
     public void gettingListOfProperties(
-        String limit,
-        String cursor,
-        String filter,
-        String sort,
-        String returned,
-        String total,
-        String linkHeader
+            String limit,
+            String cursor,
+            String filter,
+            String sort,
+            String returned,
+            String total,
+            String linkHeader
     ) {
         range(0, 59).forEachOrdered(n -> {
             testProperty1.setName(String.format("prop_name_%d", n));
@@ -180,7 +181,7 @@ public class ParametersPropertiesTests extends CommonTest {
         commonHelpers.getEntities(PROPERTIES_PATH, params);
         numberOfEntitiesInResponse(PropertyDto.class, Integer.parseInt(returned));
         headerIs("X-Total-Count", total);
-        if (! linkHeader.equals("/null")) {
+        if (!linkHeader.equals("/null")) {
             headerContains("Link", linkHeader);
         }
 
@@ -189,7 +190,7 @@ public class ParametersPropertiesTests extends CommonTest {
     @FileParameters(EXAMPLES + "gettingListOfPropertiesPropertySets.csv")
     @Test
     @Category(Categories.SlowTests.class)
-    public void gettingListOfPropertiesPropertySets(String limit, String cursor, String returned,  String total) {
+    public void gettingListOfPropertiesPropertySets(String limit, String cursor, String returned, String total) {
         range(0, 30).forEachOrdered(n -> {
             testPropertySet1.setId(null);
             testPropertySet1.setName(String.format("New_set_%d", n));
@@ -230,6 +231,7 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @FileParameters(EXAMPLES + "filteringListOfUsersForProperty.csv")
     @Test
+    @Category(Categories.SlowTests.class)
     public void filteringListOfUsersForProperty(
             String limit,
             String cursor,

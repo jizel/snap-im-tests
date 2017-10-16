@@ -77,9 +77,13 @@ import java.util.UUID;
 
 public class CommonHelpers {
 
+    public static final String RESPONSE_CODE = "code";
+    public static final String RESPONSE_MESSAGE = "message";
+    public static final String RESPONSE_DETAILS = "details";
+
     protected RequestSpecification spec;
-    private BasicSteps basicSteps = new BasicSteps();
-    protected static PropertiesHelper propertiesHelper = new PropertiesHelper();
+    private BasicSteps basicSteps;
+    private PropertiesHelper propertiesHelper;
 
     public static final String ENTITIES_TO_DELETE = "deleteThese";
 
@@ -127,9 +131,12 @@ public class CommonHelpers {
      */
     public CommonHelpers() {
         spec = setupRequestDefaults();
+        basicSteps = new BasicSteps();
+        propertiesHelper = new PropertiesHelper();
     }
 
     public static RequestSpecification setupRequestDefaults() {
+        PropertiesHelper propertiesHelper = new PropertiesHelper();
         RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
                 new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> OBJECT_MAPPER));
 
