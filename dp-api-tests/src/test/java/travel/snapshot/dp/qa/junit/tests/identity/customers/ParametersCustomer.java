@@ -20,7 +20,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
@@ -76,7 +75,6 @@ public class ParametersCustomer extends CommonTest {
 
     @FileParameters(CORRECT_REGION_EXAMPLES)
     @Test
-    @Jira("DPIM-137")
     public void validateCustomerRegionsBelongToCorrectCountry(String country,
                                                               String region,
                                                               String vatId) {
