@@ -12,6 +12,8 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParam
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_DETAILS;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_MESSAGE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -66,7 +68,7 @@ public class ParametersCustomer extends CommonTest {
                                                                                           String sortDesc,
                                                                                           String responseCode,
                                                                                           String customCode) throws Throwable {
-        UUID createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
+        UUID createdCustomerId = entityIsCreated(testCustomer1);
         commonHelpers.getRelationships(CUSTOMERS_PATH, createdCustomerId, COMMERCIAL_SUBSCRIPTIONS_RESOURCE,
                 buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
         responseCodeIs(Integer.valueOf(responseCode));
@@ -81,7 +83,7 @@ public class ParametersCustomer extends CommonTest {
         AddressDto address = createRandomAddress(5, 5, 6, country, region);
         testCustomer1.setAddress(address);
         testCustomer1.setVatId(vatId);
-        commonHelpers.createEntity(testCustomer1)
+        createEntity(testCustomer1)
                 .then()
                 .statusCode(SC_CREATED)
                 .body("vat_id", is(vatId));
@@ -93,7 +95,7 @@ public class ParametersCustomer extends CommonTest {
         AddressDto address = createRandomAddress(5, 5, 6, country, null);
         testCustomer1.setAddress(address);
         testCustomer1.setVatId(vatId);
-        commonHelpers.createEntity(testCustomer1)
+        createEntity(testCustomer1)
                 .then()
                 .statusCode(SC_UNPROCESSABLE_ENTITY);
     }
@@ -104,7 +106,7 @@ public class ParametersCustomer extends CommonTest {
         AddressDto address = createRandomAddress(5, 5, 6, country, null);
         testCustomer1.setAddress(address);
         testCustomer1.setVatId(vatId);
-        commonHelpers.createEntity(testCustomer1)
+        createEntity(testCustomer1)
                 .then()
                 .statusCode(SC_CREATED);
     }
@@ -114,7 +116,7 @@ public class ParametersCustomer extends CommonTest {
     public void checkErrorCodesForRegions(String country, String region) throws Exception {
         AddressDto address = createRandomAddress(10, 10, 5, country, region);
         testCustomer1.setAddress(address);
-        commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer1)
+        createEntity(CUSTOMERS_PATH, testCustomer1)
                 .then()
                 .statusCode(SC_UNPROCESSABLE_ENTITY)
                 .assertThat()

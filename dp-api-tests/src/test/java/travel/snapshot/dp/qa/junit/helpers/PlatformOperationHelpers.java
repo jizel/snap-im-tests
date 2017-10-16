@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.junit.helpers;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PLATFORM_OPERATIONS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 
 import travel.snapshot.dp.api.identity.model.PlatformOperationCreateDto;
 import travel.snapshot.dp.api.identity.model.PlatformOperationDto;

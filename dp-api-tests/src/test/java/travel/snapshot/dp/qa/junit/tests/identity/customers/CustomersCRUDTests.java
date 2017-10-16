@@ -15,6 +15,14 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtag;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Test;
@@ -37,7 +45,7 @@ public class CustomersCRUDTests extends CommonTest {
     @Test
     public void createAllCustomersTest() {
         customerDtos.values().forEach(customer -> {
-            commonHelpers.createEntity(customer);
+            createEntity(customer);
             responseCodeIs(SC_CREATED);
             bodyContainsEntityWith("name");
         });
@@ -47,40 +55,40 @@ public class CustomersCRUDTests extends CommonTest {
     @Test
     public void checkMandatoryAttributesCreateCustomer() throws Exception {
         testCustomer1.setName(null);
-        commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer1);
+        createEntity(testCustomer1);
         responseIsUnprocessableEntity();
 
         testCustomer2.setTimezone(null);
-        commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer2);
+        createEntity(testCustomer2);
         responseIsUnprocessableEntity();
 
         testCustomer3.setEmail(null);
-        commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer3);
+        createEntity(testCustomer3);
         responseIsUnprocessableEntity();
 
         testCustomer4.setType(null);
-        commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer4);
+        createEntity(testCustomer4);
         responseIsUnprocessableEntity();
     }
 
     @Test
     public void customerIdMustBeUnique() throws Exception {
-        UUID createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
+        UUID createdCustomerId = entityIsCreated(testCustomer1);
         testCustomer1.setId(createdCustomerId);
-        commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer1);
+        createEntity(testCustomer1);
         responseIsConflictId();
     }
 
     @Test
     public void parentChildRelationCannotContainLoops() throws Exception {
-        UUID customer1Id = commonHelpers.entityIsCreated(testCustomer1);
+        UUID customer1Id = entityIsCreated(testCustomer1);
         testCustomer2.setParentId(customer1Id);
-        UUID customer2Id = commonHelpers.entityIsCreated(testCustomer2);
+        UUID customer2Id = entityIsCreated(testCustomer2);
         testCustomer3.setParentId(customer2Id);
-        UUID customer3Id = commonHelpers.entityIsCreated(testCustomer3);
+        UUID customer3Id = entityIsCreated(testCustomer3);
         CustomerUpdateDto update = new CustomerUpdateDto();
         update.setParentId(customer3Id);
-        commonHelpers.updateEntity(CUSTOMERS_PATH, customer1Id, update);
+        updateEntity(CUSTOMERS_PATH, customer1Id, update);
 
         responseCodeIs(SC_CONFLICT);
     }
@@ -111,7 +119,7 @@ public class CustomersCRUDTests extends CommonTest {
         for (CustomerType type : CustomerType.values()) {
             testCustomer1.setType(type);
             testCustomer1.setId(null);
-            Response response = commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer1);
+            Response response = createEntity(testCustomer1);
             responseCodeIs(SC_CREATED);
             assertThat(response.as(CustomerDto.class).getType(), is(type));
         }
@@ -119,79 +127,79 @@ public class CustomersCRUDTests extends CommonTest {
 
     @Test
     public void updateCustomer() {
-        UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
+        UUID customerId = entityIsCreated(testCustomer1);
         CustomerUpdateDto customerUpdate = new CustomerUpdateDto();
         customerUpdate.setName("Updated name");
         customerUpdate.setEmail("updated@snapshot.travel");
         customerUpdate.setIsActive(false);
         customerUpdate.setNotes("Updated notes");
         customerUpdate.setParentId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
-        Response updateResponse = commonHelpers.updateEntity(CUSTOMERS_PATH, customerId, customerUpdate);
+        Response updateResponse = updateEntity(CUSTOMERS_PATH, customerId, customerUpdate);
         responseCodeIs(SC_OK);
         CustomerDto updateResponseCustomer = updateResponse.as(CustomerDto.class);
-        CustomerDto requestedCustomer = commonHelpers.getEntityAsType(CUSTOMERS_PATH, CustomerDto.class, testCustomer1.getId());
+        CustomerDto requestedCustomer = getEntityAsType(CUSTOMERS_PATH, CustomerDto.class, testCustomer1.getId());
         assertThat("Update response body differs from the same customer requested by GET ", updateResponseCustomer, is(requestedCustomer));
     }
 
     @Test
     public void invalidUpdateCustomer() throws Exception {
-        UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
+        UUID customerId = entityIsCreated(testCustomer1);
         Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
-        commonHelpers.updateEntity(CUSTOMERS_PATH, customerId, invalidUpdate);
+        updateEntity(CUSTOMERS_PATH, customerId, invalidUpdate);
         responseIsUnprocessableEntity();
 
         invalidUpdate = singletonMap("email", "invalid_value");
-        commonHelpers.updateEntity(CUSTOMERS_PATH, customerId, invalidUpdate);
+        updateEntity(CUSTOMERS_PATH, customerId, invalidUpdate);
         responseIsUnprocessableEntity();
 
-        commonHelpers.updateEntity(CUSTOMERS_PATH, randomUUID(), invalidUpdate);
+        updateEntity(CUSTOMERS_PATH, randomUUID(), invalidUpdate);
         responseIsEntityNotFound();
     }
 
     @Test
     public void updateCustomerWithInvalidEtag() throws Exception {
-        UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
-        commonHelpers.updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), DEFAULT_SNAPSHOT_ETAG);
+        UUID customerId = entityIsCreated(testCustomer1);
+        updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), DEFAULT_SNAPSHOT_ETAG);
         responseCodeIs(SC_PRECONDITION_FAILED);
         customCodeIs(CC_INVALID_ETAG);
 
-        commonHelpers.updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), "Invalid Etag");
+        updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), "Invalid Etag");
         responseCodeIs(SC_PRECONDITION_FAILED);
         customCodeIs(CC_INVALID_ETAG);
 
-        commonHelpers.updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), "");
+        updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), "");
         responseCodeIs(SC_PRECONDITION_FAILED);
         customCodeIs(CC_INVALID_ETAG);
 
-        commonHelpers.updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), null);
+        updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), null);
         responseCodeIs(SC_PRECONDITION_FAILED);
         customCodeIs(CC_INVALID_ETAG);
     }
 
     @Test
     public void deleteCustomer() throws Exception {
-        UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
-        commonHelpers.deleteEntity(CUSTOMERS_PATH, customerId);
+        UUID customerId = entityIsCreated(testCustomer1);
+        deleteEntity(CUSTOMERS_PATH, customerId);
         responseCodeIs(SC_NO_CONTENT);
     }
 
     @Test
     public void customerWithParentChildRelationshipCannotBeDeleted() throws Exception {
-        UUID customer1Id = commonHelpers.entityIsCreated(testCustomer1);
+        UUID customer1Id = entityIsCreated(testCustomer1);
         testCustomer2.setParentId(customer1Id);
-        UUID customer2Id = commonHelpers.entityIsCreated(testCustomer2);
+        UUID customer2Id = entityIsCreated(testCustomer2);
 //        Customer cannot be deleted when it has children
-        commonHelpers.deleteEntity(CUSTOMERS_PATH, customer1Id);
+        deleteEntity(CUSTOMERS_PATH, customer1Id);
         responseIsEntityReferenced();
 //        But once all children are deleted, the first customer can be deleted as well
-        commonHelpers.entityIsDeleted(CUSTOMERS_PATH, customer2Id);
-        commonHelpers.deleteEntity(CUSTOMERS_PATH, customer1Id);
+        entityIsDeleted(CUSTOMERS_PATH, customer2Id);
+        deleteEntity(CUSTOMERS_PATH, customer1Id);
         responseCodeIs(SC_NO_CONTENT);
     }
 
     @Test
     public void getNonExistentCustomer() {
-        commonHelpers.getEntity(CUSTOMERS_PATH, NON_EXISTENT_ID);
+        getEntity(CUSTOMERS_PATH, NON_EXISTENT_ID);
         responseIsEntityNotFound();
     }
 }

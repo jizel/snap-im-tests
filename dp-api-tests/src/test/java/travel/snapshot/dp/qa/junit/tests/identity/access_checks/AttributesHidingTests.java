@@ -8,6 +8,9 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERT
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_SALESFORCE_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.constructCommercialSubscriptionDto;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsTypeByUserForApp;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,24 +37,24 @@ public class AttributesHidingTests extends CommonTest {
     @Before
     public void setUp() {
         super.setUp();
-        externalApplicationId = commonHelpers.entityIsCreated(testApplication3);
-        externalApplicationVersionId = commonHelpers.entityIsCreated(testAppVersion3);
-        createdUserId = commonHelpers.entityIsCreated(testUser1);
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(
+        externalApplicationId = entityIsCreated(testApplication3);
+        externalApplicationVersionId = entityIsCreated(testAppVersion3);
+        createdUserId = entityIsCreated(testUser1);
+        entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(
                 createdUserId, DEFAULT_PROPERTY_ID, true));
 //        Populate applicationPermission table with all permissions for the new external app so it can "see" all endpoints
         dbSteps.populateApplicationPermissionsTableForApplication(externalApplicationId);
-        commonHelpers.entityIsCreated(constructCommercialSubscriptionDto(externalApplicationId, DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID));
+        entityIsCreated(constructCommercialSubscriptionDto(externalApplicationId, DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID));
     }
 
     @Test
     public void hideCustomerAttributesTest() {
-        CustomerDto createdCustomer = commonHelpers.entityIsCreatedAs(CustomerDto.class, testCustomer1);
+        CustomerDto createdCustomer = entityIsCreatedAs(CustomerDto.class, testCustomer1);
         assertNotNull(createdCustomer.getSalesforceId());
         assertNotNull(createdCustomer.getIsDemo());
 
         setUserCustomerRights(createdUserId, createdCustomer.getId());
-        CustomerDto customerReturnedForExternalApp = commonHelpers.getEntityAsTypeByUserForApp(
+        CustomerDto customerReturnedForExternalApp = getEntityAsTypeByUserForApp(
                 createdUserId, externalApplicationVersionId, CUSTOMERS_PATH, CustomerDto.class, createdCustomer.getId()
         );
         assertNull(customerReturnedForExternalApp.getSalesforceId());
@@ -62,13 +65,13 @@ public class AttributesHidingTests extends CommonTest {
     public void hidePropertyAttributesTest() {
         testProperty1.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
         testProperty1.setTtiId(12345);
-        PropertyDto createdProperty = commonHelpers.entityIsCreatedAs(PropertyDto.class, testProperty1);
+        PropertyDto createdProperty = entityIsCreatedAs(PropertyDto.class, testProperty1);
         assertNotNull(createdProperty.getSalesforceId());
         assertNotNull(createdProperty.getIsDemo());
         assertNotNull(createdProperty.getTtiId());
 
         setUserPropertyRights(createdProperty.getId());
-        PropertyDto propertyReturnedForExternalApp = commonHelpers.getEntityAsTypeByUserForApp(
+        PropertyDto propertyReturnedForExternalApp = getEntityAsTypeByUserForApp(
                 createdUserId, externalApplicationVersionId, PROPERTIES_PATH, PropertyDto.class, createdProperty.getId());
         assertNull(propertyReturnedForExternalApp.getSalesforceId());
         assertNull(propertyReturnedForExternalApp.getIsDemo());
@@ -77,11 +80,11 @@ public class AttributesHidingTests extends CommonTest {
 
     @Test
     public void hideApplicationAttributesTest() {
-        ApplicationDto createdApplication = commonHelpers.entityIsCreatedAs(ApplicationDto.class, testApplication1);
+        ApplicationDto createdApplication = entityIsCreatedAs(ApplicationDto.class, testApplication1);
         assertNotNull(createdApplication.getPartnerId());
 
-        commonHelpers.entityIsCreated(constructCommercialSubscriptionDto(createdApplication.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID));
-        ApplicationDto appReturnedForExternalApp = commonHelpers.getEntityAsTypeByUserForApp(
+        entityIsCreated(constructCommercialSubscriptionDto(createdApplication.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID));
+        ApplicationDto appReturnedForExternalApp = getEntityAsTypeByUserForApp(
                 createdUserId, externalApplicationVersionId, APPLICATIONS_PATH, ApplicationDto.class, createdApplication.getId());
         assertNull(appReturnedForExternalApp.getPartnerId());
     }
@@ -97,14 +100,14 @@ public class AttributesHidingTests extends CommonTest {
      */
     private void setUserCustomerRights(UUID userId, UUID customerId) {
         userHelpers.deleteExistingUserCustomerRelationship(userId);
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructUserCustomerRelationshipDto(
+        entityIsCreated(relationshipsHelpers.constructUserCustomerRelationshipDto(
                 userId, customerId, true, true));
-        commonHelpers.entityIsCreated(constructCommercialSubscriptionDto(externalApplicationId, customerId, DEFAULT_PROPERTY_ID));
+        entityIsCreated(constructCommercialSubscriptionDto(externalApplicationId, customerId, DEFAULT_PROPERTY_ID));
     }
 
     private void setUserPropertyRights(UUID propertyId) {
-        commonHelpers.entityIsCreated(constructCommercialSubscriptionDto(externalApplicationId, DEFAULT_SNAPSHOT_CUSTOMER_ID, propertyId));
-        commonHelpers.entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(
+        entityIsCreated(constructCommercialSubscriptionDto(externalApplicationId, DEFAULT_SNAPSHOT_CUSTOMER_ID, propertyId));
+        entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(
                 createdUserId, propertyId, true));
     }
 }

@@ -5,6 +5,13 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
@@ -31,9 +38,9 @@ public class PropertySetTests extends CommonTest {
 
     @Test
     public void propertySetCRUDTest() {
-        UUID createdCustomerId = commonHelpers.entityIsCreated(testCustomer2);
-        UUID psId = commonHelpers.entityIsCreated(testPropertySet1);
-        PropertySetDto propertySet = commonHelpers.getEntityAsType(PROPERTY_SETS_PATH, PropertySetDto.class, psId);
+        UUID createdCustomerId = entityIsCreated(testCustomer2);
+        UUID psId = entityIsCreated(testPropertySet1);
+        PropertySetDto propertySet = getEntityAsType(PROPERTY_SETS_PATH, PropertySetDto.class, psId);
         assert(propertySet.getType().equals(testPropertySet1.getType()));
         assert(propertySet.getCustomerId().equals(DEFAULT_SNAPSHOT_CUSTOMER_ID));
         assert(propertySet.getDescription().equals(testPropertySet1.getDescription()));
@@ -41,24 +48,24 @@ public class PropertySetTests extends CommonTest {
         update.setType(PropertySetType.GEOLOCATION);
         update.setDescription("Some new desc");
         update.setCustomerId(createdCustomerId);
-        commonHelpers.entityIsUpdated(PROPERTY_SETS_PATH, psId, update);
-        PropertySetDto updatedPropertySet = commonHelpers.getEntityAsType(PROPERTY_SETS_PATH, PropertySetDto.class, psId);
+        entityIsUpdated(PROPERTY_SETS_PATH, psId, update);
+        PropertySetDto updatedPropertySet = getEntityAsType(PROPERTY_SETS_PATH, PropertySetDto.class, psId);
         assert(updatedPropertySet.getType().equals(PropertySetType.GEOLOCATION));
         assert(updatedPropertySet.getCustomerId().equals(createdCustomerId));
         assert(updatedPropertySet.getDescription().equals("Some new desc"));
-        commonHelpers.entityIsDeleted(PROPERTY_SETS_PATH, psId);
+        entityIsDeleted(PROPERTY_SETS_PATH, psId);
     }
 
     @Test
     public void parentChildLoopTest() {
-        UUID ps1Id = commonHelpers.entityIsCreated(testPropertySet1);
+        UUID ps1Id = entityIsCreated(testPropertySet1);
         testPropertySet2.setParentId(ps1Id);
-        UUID ps2Id = commonHelpers.entityIsCreated(testPropertySet2);
+        UUID ps2Id = entityIsCreated(testPropertySet2);
         testPropertySet3.setParentId(ps2Id);
-        UUID ps3Id = commonHelpers.entityIsCreated(testPropertySet3);
+        UUID ps3Id = entityIsCreated(testPropertySet3);
         PropertySetUpdateDto update = new PropertySetUpdateDto();
         update.setParentId(ps3Id);
-        commonHelpers.updateEntity(PROPERTY_SETS_PATH, ps1Id, update);
+        updateEntity(PROPERTY_SETS_PATH, ps1Id, update);
         responseCodeIs(SC_CONFLICT);
         customCodeIs(CC_CIRCULAR_DEPENDENCY);
         bodyContainsEntityWith("message", "Circular dependency in PropertySet hierarchy.");
@@ -66,41 +73,41 @@ public class PropertySetTests extends CommonTest {
 
     @Test
     public void parentPropertySetCannotBeDeletedUntilAllChildPropertySetsAreDeleted() {
-        UUID ps1Id = commonHelpers.entityIsCreated(testPropertySet1);
+        UUID ps1Id = entityIsCreated(testPropertySet1);
         testPropertySet2.setParentId(ps1Id);
-        UUID ps2Id = commonHelpers.entityIsCreated(testPropertySet2);
+        UUID ps2Id = entityIsCreated(testPropertySet2);
         testPropertySet3.setParentId(ps2Id);
-        UUID ps3Id = commonHelpers.entityIsCreated(testPropertySet3);
-        commonHelpers.deleteEntity(PROPERTY_SETS_PATH, ps1Id);
+        UUID ps3Id = entityIsCreated(testPropertySet3);
+        deleteEntity(PROPERTY_SETS_PATH, ps1Id);
         responseCodeIs(SC_CONFLICT);
         customCodeIs(CC_ENTITY_REFERENCED);
-        commonHelpers.deleteEntity(PROPERTY_SETS_PATH, ps2Id);
+        deleteEntity(PROPERTY_SETS_PATH, ps2Id);
         responseCodeIs(SC_CONFLICT);
         customCodeIs(CC_ENTITY_REFERENCED);
-        commonHelpers.entityIsDeleted(PROPERTY_SETS_PATH, ps3Id);
-        commonHelpers.entityIsDeleted(PROPERTY_SETS_PATH, ps2Id);
-        commonHelpers.entityIsDeleted(PROPERTY_SETS_PATH, ps1Id);
+        entityIsDeleted(PROPERTY_SETS_PATH, ps3Id);
+        entityIsDeleted(PROPERTY_SETS_PATH, ps2Id);
+        entityIsDeleted(PROPERTY_SETS_PATH, ps1Id);
     }
 
     // PropertySet-Users
 
     @Test
     public void updatingPropertySetUserRelationship() {
-        UUID psId = commonHelpers.entityIsCreated(testPropertySet1);
-        UUID userId = commonHelpers.entityIsCreated(testUser1);
+        UUID psId = entityIsCreated(testPropertySet1);
+        UUID userId = entityIsCreated(testUser1);
         UserPropertySetRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertySetRelationshipDto(userId, psId, true);
-        UUID relationId = commonHelpers.entityIsCreated(relation);
+        UUID relationId = entityIsCreated(relation);
         UserPropertySetRelationshipUpdateDto update = new UserPropertySetRelationshipUpdateDto();
         update.setIsActive(false);
-        commonHelpers.updateEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);
+        updateEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);
         responseCodeIs(SC_OK);
-        commonHelpers.getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
+        getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         bodyContainsEntityWith("is_active", "false");
         update.setIsActive(true);
-        commonHelpers.updateEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);
+        updateEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);
         responseCodeIs(SC_OK);
-        commonHelpers.getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
+        getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         bodyContainsEntityWith("is_active", "true");
-        commonHelpers.entityIsDeleted(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
+        entityIsDeleted(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
     }
 }

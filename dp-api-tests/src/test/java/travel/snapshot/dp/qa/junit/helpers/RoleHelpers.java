@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_RESOURCE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 
 import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.api.identity.model.RoleBaseDto;
@@ -40,7 +41,7 @@ public class RoleHelpers extends RoleBaseSteps {
     public void setRoleIsActive(UUID roleId, boolean isActive){
         RoleUpdateDto roleUpdateDto = new RoleUpdateDto();
         roleUpdateDto.setIsActive(isActive);
-        commonHelpers.entityIsUpdated(ROLES_PATH, roleId, roleUpdateDto);
+        entityIsUpdated(ROLES_PATH, roleId, roleUpdateDto);
     }
 
     /**

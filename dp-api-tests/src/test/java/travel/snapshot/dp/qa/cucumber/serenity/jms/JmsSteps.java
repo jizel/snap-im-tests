@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import com.google.gson.Gson;
 import com.jayway.restassured.path.json.JsonPath;
-import lombok.NoArgsConstructor;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
@@ -24,7 +23,7 @@ import javax.jms.Topic;
  * Basic steps for handling JMS notifications
  */
 
-@NoArgsConstructor
+//@NoArgsConstructor
 public class JmsSteps extends BasicSteps {
 
     public static final String SESSION_NOTIFICATION = "notification";

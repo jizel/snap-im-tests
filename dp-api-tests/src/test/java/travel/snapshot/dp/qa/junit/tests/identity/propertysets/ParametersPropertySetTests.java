@@ -9,6 +9,10 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -53,12 +57,12 @@ public class ParametersPropertySetTests extends CommonTest {
         IntStream.range(0, 52).forEachOrdered(n -> {
             testPropertySet1.setName(String.format("ps_name_%d", n));
             testPropertySet1.setId(null);
-            commonHelpers.entityIsCreated(testPropertySet1);
+            entityIsCreated(testPropertySet1);
         });
 
         // Get list of property sets
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, null, null, null, null);
-        commonHelpers.getEntities(PROPERTY_SETS_PATH, params);
+        getEntities(PROPERTY_SETS_PATH, params);
         numberOfEntitiesInResponse(PropertySetDto.class, Integer.parseInt(returned));
         headerIs("X-Total-Count", total);
         headerContains("Link", linkHeader);
@@ -119,10 +123,10 @@ public class ParametersPropertySetTests extends CommonTest {
             testPropertySet1.setName(names.get(n));
             testPropertySet1.setDescription(String.format("Some_desc_%d", n));
             testPropertySet1.setType(types.get(n));
-            commonHelpers.entityIsCreated(testPropertySet1);
+            entityIsCreated(testPropertySet1);
         });
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null);
-        commonHelpers.getEntities(PROPERTY_SETS_PATH, params);
+        getEntities(PROPERTY_SETS_PATH, params);
         numberOfEntitiesInResponse(PropertySetDto.class, Integer.valueOf(returned));
         headerIs("X-Total-Count", total);
     }
@@ -137,18 +141,18 @@ public class ParametersPropertySetTests extends CommonTest {
         String returned,
         String filter
     ) throws Exception {
-        UUID psId = commonHelpers.entityIsCreated(testPropertySet1);
-        UUID p1Id = commonHelpers.entityIsCreated(testProperty1);
-        UUID p2Id = commonHelpers.entityIsCreated(testProperty2);
-        UUID p3Id = commonHelpers.entityIsCreated(testProperty3);
+        UUID psId = entityIsCreated(testPropertySet1);
+        UUID p1Id = entityIsCreated(testProperty1);
+        UUID p2Id = entityIsCreated(testProperty2);
+        UUID p3Id = entityIsCreated(testProperty3);
         PropertySetPropertyRelationshipCreateDto relation1 = relationshipsHelpers.constructPropertySetPropertyRelationship(psId, p1Id, true);
         PropertySetPropertyRelationshipCreateDto relation2 = relationshipsHelpers.constructPropertySetPropertyRelationship(psId, p2Id, true);
         PropertySetPropertyRelationshipCreateDto relation3 = relationshipsHelpers.constructPropertySetPropertyRelationship(psId, p3Id, false);
-        commonHelpers.entityIsCreated(relation1);
-        commonHelpers.entityIsCreated(relation2);
-        commonHelpers.entityIsCreated(relation3);
+        entityIsCreated(relation1);
+        entityIsCreated(relation2);
+        entityIsCreated(relation3);
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, null, null, null);
-        commonHelpers.getEntities(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, params);
+        getEntities(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, params);
         numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, Integer.valueOf(returned));
     }
 
@@ -170,7 +174,7 @@ public class ParametersPropertySetTests extends CommonTest {
                 UserUpdateDto.UserType.PARTNER,
                 UserUpdateDto.UserType.CUSTOMER
         );
-        UUID psId = commonHelpers.entityIsCreated(testPropertySet1);
+        UUID psId = entityIsCreated(testPropertySet1);
         IntStream.range(0, 5).forEachOrdered(n -> {
             testUser1.setType(types.get(n));
             testUser1.setId(null);
@@ -178,18 +182,18 @@ public class ParametersPropertySetTests extends CommonTest {
             testUser1.setLastName(String.format("LastName%d", n));
             testUser1.setUsername(String.format("UserName%d", n));
             testUser1.setEmail(String.format("username%d@snapshot.travel", n));
-            UUID userId = commonHelpers.entityIsCreated(testUser1);
+            UUID userId = entityIsCreated(testUser1);
             UserPropertySetRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertySetRelationshipDto(userId, psId, true);
-            commonHelpers.entityIsCreated(relation);
+            entityIsCreated(relation);
         });
         // Disable one of the relationships
         Map<String, String> relationParams = buildQueryParamMapForPaging(null, null, String.format("property_set_id==%s", String.valueOf(psId)), null, null, null);
-        UUID relationId = commonHelpers.getEntitiesAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, relationParams).get(0).getId();
+        UUID relationId = getEntitiesAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, relationParams).get(0).getId();
         UserPropertySetRelationshipUpdateDto update = new UserPropertySetRelationshipUpdateDto();
         update.setIsActive(false);
-        commonHelpers.entityIsUpdated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);
+        entityIsUpdated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, null, null, null);
-        commonHelpers.getEntities(USER_PROPERTY_SET_RELATIONSHIPS_PATH, params);
+        getEntities(USER_PROPERTY_SET_RELATIONSHIPS_PATH, params);
         numberOfEntitiesInResponse(UserPropertySetRelationshipDto.class, Integer.valueOf(returned));
     }
 }

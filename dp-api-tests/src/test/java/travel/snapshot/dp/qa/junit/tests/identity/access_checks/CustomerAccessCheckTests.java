@@ -6,6 +6,8 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,11 +36,11 @@ public class CustomerAccessCheckTests extends CommonTest {
         versionWithoutSubscriptionId = testAppVersion2.getId();
         nonCommercialVersionId = testAppVersion3.getId();
         // Create two customers
-        commonHelpers.entityIsCreated(testCustomer1);
-        commonHelpers.entityIsCreated(testCustomer2);
+        entityIsCreated(testCustomer1);
+        entityIsCreated(testCustomer2);
         // Create two applications
-        commonHelpers.entityIsCreated(testApplication1);
-        commonHelpers.entityIsCreated(testApplication2);
+        entityIsCreated(testApplication1);
+        entityIsCreated(testApplication2);
         dbSteps.populateApplicationPermissionsTableForApplication(testApplication1.getId());
         dbSteps.populateApplicationPermissionsTableForApplication(testApplication2.getId());
         // Make user belong to the correct customer
@@ -46,48 +48,48 @@ public class CustomerAccessCheckTests extends CommonTest {
         userCustRelation.setCustomerId(testCustomer1.getId());
         testUser1.setUserCustomerRelationship(userCustRelation);
         // create user
-        commonHelpers.entityIsCreated(testUser1);
+        entityIsCreated(testUser1);
         // Create subscription for app 1
         commercialSubscriptionHelpers.commercialSubscriptionIsCreated(testCustomer1.getId(), DEFAULT_PROPERTY_ID, testApplication1.getId());
         // Create app version with subscription
         testAppVersion1.setApplicationId(testApplication1.getId());
-        commonHelpers.entityIsCreated(testAppVersion1);
+        entityIsCreated(testAppVersion1);
         // Version without subscription
         testAppVersion2.setApplicationId(testApplication2.getId());
-        commonHelpers.entityIsCreated(testAppVersion2);
+        entityIsCreated(testAppVersion2);
         // Non-commercial version
         testAppVersion3.setApplicationId(testApplication2.getId());
         testAppVersion3.setIsNonCommercial(true);
-        commonHelpers.entityIsCreated(testAppVersion3);
+        entityIsCreated(testAppVersion3);
         // Grant the user access to test property
         UserPropertyRelationshipCreateDto userPropertyRelationship = relationshipsHelpers.constructUserPropertyRelationshipDto(testUser1.getId(), DEFAULT_PROPERTY_ID, true);
-        commonHelpers.entityIsCreated(userPropertyRelationship);
+        entityIsCreated(userPropertyRelationship);
     }
 
     @Test
     @Jira("DPIM-50")
     public void thereIsActiveCommercialSubscriptionLinkingToTheApplicationVersion() throws Throwable {
-        commonHelpers.getEntityByUserForApplication(testUser1.getId(), versionWithSubscriptionId, CUSTOMERS_PATH, testCustomer1.getId());
+        getEntityByUserForApplication(testUser1.getId(), versionWithSubscriptionId, CUSTOMERS_PATH, testCustomer1.getId());
         responseCodeIs(SC_OK);
-        commonHelpers.getEntityByUserForApplication(testUser1.getId(), nonCommercialVersionId, CUSTOMERS_PATH, testCustomer1.getId());
+        getEntityByUserForApplication(testUser1.getId(), nonCommercialVersionId, CUSTOMERS_PATH, testCustomer1.getId());
         responseCodeIs(SC_OK);
-        commonHelpers.getEntityByUserForApplication(testUser1.getId(), versionWithSubscriptionId, CUSTOMERS_PATH, testCustomer2.getId());
+        getEntityByUserForApplication(testUser1.getId(), versionWithSubscriptionId, CUSTOMERS_PATH, testCustomer2.getId());
         responseCodeIs(SC_NOT_FOUND);
-        commonHelpers.getEntityByUserForApplication(testUser1.getId(), versionWithoutSubscriptionId, CUSTOMERS_PATH, testCustomer1.getId());
+        getEntityByUserForApplication(testUser1.getId(), versionWithoutSubscriptionId, CUSTOMERS_PATH, testCustomer1.getId());
         responseCodeIs(SC_FORBIDDEN);
     }
 
     @Test
     public void thereIsActiveCommercialSubscriptionWithParentCustomerEntity() throws Throwable {
         testCustomer3.setParentId(testCustomer1.getId());
-        commonHelpers.entityIsCreated(testCustomer3);
+        entityIsCreated(testCustomer3);
         testCustomer4.setParentId(testCustomer3.getId());
-        commonHelpers.entityIsCreated(testCustomer4);
-        commonHelpers.getEntityByUserForApplication(testUser1.getId(), versionWithSubscriptionId, CUSTOMERS_PATH, testCustomer4.getId());
+        entityIsCreated(testCustomer4);
+        getEntityByUserForApplication(testUser1.getId(), versionWithSubscriptionId, CUSTOMERS_PATH, testCustomer4.getId());
         responseCodeIs(SC_OK);
-        commonHelpers.getEntityByUserForApplication(testUser1.getId(), nonCommercialVersionId, CUSTOMERS_PATH, testCustomer4.getId());
+        getEntityByUserForApplication(testUser1.getId(), nonCommercialVersionId, CUSTOMERS_PATH, testCustomer4.getId());
         responseCodeIs(SC_OK);
-        commonHelpers.getEntityByUserForApplication(testUser1.getId(), versionWithoutSubscriptionId, CUSTOMERS_PATH, testCustomer4.getId());
+        getEntityByUserForApplication(testUser1.getId(), versionWithoutSubscriptionId, CUSTOMERS_PATH, testCustomer4.getId());
         responseCodeIs(SC_FORBIDDEN);
     }
 }

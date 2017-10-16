@@ -12,6 +12,11 @@ import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PLATFORM_OPERATIONS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 import static travel.snapshot.dp.qa.junit.helpers.PlatformOperationHelpers.platformOperationContainsAllFields;
 
 import com.jayway.restassured.response.Response;
@@ -37,18 +42,18 @@ public class PlatformOperationsTests extends CommonPlatformOperationTest {
     @Test
     public void getPlatformOperationsTest() throws Exception {
 //        GetAll
-        Response response = commonHelpers.getEntities(PLATFORM_OPERATIONS_PATH, null);
+        Response response = getEntities(PLATFORM_OPERATIONS_PATH, null);
         responseCodeIs(SC_OK);
         stream(response.as(PlatformOperationDto[].class)).forEach(PlatformOperationHelpers::platformOperationContainsAllFields);
 //        Get single PO
-        response = commonHelpers.getEntity(PLATFORM_OPERATIONS_PATH, createdPlatformOperation.getId());
+        response = getEntity(PLATFORM_OPERATIONS_PATH, createdPlatformOperation.getId());
         responseCodeIs(SC_OK);
         assertThat(response.as(PlatformOperationDto.class), is(createdPlatformOperation));
     }
 
     @Test
     public void platformOperationsFilteringTest() throws Exception {
-        Response response = commonHelpers.getEntities(PLATFORM_OPERATIONS_PATH, buildQueryParamMapForPaging(
+        Response response = getEntities(PLATFORM_OPERATIONS_PATH, buildQueryParamMapForPaging(
                 "5",
                 null,
                 "http_method==" + HttpMethod.DELETE,
@@ -67,7 +72,7 @@ public class PlatformOperationsTests extends CommonPlatformOperationTest {
         for (HttpMethod method : HttpMethod.values()) {
             PlatformOperationCreateDto platformOperationDto = platformOperationHelpers.constructPlatformOperation(method, TEST_URI_TEMPLATE + "/{create}");
 
-            Response createResponse = commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, platformOperationDto);
+            Response createResponse = createEntity(PLATFORM_OPERATIONS_PATH, platformOperationDto);
             responseCodeIs(SC_CREATED);
 
             PlatformOperationDto createdPlatformOperation = createResponse.as(PlatformOperationDto.class);
@@ -75,7 +80,7 @@ public class PlatformOperationsTests extends CommonPlatformOperationTest {
             assertThat(createdPlatformOperation.getHttpMethod(), is(method));
             assertThat(createdPlatformOperation.getUriTemplate(), is(TEST_URI_TEMPLATE + "/{create}"));
 
-            PlatformOperationDto requestedPlatformOperation = commonHelpers.getEntityAsType(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class, createdPlatformOperation.getId());
+            PlatformOperationDto requestedPlatformOperation = getEntityAsType(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class, createdPlatformOperation.getId());
             assertThat(requestedPlatformOperation, is(createdPlatformOperation));
 
             deletePlatformOperationIfExists(createdPlatformOperation.getId());
@@ -88,7 +93,7 @@ public class PlatformOperationsTests extends CommonPlatformOperationTest {
         PlatformOperationUpdateDto update = new PlatformOperationUpdateDto();
         update.setHttpMethod(HttpMethod.POST);
         update.setUriTemplate(updatedUriTemplate);
-        Response udpateResponse = commonHelpers.updateEntity(PLATFORM_OPERATIONS_PATH, createdPlatformOperation.getId(), update);
+        Response udpateResponse = updateEntity(PLATFORM_OPERATIONS_PATH, createdPlatformOperation.getId(), update);
         responseCodeIs(SC_OK);
 
         PlatformOperationDto updatedPlatformOperation = udpateResponse.as(PlatformOperationDto.class);
@@ -103,18 +108,18 @@ public class PlatformOperationsTests extends CommonPlatformOperationTest {
     @Test
     public void checkPlatformOperationsCreateErrorCodes() throws Exception {
 //        Duplicate values
-        commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, platformOperationTestDto);
+        createEntity(PLATFORM_OPERATIONS_PATH, platformOperationTestDto);
         verifyResponseAndCustomCode(SC_CONFLICT, CC_CONFLICT_VALUES);
 //        Missing httpMethod
         PlatformOperationCreateDto errorTestPO = platformOperationHelpers.constructPlatformOperation(HttpMethod.GET, TEST_URI_TEMPLATE);
         errorTestPO.setHttpMethod(null);
-        commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, errorTestPO);
+        createEntity(PLATFORM_OPERATIONS_PATH, errorTestPO);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
 //        Missing uriTemplate
         errorTestPO.setHttpMethod(HttpMethod.GET);
         errorTestPO.setUriTemplate(null);
-        commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, errorTestPO);
+        createEntity(PLATFORM_OPERATIONS_PATH, errorTestPO);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
     }
@@ -122,11 +127,11 @@ public class PlatformOperationsTests extends CommonPlatformOperationTest {
     @Test
     public void checkPlatformOperationsUpdateErrorCodes() throws Exception {
         Map<String, String> invalidUpdate = new HashMap<>();
-        commonHelpers.updateEntity(PLATFORM_OPERATIONS_PATH, randomUUID(), invalidUpdate);
+        updateEntity(PLATFORM_OPERATIONS_PATH, randomUUID(), invalidUpdate);
         responseCodeIs(SC_NOT_FOUND);
 
         invalidUpdate.put("http_method", "definitely not RFC HTTP method");
-        commonHelpers.updateEntity(PLATFORM_OPERATIONS_PATH, createdPlatformOperation.getId(), invalidUpdate);
+        updateEntity(PLATFORM_OPERATIONS_PATH, createdPlatformOperation.getId(), invalidUpdate);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
     }

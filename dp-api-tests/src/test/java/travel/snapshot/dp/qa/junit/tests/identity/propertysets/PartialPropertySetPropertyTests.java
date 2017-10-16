@@ -6,6 +6,10 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,8 +35,8 @@ public class PartialPropertySetPropertyTests extends CommonTest {
         super.setUp();
         UserCustomerRelationshipPartialDto relation = new UserCustomerRelationshipPartialDto();
         relation.setCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
-        createdPropertyId = commonHelpers.entityIsCreated(testProperty1);
-        createdPropertySetId = commonHelpers.entityIsCreated(testPropertySet1);
+        createdPropertyId = entityIsCreated(testProperty1);
+        createdPropertySetId = entityIsCreated(testPropertySet1);
 
     }
 
@@ -41,15 +45,15 @@ public class PartialPropertySetPropertyTests extends CommonTest {
         UUID propertySetId = createdPropertySetId;
         UUID propertyId = createdPropertyId;
         PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers.constructPropertySetPropertyRelationship(propertySetId, propertyId, true);
-        commonHelpers.entityIsCreated(relation);
+        entityIsCreated(relation);
         UUID relationId = getSessionResponse().as(PropertySetPropertyRelationshipDto.class).getId();
-        commonHelpers.deleteEntity(PROPERTIES_PATH, propertyId);
+        deleteEntity(PROPERTIES_PATH, propertyId);
         responseCodeIs(SC_CONFLICT);
-        commonHelpers.entityIsDeleted(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
-        commonHelpers.getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
+        entityIsDeleted(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
+        getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
         responseIsEntityNotFound();
-        commonHelpers.entityIsDeleted(PROPERTIES_PATH, propertyId);
-        commonHelpers.getEntity(PROPERTIES_PATH, propertyId);
+        entityIsDeleted(PROPERTIES_PATH, propertyId);
+        getEntity(PROPERTIES_PATH, propertyId);
         responseIsEntityNotFound();
     }
 }

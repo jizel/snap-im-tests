@@ -48,9 +48,6 @@ public class DbStepDefs {
     private PropertySteps propertySteps;
 
 
-    //    @Steps annotation does not work with JUnit
-    private ApplicationsSteps applicationsSteps = new ApplicationsSteps();
-
     @Given("^All customerProperties are deleted from DB for customer id \"([^\"]*)\" and property code \"([^\"]*)\"$")
     public void All_customerProperties_are_deleted_from_DB_for_customer_code_and_property_code(UUID customerId, String propertyCode) throws Throwable {
         CustomerDto c = customerSteps.getCustomerById(customerId);
@@ -206,6 +203,7 @@ public class DbStepDefs {
 
     @And("^Application permission table is populated(?: for application \"([^\"]*)\")?$")
     public void applicationPermissionPopulated(String applicationName) {
+        ApplicationsSteps applicationsSteps = new ApplicationsSteps();
         UUID applicationId = applicationsSteps.resolveApplicationId(applicationName);
         dbSteps.populateApplicationPermissionsTableForApplication(applicationId);
     }

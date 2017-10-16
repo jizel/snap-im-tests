@@ -16,6 +16,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping.endpointDtoMap;
 
 import com.jayway.restassured.response.Response;
@@ -94,7 +96,7 @@ public class CommonRelationshipsTest extends CommonTest {
         // Create relationships for test
         constructAndCreateTestRelationshipsDtos();
         ALL_RELATIONSHIPS_ENDPOINTS.forEach(endpoint -> {
-            commonHelpers.getEntities(endpoint, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
+            getEntities(endpoint, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
             responseCodeIs(SC_OK);
             numberOfEntitiesInResponse(endpointDtoMap.get(endpoint), Integer.valueOf(returned));
         });
@@ -105,7 +107,7 @@ public class CommonRelationshipsTest extends CommonTest {
     @FileParameters(EXAMPLES + "invalidGetParamsExamples.csv")
     public void relationshipsFilteringTest(String limit, String cursor, String filter, String sort, String sortDesc) throws Exception {
         ALL_RELATIONSHIPS_ENDPOINTS.forEach(endpoint -> {
-            Response response = commonHelpers.getEntities(endpoint, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
+            Response response = getEntities(endpoint, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
             responseCodeIs(SC_BAD_REQUEST);
             customCodeIs(CC_BAD_PARAMS);
         });
@@ -116,15 +118,15 @@ public class CommonRelationshipsTest extends CommonTest {
 
     private void constructAndCreateTestRelationshipsDtos() throws Exception {
         //        Prepare data for tests - basic entities
-        commonHelpers.entityIsCreated(testProperty1);
-        commonHelpers.entityIsCreated(testProperty2);
-        commonHelpers.entityIsCreated(testCustomer1);
-        commonHelpers.entityIsCreated(testCustomer2);
-        commonHelpers.entityIsCreated(testUser1);
-        commonHelpers.entityIsCreated(testUser2);
-        commonHelpers.entityIsCreated(testPropertySet1);
-        commonHelpers.entityIsCreated(testUserGroup1);
-        commonHelpers.entityIsCreated(testPartner1);
+        entityIsCreated(testProperty1);
+        entityIsCreated(testProperty2);
+        entityIsCreated(testCustomer1);
+        entityIsCreated(testCustomer2);
+        entityIsCreated(testUser1);
+        entityIsCreated(testUser2);
+        entityIsCreated(testPropertySet1);
+        entityIsCreated(testUserGroup1);
+        entityIsCreated(testPartner1);
         
 //        Construct DTOs
         testCustomerPropertyRelationship1 = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
@@ -162,32 +164,32 @@ public class CommonRelationshipsTest extends CommonTest {
         testUserPartnerRelationship = relationshipsHelpers.constructUserPartnerRelationshipDto(testUser1.getId(), testPartner1.getId(), true);
 
         //        Relationships - create via api
-        commonHelpers.entityIsCreated(testCustomerPropertyRelationship1);
-        commonHelpers.entityIsCreated(testCustomerPropertyRelationship2);
-        commonHelpers.entityIsCreated(testCustomerPropertyRelationship3);
+        entityIsCreated(testCustomerPropertyRelationship1);
+        entityIsCreated(testCustomerPropertyRelationship2);
+        entityIsCreated(testCustomerPropertyRelationship3);
 
-        commonHelpers.entityIsCreated(testPropertySetPropertyRelationship1);
-        commonHelpers.entityIsCreated(testPropertySetPropertyRelationship2);
+        entityIsCreated(testPropertySetPropertyRelationship1);
+        entityIsCreated(testPropertySetPropertyRelationship2);
 
-        commonHelpers.entityIsCreated(testUserCustomerRelationship1);
-        commonHelpers.entityIsCreated(testUserCustomerRelationship2);
-        commonHelpers.entityIsCreated(testUserCustomerRelationship3);
+        entityIsCreated(testUserCustomerRelationship1);
+        entityIsCreated(testUserCustomerRelationship2);
+        entityIsCreated(testUserCustomerRelationship3);
 
-        commonHelpers.entityIsCreated(testUserGroupPropertyRelationship1);
-        commonHelpers.entityIsCreated(testUserGroupPropertyRelationship2);
+        entityIsCreated(testUserGroupPropertyRelationship1);
+        entityIsCreated(testUserGroupPropertyRelationship2);
 
-        commonHelpers.entityIsCreated(testUserGroupPropertySetRelationship);
+        entityIsCreated(testUserGroupPropertySetRelationship);
 
-        commonHelpers.entityIsCreated(testUserGroupUserRelationship1);
+        entityIsCreated(testUserGroupUserRelationship1);
 
-        commonHelpers.entityIsCreated(testUserPartnerRelationship);
+        entityIsCreated(testUserPartnerRelationship);
 
-        commonHelpers.entityIsCreated(testUserPropertyRelationship1);
-        commonHelpers.entityIsCreated(testUserPropertyRelationship2);
-        commonHelpers.entityIsCreated(testUserPropertyRelationship3);
-        commonHelpers.entityIsCreated(testUserPropertyRelationship4);
+        entityIsCreated(testUserPropertyRelationship1);
+        entityIsCreated(testUserPropertyRelationship2);
+        entityIsCreated(testUserPropertyRelationship3);
+        entityIsCreated(testUserPropertyRelationship4);
 
-        commonHelpers.entityIsCreated(testUserPropertySetRelationship1);
-        commonHelpers.entityIsCreated(testUserPropertySetRelationship2);
+        entityIsCreated(testUserPropertySetRelationship1);
+        entityIsCreated(testUserPropertySetRelationship2);
     }
 }

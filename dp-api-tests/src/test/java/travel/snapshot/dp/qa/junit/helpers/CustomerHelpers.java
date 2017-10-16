@@ -36,7 +36,7 @@ public class CustomerHelpers extends CustomerSteps {
 
     public void createRandomCustomer(CustomerCreateDto customer) {
         customer.setId(null);
-        commonHelpers.createEntity(customer);
+        createEntity(customer);
     }
 
     /**

@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests.notification;
 
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
@@ -32,7 +33,7 @@ public class PartnerNotificationTests extends CommonTest{
     public void createPartnerNotificationTest() throws Exception{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createPartnerNotificationTest");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        commonHelpers.entityIsCreated(testPartner1);
+        entityIsCreated(testPartner1);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -40,7 +41,7 @@ public class PartnerNotificationTests extends CommonTest{
     @Test
     public void updatePartnerNotificationTest() throws Exception{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "updatePartnerNotificationTest");
-        commonHelpers.entityIsCreated(testPartner1);
+        entityIsCreated(testPartner1);
         PartnerUpdateDto partnerUpdate = new PartnerUpdateDto();
         partnerUpdate.setName("Updated partner name");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
@@ -52,7 +53,7 @@ public class PartnerNotificationTests extends CommonTest{
     @Test
     public void deletePartnerNotificationTest() throws Exception{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "deletePartnerNotificationTest");
-        commonHelpers.entityIsCreated(testPartner1);
+        entityIsCreated(testPartner1);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         partnerHelpers.deletePartner(testPartner1.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);

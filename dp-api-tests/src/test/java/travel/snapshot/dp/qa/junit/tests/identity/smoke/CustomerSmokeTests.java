@@ -23,7 +23,7 @@ import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
-import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
+import travel.snapshot.dp.qa.junit.utils.NonNullMapDecorator;
 
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.time.LocalDate;
@@ -34,7 +34,7 @@ import java.util.UUID;
 @Category(Categories.Authorization.class)
 public class CustomerSmokeTests extends CommonSmokeTest {
 
-    private EntityNonNullMap<String, CustomerCreateDto> customerDtos = null;
+    private NonNullMapDecorator<String, CustomerCreateDto> customerDtos = null;
 
     @Before
     public void setUp() {

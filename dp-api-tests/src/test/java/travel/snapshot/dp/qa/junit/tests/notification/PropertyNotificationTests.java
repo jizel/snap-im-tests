@@ -5,6 +5,10 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUserForApplication;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadExamplesYaml;
@@ -38,7 +42,7 @@ public class PropertyNotificationTests extends CommonTest{
     @Before
     public void setUp() {
         super.setUp();
-        createdCustomerId = commonHelpers.entityIsCreated(testCustomer1);
+        createdCustomerId = entityIsCreated(testCustomer1);
     }
 
     @After
@@ -51,7 +55,7 @@ public class PropertyNotificationTests extends CommonTest{
     public void createPropertyNotificationTest() throws Exception{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createPropertyNotificationTest");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        commonHelpers.entityIsCreated(testProperty2);
+        entityIsCreated(testProperty2);
         Map<String, Object> receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -63,7 +67,7 @@ public class PropertyNotificationTests extends CommonTest{
         UserDto customerUser = userHelpers.userWithCustomerIsCreated(entitiesLoader.getUserDtos().get("user1"), createdCustomerId);
 
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        commonHelpers.createEntityByUserForApplication(customerUser.getId(), DEFAULT_SNAPSHOT_APPLICATION_ID,  testProperty2);
+        createEntityByUserForApplication(customerUser.getId(), DEFAULT_SNAPSHOT_APPLICATION_ID,  testProperty2);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -74,7 +78,7 @@ public class PropertyNotificationTests extends CommonTest{
         PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
         propertyUpdate.setName("Update Property Name");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        commonHelpers.entityIsUpdated(PROPERTIES_PATH, testProperty1.getId(), propertyUpdate);
+        entityIsUpdated(PROPERTIES_PATH, testProperty1.getId(), propertyUpdate);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }
@@ -83,7 +87,7 @@ public class PropertyNotificationTests extends CommonTest{
     public void deletePropertyNotificationTest() throws Exception{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "deletePropertyNotificationTest");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        commonHelpers.entityIsDeleted(PROPERTIES_PATH, testProperty1.getId());
+        entityIsDeleted(PROPERTIES_PATH, testProperty1.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }

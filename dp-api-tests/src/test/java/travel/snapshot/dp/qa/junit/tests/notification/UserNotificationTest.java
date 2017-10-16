@@ -4,6 +4,7 @@ import static travel.snapshot.dp.qa.cucumber.helpers.RoleType.CUSTOMER;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
@@ -36,7 +37,7 @@ public class UserNotificationTest extends CommonTest {
     @Before
     public void setUp() {
         super.setUp();
-        createdUserId = commonHelpers.entityIsCreated(testUser1);
+        createdUserId = entityIsCreated(testUser1);
         user2 = entitiesLoader.getUserDtos().get("user2");
     }
 

@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 public class PermissionHelpers {
 
-    public ApplicationPermissionCreateDto constructAppPermission(UUID applicationId, UUID platformOperationId) {
+    public static ApplicationPermissionCreateDto constructAppPermission(UUID applicationId, UUID platformOperationId) {
         ApplicationPermissionCreateDto applicationPermissionDto = new ApplicationPermissionCreateDto();
         applicationPermissionDto.setApplicationId(applicationId);
         applicationPermissionDto.setPlatformOperationId(platformOperationId);
