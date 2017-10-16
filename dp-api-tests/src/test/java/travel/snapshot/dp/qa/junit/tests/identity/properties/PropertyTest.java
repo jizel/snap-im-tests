@@ -29,6 +29,9 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -133,7 +136,7 @@ public class PropertyTest extends CommonTest {
         responseIsUnprocessableEntity();
 
         UUID userId = entityIsCreated(testUser1);
-        UserPropertyRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, createdPropertyId, true);
+        UserPropertyRelationshipCreateDto relation = constructUserPropertyRelationshipDto(userId, createdPropertyId, true);
         entityIsCreated(relation);
 
         sendBlankPost(String.format("%s/%s/users/%s", PROPERTIES_PATH, createdPropertyId, userId), "identity");
@@ -155,7 +158,7 @@ public class PropertyTest extends CommonTest {
     public void propertyCannotBeDeletedIfItHasRelationshipWithExistingCustomer() {
         for (CustomerPropertyRelationshipType type : CustomerPropertyRelationshipType.values()) {
             createdPropertyId = entityIsCreated(testProperty1);
-            CustomerPropertyRelationshipCreateDto relation = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
+            CustomerPropertyRelationshipCreateDto relation = constructCustomerPropertyRelationshipDto(
                     DEFAULT_SNAPSHOT_CUSTOMER_ID,
                     createdPropertyId,
              true,
@@ -175,7 +178,7 @@ public class PropertyTest extends CommonTest {
     public void propertyCannotBeDeletedWhenItBelongsToAnyPropertySet() {
         createdPropertyId = entityIsCreated(testProperty1);
         UUID psId = entityIsCreated(testPropertySet1);
-        PropertySetPropertyRelationshipCreateDto relation = relationshipsHelpers.constructPropertySetPropertyRelationship(psId, createdPropertyId, true);
+        PropertySetPropertyRelationshipCreateDto relation = constructPropertySetPropertyRelationship(psId, createdPropertyId, true);
         UUID relationId = entityIsCreated(relation);
         deleteEntity(PROPERTIES_PATH, createdPropertyId);
         responseIsEntityReferenced();
@@ -190,7 +193,7 @@ public class PropertyTest extends CommonTest {
     public void propertyCannotBeDeletedWhenItHasARelationshipWithSomeUser() {
         createdPropertyId = entityIsCreated(testProperty1);
         UUID userId = entityIsCreated(testUser1);
-        UserPropertyRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, createdPropertyId, true);
+        UserPropertyRelationshipCreateDto relation = constructUserPropertyRelationshipDto(userId, createdPropertyId, true);
         UUID relationId = entityIsCreated(relation);
         deleteEntity(PROPERTIES_PATH, createdPropertyId);
         responseIsEntityReferenced();

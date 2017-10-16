@@ -12,6 +12,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
@@ -95,7 +96,7 @@ public class PropertySetTests extends CommonTest {
     public void updatingPropertySetUserRelationship() {
         UUID psId = entityIsCreated(testPropertySet1);
         UUID userId = entityIsCreated(testUser1);
-        UserPropertySetRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertySetRelationshipDto(userId, psId, true);
+        UserPropertySetRelationshipCreateDto relation = constructUserPropertySetRelationshipDto(userId, psId, true);
         UUID relationId = entityIsCreated(relation);
         UserPropertySetRelationshipUpdateDto update = new UserPropertySetRelationshipUpdateDto();
         update.setIsActive(false);

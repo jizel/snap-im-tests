@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
 import com.jayway.restassured.specification.RequestSpecification;
 import org.junit.Test;
@@ -52,7 +53,7 @@ public class PropertySetSmokeTests extends CommonSmokeTest {
         // create PS
         UUID propertySetId = authorizationHelpers.entityIsCreated(testPropertySet1);
         // create relation
-        UserPropertySetRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertySetRelationshipDto(userId, propertySetId, true);
+        UserPropertySetRelationshipCreateDto relation = constructUserPropertySetRelationshipDto(userId, propertySetId, true);
         UUID relationId = authorizationHelpers.entityIsCreated(relation);
         // request
         authorizationHelpers.getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);

@@ -20,6 +20,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
@@ -95,7 +96,7 @@ public class CustomerRestrictionsTests extends CommonRestrictionTest {
     private void setApplicationAccessRightsForNewCustomer(){
         UUID existingRelationshipId = getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, emptyQueryParams()).get(0).getId();
         entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, existingRelationshipId);
-        entityIsCreated(relationshipsHelpers.constructUserCustomerRelationshipDto(DEFAULT_SNAPSHOT_USER_ID, testCustomer1.getId(), true, true));
+        entityIsCreated(constructUserCustomerRelationshipDto(DEFAULT_SNAPSHOT_USER_ID, testCustomer1.getId(), true, true));
         entityIsCreated(constructCommercialSubscriptionDto(restrictedApp.getId(), testCustomer1.getId(), DEFAULT_PROPERTY_ID));
     }
 }

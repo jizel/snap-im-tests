@@ -18,6 +18,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_AS
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_PERMISSIONS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.constructCommercialSubscriptionDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructRoleAssignment;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 public class RoleSmokeTests extends CommonSmokeTest {
     private UUID createdUserId;
@@ -37,7 +39,7 @@ public class RoleSmokeTests extends CommonSmokeTest {
         testAppVersion1.setApplicationId(createdAppId);
         createdAppVersionId = authorizationHelpers.entityIsCreated(testAppVersion1);
 
-        UserPropertyRelationshipCreateDto relationship = relationshipsHelpers.constructUserPropertyRelationshipDto(createdUserId, DEFAULT_PROPERTY_ID, true);
+        UserPropertyRelationshipCreateDto relationship = constructUserPropertyRelationshipDto(createdUserId, DEFAULT_PROPERTY_ID, true);
         authorizationHelpers.entityIsCreated(relationship);
 
         testRole1.setApplicationId(createdAppId);
@@ -48,7 +50,7 @@ public class RoleSmokeTests extends CommonSmokeTest {
 
     @Test
     public void roleAssignmentCRUD() {
-        UUID assignmentId = authorizationHelpers.entityIsCreated(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId));
+        UUID assignmentId = authorizationHelpers.entityIsCreated(constructRoleAssignment(createdRoleId, createdUserId));
         RoleAssignmentDto assignmentDto = authorizationHelpers.getEntity(ROLE_ASSIGNMENTS_PATH, assignmentId).as(RoleAssignmentDto.class);
         assertThat(assignmentId, is(assignmentDto.getId()));
         // Role assignments do not support update, therefore - delete

@@ -20,6 +20,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructRoleAssignment;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import lombok.extern.java.Log;
 import org.junit.Before;
@@ -53,7 +55,7 @@ public class RoleAssignmentTests extends CommonTest {
         testAppVersion1.setApplicationId(createdAppId);
         createdAppVersionId = entityIsCreated(testAppVersion1);
 
-        UserPropertyRelationshipCreateDto relationship = relationshipsHelpers.constructUserPropertyRelationshipDto(createdUserId, DEFAULT_PROPERTY_ID, true);
+        UserPropertyRelationshipCreateDto relationship = constructUserPropertyRelationshipDto(createdUserId, DEFAULT_PROPERTY_ID, true);
         entityIsCreated(relationship);
 
         testRole1.setApplicationId(createdAppId);
@@ -75,7 +77,7 @@ public class RoleAssignmentTests extends CommonTest {
 
     @Test
     public void roleWithWithoutPermissions() {
-        entityIsCreated(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId));
+        entityIsCreated(constructRoleAssignment(createdRoleId, createdUserId));
         ALL_ENDPOINTS.forEach(endpoint -> {
             log.info("Endpoint is " + endpoint);
             getEntitiesByUserForApp(createdUserId, createdAppVersionId, endpoint, emptyQueryParams())
@@ -90,7 +92,7 @@ public class RoleAssignmentTests extends CommonTest {
 
     @Test
     public void roleAssignmentCRUD() {
-        UUID assignmentId = entityIsCreated(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId));
+        UUID assignmentId = entityIsCreated(constructRoleAssignment(createdRoleId, createdUserId));
         RoleAssignmentDto assignmentDto = getEntityAsType(ROLE_ASSIGNMENTS_PATH, RoleAssignmentDto.class, assignmentId);
         assertThat(assignmentId, is(assignmentDto.getId()));
         // Role assignments do not support update, therefore - delete
@@ -108,7 +110,7 @@ public class RoleAssignmentTests extends CommonTest {
 
     @Test
     public void userCustomerRelationshipIsNeededToCreateRole() {
-        createEntity(relationshipsHelpers.constructRoleAssignment(createdRoleId, DEFAULT_SNAPSHOT_USER_ID))
+        createEntity(constructRoleAssignment(createdRoleId, DEFAULT_SNAPSHOT_USER_ID))
                 .then()
                 .statusCode(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NO_MATCHING_ENTITY);
@@ -131,7 +133,7 @@ public class RoleAssignmentTests extends CommonTest {
         RoleRelationshipDto roleRelationship = constructTestRoleRelationship(createdRoleId);
         roleHelpers.assignRoleToUserCustomerRelationshipOld(createdUserId, DEFAULT_SNAPSHOT_CUSTOMER_ID, roleRelationship);
 
-        createEntity(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId))
+        createEntity(constructRoleAssignment(createdRoleId, createdUserId))
                 .then()
                 .statusCode(SC_CONFLICT);
     }

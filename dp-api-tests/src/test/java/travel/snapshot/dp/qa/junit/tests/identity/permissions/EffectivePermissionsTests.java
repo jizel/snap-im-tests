@@ -19,6 +19,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTypeByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.PermissionHelpers.constructAppPermission;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructRoleAssignment;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -102,7 +103,7 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
         testRole1.setApplicationId(restrictedApp.getId());
         UUID createdRoleId = entityIsCreated(testRole1);
         entityIsCreated(relationshipsHelpers.constructRolePermission(createdRoleId, GET, RESTRICTIONS_EFFECTIVE_PERMISSIONS, false));
-        entityIsCreated(relationshipsHelpers.constructRoleAssignment(createdRoleId, createdUserId));
+        entityIsCreated(constructRoleAssignment(createdRoleId, createdUserId));
         pathParams.put(USER_ID, createdUserId.toString());
 
         //        Test with inactive role

@@ -13,6 +13,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -145,9 +147,9 @@ public class ParametersPropertySetTests extends CommonTest {
         UUID p1Id = entityIsCreated(testProperty1);
         UUID p2Id = entityIsCreated(testProperty2);
         UUID p3Id = entityIsCreated(testProperty3);
-        PropertySetPropertyRelationshipCreateDto relation1 = relationshipsHelpers.constructPropertySetPropertyRelationship(psId, p1Id, true);
-        PropertySetPropertyRelationshipCreateDto relation2 = relationshipsHelpers.constructPropertySetPropertyRelationship(psId, p2Id, true);
-        PropertySetPropertyRelationshipCreateDto relation3 = relationshipsHelpers.constructPropertySetPropertyRelationship(psId, p3Id, false);
+        PropertySetPropertyRelationshipCreateDto relation1 = constructPropertySetPropertyRelationship(psId, p1Id, true);
+        PropertySetPropertyRelationshipCreateDto relation2 = constructPropertySetPropertyRelationship(psId, p2Id, true);
+        PropertySetPropertyRelationshipCreateDto relation3 = constructPropertySetPropertyRelationship(psId, p3Id, false);
         entityIsCreated(relation1);
         entityIsCreated(relation2);
         entityIsCreated(relation3);
@@ -183,7 +185,7 @@ public class ParametersPropertySetTests extends CommonTest {
             testUser1.setUsername(String.format("UserName%d", n));
             testUser1.setEmail(String.format("username%d@snapshot.travel", n));
             UUID userId = entityIsCreated(testUser1);
-            UserPropertySetRelationshipCreateDto relation = relationshipsHelpers.constructUserPropertySetRelationshipDto(userId, psId, true);
+            UserPropertySetRelationshipCreateDto relation = constructUserPropertySetRelationshipDto(userId, psId, true);
             entityIsCreated(relation);
         });
         // Disable one of the relationships

@@ -14,6 +14,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupPropertySetRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupPropertySetRelationshipUpdate;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
@@ -38,7 +40,7 @@ public class UserGroupPropertySetRelationshipTests extends CommonTest {
         super.setUp();
         createdPropertySetId = entityIsCreated(testPropertySet1);
         createdUserGroupId = entityIsCreated(testUserGroup1);
-        testUserGroupPropertySetRelationship = relationshipsHelpers.constructUserGroupPropertySetRelationship(createdUserGroupId, createdPropertySetId, true);
+        testUserGroupPropertySetRelationship = constructUserGroupPropertySetRelationship(createdUserGroupId, createdPropertySetId, true);
     }
 
     @Test
@@ -56,11 +58,11 @@ public class UserGroupPropertySetRelationshipTests extends CommonTest {
 
     @Test
     public void createUserGroupPropertySetRelationshipErrors() {
-        testUserGroupPropertySetRelationship = relationshipsHelpers.constructUserGroupPropertySetRelationship(NON_EXISTENT_ID, createdPropertySetId, true);
+        testUserGroupPropertySetRelationship = constructUserGroupPropertySetRelationship(NON_EXISTENT_ID, createdPropertySetId, true);
         createEntity(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, testUserGroupPropertySetRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
-        testUserGroupPropertySetRelationship = relationshipsHelpers.constructUserGroupPropertySetRelationship(createdUserGroupId, NON_EXISTENT_ID, true);
+        testUserGroupPropertySetRelationship = constructUserGroupPropertySetRelationship(createdUserGroupId, NON_EXISTENT_ID, true);
         createEntity(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, testUserGroupPropertySetRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
@@ -69,7 +71,7 @@ public class UserGroupPropertySetRelationshipTests extends CommonTest {
     @Test
     public void updateUserGroupPropertySetRelationship() throws Exception {
         UserGroupPropertySetRelationshipCreateDto userGroupPropertySetRelationship = entityIsCreatedAs(UserGroupPropertySetRelationshipDto.class, testUserGroupPropertySetRelationship);
-        UserGroupPropertySetRelationshipUpdateDto update = relationshipsHelpers.constructUserGroupPropertySetRelationshipUpdate(false);
+        UserGroupPropertySetRelationshipUpdateDto update = constructUserGroupPropertySetRelationshipUpdate(false);
         commonHelpers.updateEntityPost(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, userGroupPropertySetRelationship.getId(), update);
         responseCodeIs(SC_NO_CONTENT);
         UserGroupPropertySetRelationshipCreateDto returnedRelationship = getEntityAsType(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, UserGroupPropertySetRelationshipDto.class, userGroupPropertySetRelationship.getId());

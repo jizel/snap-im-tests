@@ -58,7 +58,7 @@ public class RelationshipsHelpers extends BasicSteps {
     //    This approach is used instead of yaml entities because relationships contain a lot of dependencies to other
     // entities which we want to test. It is also easier to maintain than dependencies across yaml files.
 
-    public UserCustomerRelationshipCreateDto constructUserCustomerRelationshipDto(UUID userId, UUID customerId, Boolean isActive, Boolean isPrimary) {
+    public static UserCustomerRelationshipCreateDto constructUserCustomerRelationshipDto(UUID userId, UUID customerId, Boolean isActive, Boolean isPrimary) {
         UserCustomerRelationshipCreateDto userCustomerRelationship = new UserCustomerRelationshipCreateDto();
         userCustomerRelationship.setCustomerId(customerId);
         userCustomerRelationship.setUserId(userId);
@@ -67,14 +67,14 @@ public class RelationshipsHelpers extends BasicSteps {
         return userCustomerRelationship;
     }
 
-    public UserCustomerRelationshipUpdateDto constructUserCustomerRelationshipUpdate(Boolean isActive, Boolean isPrimary) {
+    public static UserCustomerRelationshipUpdateDto constructUserCustomerRelationshipUpdate(Boolean isActive, Boolean isPrimary) {
         UserCustomerRelationshipUpdateDto userCustomerRelationshipUpdate = new UserCustomerRelationshipUpdateDto();
         userCustomerRelationshipUpdate.setIsPrimary(isPrimary);
         userCustomerRelationshipUpdate.setIsActive(isActive);
         return userCustomerRelationshipUpdate;
     }
 
-    public UserPartnerRelationshipCreateDto constructUserPartnerRelationshipDto(UUID userId, UUID partnerId, Boolean isActive) {
+    public static UserPartnerRelationshipCreateDto constructUserPartnerRelationshipDto(UUID userId, UUID partnerId, Boolean isActive) {
         UserPartnerRelationshipCreateDto userPartnerRelationship = new UserPartnerRelationshipCreateDto();
         userPartnerRelationship.setUserId(userId);
         userPartnerRelationship.setPartnerId(partnerId);
@@ -82,14 +82,14 @@ public class RelationshipsHelpers extends BasicSteps {
         return userPartnerRelationship;
     }
 
-    public UserPartnerRelationshipUpdateDto constructUserPartnerRelationshipUpdateDto(Boolean isActive) {
+    public static UserPartnerRelationshipUpdateDto constructUserPartnerRelationshipUpdateDto(Boolean isActive) {
         UserPartnerRelationshipUpdateDto userPartnerRelationship = new UserPartnerRelationshipUpdateDto();
         userPartnerRelationship.setIsActive(isActive);
         return userPartnerRelationship;
     }
 
 
-    public UserPropertyRelationshipCreateDto constructUserPropertyRelationshipDto(UUID userId, UUID propertyId, Boolean isActive) {
+    public static UserPropertyRelationshipCreateDto constructUserPropertyRelationshipDto(UUID userId, UUID propertyId, Boolean isActive) {
         UserPropertyRelationshipCreateDto userPartnerRelationship = new UserPropertyRelationshipCreateDto();
         userPartnerRelationship.setUserId(userId);
         userPartnerRelationship.setPropertyId(propertyId);
@@ -97,13 +97,13 @@ public class RelationshipsHelpers extends BasicSteps {
         return userPartnerRelationship;
     }
 
-    public UserPropertyRelationshipUpdateDto constructUserPropertyRelationshipUpdateDto(Boolean isActive) {
+    public static UserPropertyRelationshipUpdateDto constructUserPropertyRelationshipUpdateDto(Boolean isActive) {
         UserPropertyRelationshipUpdateDto userPropertyRelationship = new UserPropertyRelationshipUpdateDto();
         userPropertyRelationship.setIsActive(isActive);
         return userPropertyRelationship;
     }
 
-    public UserPropertySetRelationshipCreateDto constructUserPropertySetRelationshipDto(UUID userId, UUID propertySetId, Boolean isActive) {
+    public static UserPropertySetRelationshipCreateDto constructUserPropertySetRelationshipDto(UUID userId, UUID propertySetId, Boolean isActive) {
         UserPropertySetRelationshipCreateDto userPropertySetRelationship = new UserPropertySetRelationshipCreateDto();
         userPropertySetRelationship.setUserId(userId);
         userPropertySetRelationship.setPropertySetId(propertySetId);
@@ -111,13 +111,13 @@ public class RelationshipsHelpers extends BasicSteps {
         return userPropertySetRelationship;
     }
 
-    public UserPropertySetRelationshipUpdateDto constructUserPropertySetRelationshipUpdateDto(Boolean isActive) {
+    public static UserPropertySetRelationshipUpdateDto constructUserPropertySetRelationshipUpdateDto(Boolean isActive) {
         UserPropertySetRelationshipUpdateDto userPropertySetRelationship = new UserPropertySetRelationshipUpdateDto();
         userPropertySetRelationship.setIsActive(isActive);
         return userPropertySetRelationship;
     }
 
-    public CustomerPropertyRelationshipCreateDto constructCustomerPropertyRelationshipDto(UUID customerId, UUID propertyId, Boolean isActive,
+    public static CustomerPropertyRelationshipCreateDto constructCustomerPropertyRelationshipDto(UUID customerId, UUID propertyId, Boolean isActive,
                                                                                           CustomerPropertyRelationshipType type,
                                                                                           LocalDate validFrom,
                                                                                           LocalDate validTo) {
@@ -131,7 +131,7 @@ public class RelationshipsHelpers extends BasicSteps {
         return customerPropertyRelationship;
     }
 
-    public CustomerPropertyRelationshipUpdateDto constructCustomerPropertyRelationshipUpdate(Boolean isActive,
+    public static CustomerPropertyRelationshipUpdateDto constructCustomerPropertyRelationshipUpdate(Boolean isActive,
                                                                                              CustomerPropertyRelationshipType type,
                                                                                              LocalDate validFrom,
                                                                                              LocalDate validTo) {
@@ -144,7 +144,7 @@ public class RelationshipsHelpers extends BasicSteps {
         return customerPropertyRelationshipUpdate;
     }
 
-    public PropertySetPropertyRelationshipCreateDto constructPropertySetPropertyRelationship(UUID propertySetId, UUID propertyId, Boolean isActive) {
+    public static PropertySetPropertyRelationshipCreateDto constructPropertySetPropertyRelationship(UUID propertySetId, UUID propertyId, Boolean isActive) {
         PropertySetPropertyRelationshipCreateDto propertySetPropertyRelationship = new PropertySetPropertyRelationshipCreateDto();
         propertySetPropertyRelationship.setPropertyId(propertyId);
         propertySetPropertyRelationship.setPropertySetId(propertySetId);
@@ -152,13 +152,13 @@ public class RelationshipsHelpers extends BasicSteps {
         return propertySetPropertyRelationship;
     }
 
-    public PropertySetPropertyRelationshipUpdateDto constructPropertySetPropertyRelationshipUpdate(Boolean isActive) {
+    public static PropertySetPropertyRelationshipUpdateDto constructPropertySetPropertyRelationshipUpdate(Boolean isActive) {
         PropertySetPropertyRelationshipUpdateDto propertySetPropertyRelationshipUpdate = new PropertySetPropertyRelationshipUpdateDto();
         propertySetPropertyRelationshipUpdate.setIsActive(isActive);
         return propertySetPropertyRelationshipUpdate;
     }
 
-    public UserGroupUserRelationshipCreateDto constructUserGroupUserRelationship(UUID userGroupId, UUID userId, Boolean isActive) {
+    public static UserGroupUserRelationshipCreateDto constructUserGroupUserRelationship(UUID userGroupId, UUID userId, Boolean isActive) {
         UserGroupUserRelationshipCreateDto userGroupUserRelationship = new UserGroupUserRelationshipCreateDto();
         userGroupUserRelationship.setUserGroupId(userGroupId);
         userGroupUserRelationship.setUserId(userId);
@@ -166,13 +166,13 @@ public class RelationshipsHelpers extends BasicSteps {
         return userGroupUserRelationship;
     }
 
-    public UserGroupUserRelationshipUpdateDto constructUserGroupUserRelationshipUpdate(Boolean isActive) {
+    public static UserGroupUserRelationshipUpdateDto constructUserGroupUserRelationshipUpdate(Boolean isActive) {
         UserGroupUserRelationshipUpdateDto userGroupUserRelationshipUpdate = new UserGroupUserRelationshipUpdateDto();
         userGroupUserRelationshipUpdate.setIsActive(isActive);
         return userGroupUserRelationshipUpdate;
     }
 
-    public UserGroupPropertyRelationshipCreateDto constructUserGroupPropertyRelationship(UUID userGroupId, UUID propertyId, Boolean isActive) {
+    public static UserGroupPropertyRelationshipCreateDto constructUserGroupPropertyRelationship(UUID userGroupId, UUID propertyId, Boolean isActive) {
         UserGroupPropertyRelationshipCreateDto userGroupPropertyRelationship = new UserGroupPropertyRelationshipCreateDto();
         userGroupPropertyRelationship.setPropertyId(propertyId);
         userGroupPropertyRelationship.setUserGroupId(userGroupId);
@@ -180,13 +180,13 @@ public class RelationshipsHelpers extends BasicSteps {
         return userGroupPropertyRelationship;
     }
 
-    public UserGroupPropertyRelationshipUpdateDto constructUserGroupPropertyRelationshipUpdate(Boolean isActive) {
+    public static UserGroupPropertyRelationshipUpdateDto constructUserGroupPropertyRelationshipUpdate(Boolean isActive) {
         UserGroupPropertyRelationshipUpdateDto userGroupPropertyRelationshipUpdate = new UserGroupPropertyRelationshipUpdateDto();
         userGroupPropertyRelationshipUpdate.setIsActive(isActive);
         return userGroupPropertyRelationshipUpdate;
     }
 
-    public UserGroupPropertySetRelationshipCreateDto constructUserGroupPropertySetRelationship(UUID userGroupId, UUID propertySetId, Boolean isActive) {
+    public static UserGroupPropertySetRelationshipCreateDto constructUserGroupPropertySetRelationship(UUID userGroupId, UUID propertySetId, Boolean isActive) {
         UserGroupPropertySetRelationshipCreateDto userGroupPropertySetRelationship = new UserGroupPropertySetRelationshipCreateDto();
         userGroupPropertySetRelationship.setPropertySetId(propertySetId);
         userGroupPropertySetRelationship.setUserGroupId(userGroupId);
@@ -194,13 +194,13 @@ public class RelationshipsHelpers extends BasicSteps {
         return userGroupPropertySetRelationship;
     }
 
-    public UserGroupPropertySetRelationshipUpdateDto constructUserGroupPropertySetRelationshipUpdate(Boolean isActive) {
+    public static UserGroupPropertySetRelationshipUpdateDto constructUserGroupPropertySetRelationshipUpdate(Boolean isActive) {
         UserGroupPropertySetRelationshipUpdateDto userGroupPropertySetRelationshipUpdate = new UserGroupPropertySetRelationshipUpdateDto();
         userGroupPropertySetRelationshipUpdate.setIsActive(isActive);
         return userGroupPropertySetRelationshipUpdate;
     }
 
-    public RoleAssignmentCreateDto constructRoleAssignment(UUID roleId, UUID userId) {
+    public static RoleAssignmentCreateDto constructRoleAssignment(UUID roleId, UUID userId) {
         RoleAssignmentCreateDto assignment = new RoleAssignmentCreateDto();
         assignment.setRoleId(roleId);
         assignment.setUserId(userId);

@@ -18,6 +18,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTyp
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTypeByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsTypeByUserForApp;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_APPLICATIONS_ENDPOINT;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_SINGLE_APPLICATION_ENDPOINT;
 
@@ -106,9 +108,9 @@ public class ApplicationsTests extends CommonTest {
         externalAppId = entityIsCreated(application);
         dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_APPLICATIONS_ENDPOINT, HttpMethod.GET);
         dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_SINGLE_APPLICATION_ENDPOINT, HttpMethod.GET);
-        entityIsCreated(relationshipsHelpers.constructUserCustomerRelationshipDto(
+        entityIsCreated(constructUserCustomerRelationshipDto(
                 DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true));
-        entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(
+        entityIsCreated(constructUserPropertyRelationshipDto(
                 DEFAULT_SNAPSHOT_USER_ID, DEFAULT_PROPERTY_ID, true));
         commercialSubscriptionHelpers.commercialSubscriptionIsCreated(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID, externalAppId);
     }

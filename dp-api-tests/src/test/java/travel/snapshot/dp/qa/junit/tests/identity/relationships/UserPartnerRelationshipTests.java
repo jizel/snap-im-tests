@@ -14,6 +14,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPartnerRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPartnerRelationshipUpdateDto;
 
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -41,7 +43,7 @@ public class UserPartnerRelationshipTests extends CommonTest{
         super.setUp();
         createdPartnerId = entityIsCreated(testPartner1);
         createdUserId = entityIsCreated(testUser1);
-        testUserPartnerRelationship = relationshipsHelpers.constructUserPartnerRelationshipDto(createdUserId, createdPartnerId, true);
+        testUserPartnerRelationship = constructUserPartnerRelationshipDto(createdUserId, createdPartnerId, true);
     }
 
     @Test
@@ -59,11 +61,11 @@ public class UserPartnerRelationshipTests extends CommonTest{
 
     @Test
     public void createUserPartnerRelationshipErrors() {
-        testUserPartnerRelationship = relationshipsHelpers.constructUserPartnerRelationshipDto(NON_EXISTENT_ID, createdPartnerId, true);
+        testUserPartnerRelationship = constructUserPartnerRelationshipDto(NON_EXISTENT_ID, createdPartnerId, true);
         createEntity(USER_PARTNER_RELATIONSHIPS_PATH, testUserPartnerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
-        testUserPartnerRelationship = relationshipsHelpers.constructUserPartnerRelationshipDto(createdUserId, NON_EXISTENT_ID, true);
+        testUserPartnerRelationship = constructUserPartnerRelationshipDto(createdUserId, NON_EXISTENT_ID, true);
         createEntity(USER_PARTNER_RELATIONSHIPS_PATH, testUserPartnerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
@@ -72,7 +74,7 @@ public class UserPartnerRelationshipTests extends CommonTest{
     @Test
     public void updateUserPartnerRelationship() throws Exception {
         UserPartnerRelationshipCreateDto userPartnerRelationship = entityIsCreatedAs(UserPartnerRelationshipDto.class, testUserPartnerRelationship);
-        UserPartnerRelationshipUpdateDto update = relationshipsHelpers.constructUserPartnerRelationshipUpdateDto(false);
+        UserPartnerRelationshipUpdateDto update = constructUserPartnerRelationshipUpdateDto(false);
         commonHelpers.updateEntityPost(USER_PARTNER_RELATIONSHIPS_PATH, userPartnerRelationship.getId(), update);
         responseCodeIs(SC_NO_CONTENT);
         UserPartnerRelationshipCreateDto requestedRelationship = getEntityAsType(USER_PARTNER_RELATIONSHIPS_PATH, UserPartnerRelationshipDto.class, userPartnerRelationship.getId());
