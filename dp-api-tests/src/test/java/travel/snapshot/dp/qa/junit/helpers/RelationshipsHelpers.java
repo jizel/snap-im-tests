@@ -11,6 +11,7 @@ import travel.snapshot.dp.api.identity.model.RoleAssignmentCreateDto;
 import travel.snapshot.dp.api.identity.model.RolePermissionCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
@@ -62,6 +63,14 @@ public class RelationshipsHelpers extends BasicSteps {
         UserCustomerRelationshipCreateDto userCustomerRelationship = new UserCustomerRelationshipCreateDto();
         userCustomerRelationship.setCustomerId(customerId);
         userCustomerRelationship.setUserId(userId);
+        userCustomerRelationship.setIsActive(isActive);
+        userCustomerRelationship.setIsPrimary(isPrimary);
+        return userCustomerRelationship;
+    }
+
+    public static UserCustomerRelationshipPartialDto constructUserCustomerRelationshipPartialDto(UUID customerId, Boolean isActive, Boolean isPrimary) {
+        UserCustomerRelationshipPartialDto userCustomerRelationship = new UserCustomerRelationshipPartialDto();
+        userCustomerRelationship.setCustomerId(customerId);
         userCustomerRelationship.setIsActive(isActive);
         userCustomerRelationship.setIsPrimary(isPrimary);
         return userCustomerRelationship;

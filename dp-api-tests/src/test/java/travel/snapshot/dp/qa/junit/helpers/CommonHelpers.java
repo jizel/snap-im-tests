@@ -141,12 +141,12 @@ public class CommonHelpers {
     }
 
     public static <DTO> List<DTO> getEntitiesAsType(String basePath, Class<DTO> clazz, Map<String, String> queryParams) {
-        setSessionResponse(getEntities(basePath, queryParams));
+        getEntities(basePath, queryParams).then().statusCode(SC_OK);
         return parseResponseAsListOfObjects(clazz);
     }
 
     public static <DTO> List<DTO> getEntitiesAsTypeByUserForApp(UUID userId, UUID appId, String basePath, Class<DTO> clazz, Map<String, String> queryParams) {
-        setSessionResponse(getEntitiesByUserForApp(userId, appId, basePath, queryParams));
+        getEntitiesByUserForApp(userId, appId, basePath, queryParams).then().statusCode(SC_OK);
         return parseResponseAsListOfObjects(clazz);
     }
 
