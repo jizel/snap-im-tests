@@ -33,22 +33,20 @@ public class CustomerGetTests extends CommonTest{
 
     private static final String FILTERING_CUSTOMERS_EXAMPLES = "src/test/resources/csv/customers/filteringCustomers.csv";
     private static DbStepDefs dbStepDefs;
-    private static CommonHelpers commonHelpers;
 
     @BeforeClass
     public static void createTestCustomers() throws Exception {
 //        Create 50+ test customers but only once for all tests!
         dbStepDefs = new DbStepDefs();
-        commonHelpers = new CommonHelpers();
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
         loadDefaultTestEntities();
-            range(0, 52).forEachOrdered(n -> {
-                testCustomer1.setName(String.format("customer_%d", n));
-                testCustomer1.setEmail(String.format("customer-%d@snapshot.travel", n));
-                testCustomer1.setWebsite(String.format("http://www.customer%d.snapshot.travel", n));
-                testCustomer1.setId(null);
-                entityIsCreated(testCustomer1);
-            });
+        range(0, 52).forEachOrdered(n -> {
+            testCustomer1.setName(String.format("customer_%d", n));
+            testCustomer1.setEmail(String.format("customer-%d@snapshot.travel", n));
+            testCustomer1.setWebsite(String.format("http://www.customer%d.snapshot.travel", n));
+            testCustomer1.setId(null);
+            entityIsCreated(testCustomer1);
+        });
         // The following is needed to test customer filtering/sorting by address.country DPIM-116
         AddressDto address = createRandomAddress(5, 5, 6, "CZ", null);
         testCustomer1.setAddress(address);

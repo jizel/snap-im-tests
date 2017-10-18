@@ -46,7 +46,6 @@ import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,8 +69,6 @@ public class CommonRelationshipsTest extends CommonTest {
             USER_GROUP_USER_RELATIONSHIPS_PATH
     );
 
-    protected LocalDate validFrom = LocalDate.now();
-    protected LocalDate validTo = LocalDate.now().plusYears(1).plusMonths(2).plusDays(3);
     private PropertySetPropertyRelationshipCreateDto testPropertySetPropertyRelationship1;
     private PropertySetPropertyRelationshipCreateDto testPropertySetPropertyRelationship2;
     private CustomerPropertyRelationshipCreateDto testCustomerPropertyRelationship1;
