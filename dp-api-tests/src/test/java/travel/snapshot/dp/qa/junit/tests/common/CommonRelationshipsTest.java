@@ -70,8 +70,8 @@ public class CommonRelationshipsTest extends CommonTest {
             USER_GROUP_USER_RELATIONSHIPS_PATH
     );
 
-    private LocalDate validFrom = LocalDate.now();
-    private LocalDate validTo = LocalDate.now().plusYears(1).plusMonths(2).plusDays(3);
+    protected LocalDate validFrom = LocalDate.now();
+    protected LocalDate validTo = LocalDate.now().plusYears(1).plusMonths(2).plusDays(3);
     private PropertySetPropertyRelationshipCreateDto testPropertySetPropertyRelationship1;
     private PropertySetPropertyRelationshipCreateDto testPropertySetPropertyRelationship2;
     private CustomerPropertyRelationshipCreateDto testCustomerPropertyRelationship1;

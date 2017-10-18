@@ -1,0 +1,11 @@
+defaultPropertyCode,chain,1,/null,2100-01-01,422,42201
+defaultPropertyCode,chain,1,/null,/null,422,42201
+defaultPropertyCode,chain,1,2015-01-01,/null,422,42201
+defaultPropertyCode,chain,1,,,422,42201
+defaultPropertyCode,chain,1,2015-01-01,2014-12-31,422,42201
+defaultPropertyCode,chain,1,2015-01-,2100-01-01,422,42201
+defaultPropertyCode,chain,1,2015-01-01,asdfasdf,422,42201
+defaultPropertyCode,chain,1,2015-01-01,2018-02-30,422,42201
+property1code,nonexistent,1,2015-01-01,2100-01-01,422,42201
+property1code,chain,0,2015-01-01,2100-01-01,409,40907
+nonexistent,chain,1,2015-01-01,2100-01-01,422,42202

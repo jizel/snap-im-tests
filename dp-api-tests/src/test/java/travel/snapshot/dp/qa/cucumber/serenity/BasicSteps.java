@@ -115,7 +115,8 @@ public class BasicSteps {
     public static final String PROPERTY_CODE = "property_code";
     public static final String IS_ACTIVE = "is_active";
     public static final String PROPERTY_ID = "property_id";
-    public static final String RELATIONSHIP_TYPE = "relationship_type";
+    public static final String CUSTOMER_ID = "customer_id";
+    public static final String RELATIONSHIP_TYPE = "type";
     public static final String VALID_FROM = "valid_from";
     public static final String VALID_TO = "valid_to";
     public static final String VALID_FROM_VALUE = "2017-06-01";

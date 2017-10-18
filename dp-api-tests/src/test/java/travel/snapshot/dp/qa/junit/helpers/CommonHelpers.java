@@ -449,4 +449,12 @@ public class CommonHelpers {
         return null;
     }
 
+    public static Response sendPostWithBody(String url, Object body) {
+        spec.basePath(url);
+        return givenContext(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
+                .spec(spec)
+                .body(body)
+                .post();
+    }
+
 }
