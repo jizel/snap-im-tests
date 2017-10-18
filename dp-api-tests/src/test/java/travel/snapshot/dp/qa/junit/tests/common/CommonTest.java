@@ -93,19 +93,19 @@ public abstract class CommonTest {
 
 
     //    Custom codes
-    protected static final int CC_INSUFFICIENT_PERMISSIONS = 40301;
-    protected static final int CC_ENDPOINT_NOT_FOUND = 40401;
-    protected static final int CC_ENTITY_NOT_FOUND = 40402;
-    protected static final int CC_CONFLICT_CODE = 40901;
-    protected static final int CC_CONFLICT_ID = 40902;
-    protected static final int CC_CONFLICT_VALUES = 40907;
-    protected static final int CC_CIRCULAR_DEPENDENCY = 40911;
-    protected static final int CC_ENTITY_REFERENCED = 40915;
-    protected static final int CC_BAD_PARAMS = 40002;
-    protected static final int CC_SEMANTIC_ERRORS = 42201;
-    protected static final int CC_NON_EXISTING_REFERENCE = 42202;
-    protected static final int CC_NO_MATCHING_ENTITY = 42203;
-    protected static final int CC_INVALID_ETAG = 41202;
+    public static final int CC_INSUFFICIENT_PERMISSIONS = 40301;
+    public static final int CC_ENDPOINT_NOT_FOUND = 40401;
+    public static final int CC_ENTITY_NOT_FOUND = 40402;
+    public static final int CC_CONFLICT_CODE = 40901;
+    public static final int CC_CONFLICT_ID = 40902;
+    public static final int CC_CONFLICT_VALUES = 40907;
+    public static final int CC_CIRCULAR_DEPENDENCY = 40911;
+    public static final int CC_ENTITY_REFERENCED = 40915;
+    public static final int CC_BAD_PARAMS = 40002;
+    public static final int CC_SEMANTIC_ERRORS = 42201;
+    public static final int CC_NON_EXISTING_REFERENCE = 42202;
+    public static final int CC_NO_MATCHING_ENTITY = 42203;
+    public static final int CC_INVALID_ETAG = 41202;
 
     //    Basic test entities
     protected static NonNullMapDecorator<String, CustomerCreateDto> customerDtos;

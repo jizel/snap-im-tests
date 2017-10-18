@@ -1,8 +1,9 @@
 package travel.snapshot.dp.qa.junit.tests.identity.relationships;
 
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.apache.http.HttpStatus.SC_PRECONDITION_FAILED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -10,12 +11,14 @@ import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationship
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.CHAIN;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtag;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipUpdate;
 
@@ -68,6 +71,11 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
         CustomerPropertyRelationshipCreateDto requestedRelationship = getEntityAsType(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH,
                 CustomerPropertyRelationshipDto.class, returnedRelationship.getId());
         assertThat("Returned relationship is different from sent ", requestedRelationship, is(returnedRelationship));
+        createEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, testCustomerPropertyRelationship)
+                .then()
+                .statusCode(SC_CONFLICT)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_CONFLICT_VALUES));
     }
 
     @Test
@@ -97,10 +105,14 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
         LocalDate updatedValidTo = LocalDate.now();
         CustomerPropertyRelationshipCreateDto createdRelationship = entityIsCreatedAs(CustomerPropertyRelationshipDto.class, testCustomerPropertyRelationship);
         CustomerPropertyRelationshipUpdateDto update = constructCustomerPropertyRelationshipUpdate(false, CHAIN, updatedValidFrom, updatedValidTo);
+        updateEntityWithEtag(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), update, "invalid")
+                .then()
+                .statusCode(SC_PRECONDITION_FAILED)
+                .assertThat().body(RESPONSE_CODE, is(CC_INVALID_ETAG));
 
-        commonHelpers.updateEntityPost(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), update);
-        responseCodeIs(SC_NO_CONTENT);
-
+        updateEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), update)
+                .then()
+                .statusCode(SC_NO_CONTENT);
         CustomerPropertyRelationshipCreateDto returnedRelationship = getEntityAsType(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH,
                 CustomerPropertyRelationshipDto.class, createdRelationship.getId());
         assertThat(returnedRelationship.getIsActive(), is(false));
@@ -112,9 +124,6 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
     @Test
     public void deleteCustomerPropertyRelationship() {
         CustomerPropertyRelationshipCreateDto createdRelationship = entityIsCreatedAs(CustomerPropertyRelationshipDto.class, testCustomerPropertyRelationship);
-        deleteEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
-        responseCodeIs(SC_NO_CONTENT);
-        getEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
-        responseCodeIs(SC_NOT_FOUND);
+        entityIsDeleted(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
     }
 }

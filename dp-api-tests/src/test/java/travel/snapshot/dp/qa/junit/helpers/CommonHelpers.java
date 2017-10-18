@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.junit.helpers;
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.asList;
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.is;
@@ -40,20 +41,17 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_IF_MATCH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_USER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.IDENTITY_BASE_URI;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
+import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.CC_ENTITY_NOT_FOUND;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.transformNull;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping.endpointDtoMap;
 import static travel.snapshot.dp.qa.junit.utils.EntityEndpointMapping.entityCreateDtoEndpointMap;
 import static travel.snapshot.dp.qa.junit.utils.RestAssuredConfig.setupRequestDefaults;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.config.ObjectMapperConfig;
-import com.jayway.restassured.config.RestAssuredConfig;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import travel.snapshot.dp.api.identity.model.AddressDto;
@@ -315,7 +313,14 @@ public class CommonHelpers {
     // Delete
 
     public static void entityIsDeleted(String basePath, UUID entityId) {
-        deleteEntity(basePath, entityId).then().statusCode(SC_NO_CONTENT);
+        deleteEntity(basePath, entityId)
+                .then()
+                .statusCode(SC_NO_CONTENT);
+        getEntity(basePath, entityId)
+                .then()
+                .statusCode(SC_NOT_FOUND)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
     }
 
     public static Response deleteEntity(String basePath, UUID entityId) {
