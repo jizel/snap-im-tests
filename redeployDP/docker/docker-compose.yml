@@ -230,7 +230,7 @@ services:
         networks:
             - main
     keycloak:
-        image: snapshothub/dp-keycloak:master-56
+        image: snapshothub/dp-keycloak
         ports:
             - 8081:8080
             - 9991:9990
@@ -262,7 +262,7 @@ services:
         networks:
           - main
     nginx:
-        image: snapshothub/dp-nginx:master-64
+        image: snapshothub/dp-nginx:master-69
         ports:
             - 81:80
         volumes:
