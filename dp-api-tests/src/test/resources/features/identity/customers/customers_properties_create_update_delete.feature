@@ -21,27 +21,6 @@ Feature: Customers properties create update delete
     Given Relation between property with code "p1_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
 
-  Scenario Outline: Checking error codes for creating customerProperty
-    When Property with code "<property_code>" is added to customer with id "<customer_id>" with type "<type>" from "<valid_from>" to "<valid_to>" with error "true"
-    Then Response code is "<error_code>"
-    And Custom code is "<custom_code>"
-    Examples:
-      | property_code | customer_id                          | type        | valid_from | valid_to   | error_code | custom_code |
-      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      | 2100-01-01 | 422        | 42201       |
-      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      | /null      | 422        | 42201       |
-      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | /null      | 422        | 42201       |
-      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            |            | 422        | 42201       |
-      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2014-12-31 | 422        | 42201       |
-      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-   | 2100-01-01 | 400        | 40001       |
-      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | asdfasdf   | 400        | 40001       |
-      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2018-02-30 | 400        | 40001       |
-      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | nonexistent | 2015-01-01 | 2100-01-01 | 422        | 42201       |
-      | p1_code       | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 409        | 40907       |
-      | nonexistent   | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 422        | 42202       |
-
-
-    #add wrong dates, wrong type, not unique type, more anchor for one property, ...
-
 
   #TODO update cutomer with not matched etag/empty etag/missing etag
   # update with error fields, bad values, missing fields
