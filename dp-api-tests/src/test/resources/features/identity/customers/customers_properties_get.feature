@@ -22,23 +22,6 @@ Feature: Customers properties get
     Given Relation between property with code "p3_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "chain" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p3_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "chain" from "2015-01-01" to "2015-12-31"
 
-  @Smoke
-  Scenario: Getting customerProperty
-    When Property with code "p1_code" for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is requested
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "property_id" value "4d266045-1cf1-4735-8ef9-216de1370f2e"
-    And Body contains entity with attribute "valid_from" value "2015-01-01"
-    And Body contains entity with attribute "valid_to" value "2015-12-31"
-    And Body contains entity with attribute "relationship_type" value "chain"
-
-  Scenario: Checking error code for getting customerProperty
-    When Nonexistent customerPropety id is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-    Then Response code is "404"
-    And Custom code is "40402"
-
-
   Scenario Outline: Getting list of customerProperties
     Given The following customers exist with random address
       | id                                   | name                      | email               | salesforceId              | vatId      | isDemo         | phone         | website                    | timezone      |
