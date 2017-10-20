@@ -44,6 +44,8 @@ import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 import travel.snapshot.dp.qa.junit.utils.NonNullMapDecorator;
 import travel.snapshot.dp.qa.junit.utils.issueKeeperJiraCredentials.JiraCredentialsClient;
 
+import java.time.LocalDate;
+
 
 /**
  * Commons for all test classes. Every new test class should extend this class and use it's protected variables such as:
@@ -145,6 +147,8 @@ public abstract class CommonTest {
     protected static ApplicationVersionCreateDto testAppVersion1;
     protected static ApplicationVersionCreateDto testAppVersion2;
     protected static ApplicationVersionCreateDto testAppVersion3;
+    public static LocalDate validFrom = LocalDate.now();
+    public static LocalDate validTo = LocalDate.now().plusYears(1).plusMonths(2).plusDays(3);
 
     @Rule
     public IKeeperJUnitConnector issueKeeper = new IKeeperJUnitConnector(

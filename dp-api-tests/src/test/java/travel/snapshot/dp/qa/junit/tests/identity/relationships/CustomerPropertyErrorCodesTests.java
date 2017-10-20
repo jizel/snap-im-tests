@@ -36,7 +36,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.sendPostWithBody
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 
 @RunWith(JUnitParamsRunner.class)
-public class CustomerPropertyRelationshipsParameterizedTests extends CommonRelationshipsTest {
+public class CustomerPropertyErrorCodesTests extends CommonRelationshipsTest {
 
     private static final String EXAMPLES = "src/test/resources/csv/relationships/";
     private UUID createdPropertyId1 = null;

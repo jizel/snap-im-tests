@@ -2,9 +2,12 @@ package travel.snapshot.dp.qa.junit.tests.identity.propertysets;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.hamcrest.core.Is.is;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
@@ -110,5 +113,16 @@ public class PropertySetTests extends CommonTest {
         getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         bodyContainsEntityWith("is_active", "true");
         entityIsDeleted(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
+    }
+
+    @Test
+    public void customerCannotBeDeletedIfHeHasRelationshipToExistingPropertySet() {
+        UUID createdCustomerId = entityIsCreated(testCustomer1);
+        testPropertySet1.setCustomerId(createdCustomerId);
+        UUID createdPSId = entityIsCreated(testPropertySet1);
+        deleteEntity(CUSTOMERS_PATH, createdCustomerId)
+                .then()
+                .statusCode(SC_CONFLICT)
+                .assertThat().body(RESPONSE_CODE, is(CC_ENTITY_REFERENCED));
     }
 }
