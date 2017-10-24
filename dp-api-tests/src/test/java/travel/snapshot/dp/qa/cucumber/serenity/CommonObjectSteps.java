@@ -7,6 +7,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
+import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.JSON;
+import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.STRING;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,7 +38,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * @author konkol
+ * TODO: Delete this class (and related) when all validations are JUnitized!
  */
 public class CommonObjectSteps extends BasicSteps {
 
@@ -181,9 +183,8 @@ public class CommonObjectSteps extends BasicSteps {
 
         List<ObjectField> definition = getObjectDefinition(objectName);
         for (ObjectField field : definition) {
-            String fieldType = field.getType();
             // skip processing any relationship fields since the system does not expose them for filtering
-            if (fieldType.equals("JSON")) {
+            if (field.getType().equals(JSON)) {
                 continue;
             }
             // filter only top-level fields, ignore inner objects
@@ -197,7 +198,7 @@ public class CommonObjectSteps extends BasicSteps {
                     // do the filtering
                     JsonNode result =
                             getJsonNode(restFilterObject(getObjectLocation(objectName),
-                                    field.getName() + "==" + FieldType.getType(field.getType()).getFilterValue(filterValue)));
+                                    field.getName() + "==" + field.getType().getFilterValue(filterValue)));
 
                     // search results should always be packed in arrays
                     if (result.isArray()) {
@@ -352,7 +353,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @return JsonNode with matching data type
      */
     private JsonNode getJsonNode(ObjectField field, String value) {
-        return FieldType.getType(field.getType()).getJsonNode(value);
+        return field.getType().getJsonNode(value);
     }
 
     /**
@@ -537,8 +538,8 @@ public class CommonObjectSteps extends BasicSteps {
         return new Generex(regex).random();
     }
 
-    private String generateFieldValue(String type, String regex) {
-        return type.equals("String") ? new Generex(regex).random() : regex;
+    private String generateFieldValue(FieldType type, String regex) {
+        return type.equals(STRING) ? new Generex(regex).random() : regex;
     }
 
 }
