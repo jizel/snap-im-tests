@@ -3,7 +3,10 @@ package travel.snapshot.dp.qa.junit.tests.common;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.hamcrest.core.Is.is;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 
+import com.jayway.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
@@ -311,6 +314,13 @@ public abstract class CommonTest {
 
     protected String getAttributeValue(String attributeName) {
         return basicSteps.getAttributeValue(attributeName);
+    }
+
+    protected static void assertStatusCodes(Response response, Integer returnCode, Integer customCode) {
+        response.then()
+                .statusCode(returnCode)
+                .assertThat()
+                .body(RESPONSE_CODE, is(customCode));
     }
 
 }
