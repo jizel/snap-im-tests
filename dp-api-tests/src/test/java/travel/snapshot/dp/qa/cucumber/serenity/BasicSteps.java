@@ -81,6 +81,7 @@ public class BasicSteps {
     public static final String DEFAULT_SNAPSHOT_TIMEZONE = "Europe/Prague";
     public static final String DEFAULT_SNAPSHOT_SALESFORCE_ID = "DEFAULTSFID0001";
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
+    public static final String DEFAULT_SNAPSHOT_PARTNER_NAME = "CoreQA Partner";
     public static final UUID NON_EXISTENT_ID = UUID.fromString("00000000-0000-4000-a000-000000000000");
     public static final String SESSION_RESPONSE = "response";
     public static final String SESSION_TOKEN = "token";

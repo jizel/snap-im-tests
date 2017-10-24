@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.partners;
 
 import static java.util.Collections.singletonMap;
 import static java.util.UUID.randomUUID;
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,7 +14,10 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERT
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_NAME;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
@@ -137,5 +141,13 @@ public class PartnerTests extends CommonTest{
         entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, update);
         getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);
+    }
+
+    @Test
+    @Jira("DPIM-174")
+    public void customerNameIsUnique() {
+        testPartner1.setName(DEFAULT_SNAPSHOT_PARTNER_NAME);
+        testPartner1.setId(null);
+        assertStatusCodes(createEntity(testPartner1), SC_CONFLICT, CC_CONFLICT_CODE);
     }
 }
