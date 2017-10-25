@@ -4,10 +4,10 @@ users: 1000
 addresses: 1000
 applications: 10
 application_versions: 30
-commercial_subscriptions: 120
+commercial_subscriptions: 600
 customers: 60
 customer_properties: 200
-customer_users: 1200
+customer_users: 1000
 partners: 20
 partner_users: 10
 properties: 300

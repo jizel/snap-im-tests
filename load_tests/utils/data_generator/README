@@ -24,3 +24,13 @@ The default config.yaml makes the script to create a really huge database with:
 24000 commercial subscriptions, etc
 The script takes it's time to perform the task (~ 20 min) and consumes considerable amount
 of RAM at some point - up to 2Gb. Be aware of that.
+
+At the exit the script generates the test_data.txt file that contains the valid
+user_id and application_version_id to be used for REST requests. The user has a
+role with the context application that enables him to see all endpoints. Also
+the context app has permissions to see all endpoints. Note that the user does
+not have password set, so you need to set his password in order to use the
+authorization workflow.
+After the performance tests are finished it is generally a good idea to clean
+the database of the test data. This is done by executing the contents of
+cleanup.sql in a db session.
