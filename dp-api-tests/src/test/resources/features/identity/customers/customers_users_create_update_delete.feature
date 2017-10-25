@@ -16,33 +16,6 @@ Feature: Customers users create update delete
     Given Relation between user "snapUser1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
     Given Relation between user "snapUser2" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
 
-  @Smoke
-  Scenario: Adding user to customer with isPrimary set
-    When User "snapUser3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with isPrimary "true"
-    Then Response code is "201"
-
-  Scenario: Updating User Customer relationship
-    When User "snapUser1" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with isPrimary "false"
-    Then Relation between user "snapUser1" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is not primary
-    When Relation between user "snapUser1" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is updated with isPrimary "true"
-    Then Response code is "204"
-    And Relation between user "snapUser1" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is primary
-
-  #validate just one primary user, notexistent user, already present user
-  #validate different type of users
-
-  @Smoke
-  Scenario: Removing user from customer
-    When User "snapUser2" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-    Then Response code is "204"
-    And Body is empty
-    And User "snapUser2" isn't there for customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-
-  Scenario: Checking error code for removing user from customer
-    When Nonexistent user is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-    Then Response code is "404"
-
-
   Scenario Outline: Filtering list of users for customer
     Given The following users exist for customer "40ebf861-7549-46f1-a99f-249716c83b33" as primary "true"
       | type     | username            | firstName        | lastName      | email                           | phone        | timezone      | languageCode |
@@ -81,28 +54,3 @@ Feature: Customers users create update delete
       | 5     | 0      | 3        | 3     | is_primary=='true'             |           | /null     | filter_cu_default_2, other_cu_default_8                                                                                                         |
       | 5     | 2      | 5        | 8     | is_primary=='false'            | /null     |           | filter_cu_default_3, filter_cu_default_4, filter_cu_default_5, filter_cu_default_6, other_cu_default_7, other_cu_default_9                      |
       | /null | /null  | 8        | 8     | is_primary=='false'            | /null     | /null     | filter_cu_default_1, other_cu_default_8                                                                                                         |
-
-
-  Scenario: Duplicate adding user to customer throws correct error - DP-1661
-    When User "snapUser3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with isPrimary "true"
-    Then Response code is "201"
-    When User "snapUser3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with isPrimary "true"
-    Then Response code is "409"
-    And Custom code is 40907
-
-  Scenario: Customer cannot be deleted if he has relationship to an existing user (and vice versa)
-    When Customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
-    Then Response code is "409"
-    And Custom code is 40915
-    When User "snapUser1" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-    When Customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
-    Then Response code is "409"
-    And Custom code is 40915
-    When User "snapUser2" is deleted
-    Then Response code is "409"
-    And Custom code is 40915
-    When User "snapUser2" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-    When Customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
-    Then Response code is "204"
-    When User "snapUser2" is deleted
-    Then Response code is "204"
