@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
- * @author konkol
+ * Types of ObjectField objects (for validation tests)
  */
 public enum FieldType {
 
@@ -21,12 +21,8 @@ public enum FieldType {
     },
     STRING,
     INTEGER,
-    BOOL {
-        @Override
-        public JsonNode getJsonNode(String value) {
-            return factory.booleanNode(Boolean.parseBoolean(value));
-        }
-    };
+    ENUM ,
+    BOOL;
 
     private static final JsonNodeFactory factory = new JsonNodeFactory(false);
 

@@ -7,11 +7,9 @@ import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 
 import com.jayway.restassured.response.Response;
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.runner.RunWith;
 import qa.tools.ikeeper.test.IKeeperJUnitConnector;
 import travel.snapshot.dp.api.identity.model.ApplicationCreateDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionCreateDto;
@@ -61,8 +59,6 @@ import java.time.LocalDate;
  *
  * This class is declared abstract and there should never be a good reason to instantiate it.
  */
-
-@RunWith(SerenityRunner.class)
 public abstract class CommonTest {
     public static final String YAML_DATA_PATH = "src/test/resources/yaml/%s";
     public static final String NOTIFICATION_CRUD_TOPIC = "VirtualTopic.Notifications.crud";

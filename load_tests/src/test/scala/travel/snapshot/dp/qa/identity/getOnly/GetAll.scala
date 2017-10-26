@@ -10,7 +10,7 @@ import travel.snapshot.dp.qa.identity.AbstractIdentitySimulation
 class GetAll extends AbstractIdentitySimulation {
 
   val getAllScenario: ScenarioBuilder = scenario("Get token and get all customers").exec(
-//    getToken(),
+    getToken(),
     GetAllCustomers(),
     pause(1),
     GetAllProperties(),
@@ -38,8 +38,7 @@ class GetAll extends AbstractIdentitySimulation {
     GetAllPropertySets(10),
     pause(1),
     GetAllCommercialSubscriptions(10)
-  )
+)
 
-  runScenario(getAllScenario)
-
+runScenario(getAllScenario)
 }

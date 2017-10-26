@@ -73,6 +73,8 @@ abstract class AbstractSimulation extends Simulation {
     * startUser number of threads is activated at the beginning and each thread performs all actions from scn once. */
   private val atOnce: InjectionStep = atOnceUsers(startUsers)
 
+  private val constantPerSec: InjectionStep = constantUsersPerSec(startUsers.toDouble) during(rampTime)
+
 
   /** Executes the scenario defined in descendant with specified injection method */
   protected def runScenario(scn: ScenarioBuilder): Unit = {
