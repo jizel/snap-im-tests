@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class Jms {
 
-    private final JmsTemplate jmsTeplate;
+    private final JmsTemplate jmsTemplate;
 
     @Autowired
-    public Jms(JmsTemplate jmsTeplate) {
-        this.jmsTeplate = jmsTeplate;
+    public Jms(JmsTemplate jmsTemplate) {
+        this.jmsTemplate = jmsTemplate;
     }
 
     public Jms send(String destination, String message) {
-        jmsTeplate.convertAndSend(destination, message);
+        jmsTemplate.convertAndSend(destination, message);
 
         return this;
     }
