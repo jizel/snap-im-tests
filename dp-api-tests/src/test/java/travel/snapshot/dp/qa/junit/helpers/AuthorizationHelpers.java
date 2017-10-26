@@ -49,6 +49,18 @@ public class AuthorizationHelpers {
         Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(registry);
     }
 
+    public Response sendGetRequest(String path, Map<String, String> queryParams, Map<String, String> headers) {
+        RequestSpecification specification = constructRequestSpecification(path, null);
+        specification.baseUri(propertiesHelper.getProperty("authorization.baseURI") + propertiesHelper.getProperty("version"));
+        if (queryParams != null) {
+            specification.parameters(queryParams);
+        }
+        if (headers != null) {
+            specification.headers(headers);
+        }
+        return specification.when().get();
+    }
+
     private RequestSpecification constructRequestSpecification(String basePath, String etag) {
         spec.baseUri(propertiesHelper.getProperty("identity_nginx.baseURI"));
         spec.basePath(basePath);
