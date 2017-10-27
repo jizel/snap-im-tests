@@ -1,6 +1,10 @@
 package travel.snapshot.dp.qa.junit.tests.notification;
 
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
@@ -55,7 +59,7 @@ public class CustomerNotificationTests extends CommonTest {
         customerUpdate.setName("Update Customer Name");
 //        Get update notification and verify
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        customerHelpers.customerIsUpdated(createdCustomerId, customerUpdate);
+        entityIsUpdated(CUSTOMERS_PATH, createdCustomerId, customerUpdate);
         Map<String, Object> receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }
@@ -64,7 +68,7 @@ public class CustomerNotificationTests extends CommonTest {
     public void deleteCustomerNotificationTest() throws Exception{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "deleteCustomerNotificationTest");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        customerHelpers.customerIsDeleted(createdCustomerId);
+        entityIsDeleted(CUSTOMERS_PATH, createdCustomerId);
         Map<String, Object> receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }

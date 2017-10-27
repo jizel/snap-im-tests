@@ -1,5 +1,5 @@
 general_notification: &NOTIFICATION
-  application_version_id: 0b000000-0000-4444-8888-111111111111
+  application_version_id: 04000000-0000-4444-8888-000000000000
   user_id: 0b000000-0000-4444-8888-000000000000
   entity_type: Customer
 
@@ -11,12 +11,12 @@ createCustomerNotificationTest:
 updateCustomerNotificationTest:
   <<: *NOTIFICATION
   operation: update
-  entity_id: 06000000-0000-4444-8888-000000000001
+  entity_id: 06000000-0000-4444-8888-000000000002
 
 deleteCustomerNotificationTest:
   <<: *NOTIFICATION
   operation: delete
-  entity_id: 06000000-0000-4444-8888-000000000001
+  entity_id: 06000000-0000-4444-8888-000000000002
 
 addPropertyToCustomerNotificationTest:
   <<: *NOTIFICATION
