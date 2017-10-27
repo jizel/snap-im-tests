@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.junit.tests.common;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.assertj.core.api.Fail.fail;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 
@@ -21,6 +22,7 @@ import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.RoleCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupCreateDto;
+import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.configuration.ConfigurationSteps;
@@ -91,7 +93,7 @@ public abstract class CommonTest {
     protected final CommonHelpers commonHelpers = new CommonHelpers();
     protected final PlatformOperationHelpers platformOperationHelpers = new PlatformOperationHelpers();
     protected final PermissionHelpers permissionHelpers= new PermissionHelpers();
-
+    protected final PropertiesHelper propertiesHelper = new PropertiesHelper();
 
     //    Custom codes
     public static final int CC_INSUFFICIENT_PERMISSIONS = 40301;
@@ -156,6 +158,10 @@ public abstract class CommonTest {
 
     @Before
     public void setUp() {
+        String dbConnString = propertiesHelper.getProperty("identity.db.connectionString");
+        if (! dbConnString.contains("localhost")) {
+            fail("You are trying to run destructive tests against public environment. Don't do that!");
+        }
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
         loadDefaultTestEntities();
     }
