@@ -20,6 +20,8 @@ from sqlalchemy import String
 from sqlalchemy import Boolean
 from sqlalchemy import Date
 from sqlalchemy.orm import sessionmaker
+from copy import deepcopy
+from sqlalchemy.sql import select
 
 
 Base = declarative_base()
@@ -56,15 +58,6 @@ class Generator(object):
         Base.metadata.create_all(self.engine)
         self.max_data_len = 1000
 
-        self.find_app_versions_string = """
-        select u.id, av.id from public.User u inner join ApplicationVersion av on
-        av.application_id = (select cs.application_id from
-        CommercialSubscription cs where customer_id in (select customer_id
-                from User_Customer where user_id = u.id) and property_id in
-        (select property_id from User_Property where user_id = u.id) and
-        (select true from Application where id = cs.application_id and is_internal
-                = true) limit 1) and av.is_non_commercial = false limit 10;
-        """
 
     def pregenerate_ids(self):
         self.user_ids = [self.genuuid() for _ in range(self.num_users)]
@@ -137,12 +130,11 @@ class Generator(object):
             self.session.commit()
 
     def grant_permissions_to_apps(self):
-        self.engine.execute("delete from applicationpermission;")
-        self.engine.execute("""insert into applicationpermission (application_id,
-        platform_operation_id) select a.id, r.id from Application a left join
-        platformoperation r on r.id is not null;""")
+        ids = str(tuple(self.application_ids))
+        self.engine.execute("insert into applicationpermission (id, application_id, platform_operation_id) select uuid_generate_v4(), a.id, r.id from Application a left join platformoperation r on r.id is not null where a.id in %s and r.id not in (select platform_operation_id from applicationpermission where application_id in %s);" % (ids, ids))
 
     def doyourjob(self):
+        self.user_ids_for_customer_relations = deepcopy(self.user_ids)
         self.addresses = [self.generate_address(i) for i in self.address_ids]
         self.customers = [self.generate_customer(i) for i in self.customer_ids]
         self.partners = [self.generate_partner(i) for i in self.partner_ids]
@@ -151,11 +143,6 @@ class Generator(object):
         self.properties = [self.generate_property(i) for i in self.property_ids]
         self.property_sets = [self.generate_property_set(i) for i in self.propertyset_ids]
         self.commercial_subscriptions = self.generate_commercial_subscriptions()
-        # Number of entries in customer_hierarchy_path exactly corresponds to the number of customers
-        # And contains customer-customer pairs of the same customer id, like ('15efef49-bd99-41b7-911b-8b64e4adc1c4', '15efef49-bd99-41b7-911b-8b64e4adc1c4')
-        self.cust_hpaths = [self.generate_customer_hpath(i) for i in self.customer_ids]
-        # The same applies to propertyset_herarchy_path
-        self.propset_hpaths = [self.generate_propset_hpath(i) for i in self.propertyset_ids]
         self.users_type_customer = [self.generate_user(i, 'CUSTOMER') for i in self.user_ids]
         self.users_type_partner = [self.generate_user(i, 'PARTNER') for i in self.user_type_partner_ids]
         self.users_type_snapshot = [self.generate_user(self.snapshot_user_id, 'SNAPSHOT')]
@@ -163,7 +150,7 @@ class Generator(object):
         self.roles = [self.generate_role(i) for i in self.role_ids]
         self.cust_properties = [self.generate_customer_property(i, *self.customer_property_combinations.pop()) for i in self.customer_property_ids]
         self.partner_user_relations = [self.generate_partner_user(i, *self.partner_user_combinations.pop()) for i in self.partner_user_relation_ids]
-        self.customer_users = [self.generate_customer_user(i, *self.customer_user_combinations.pop()) for i in self.customer_user_ids]
+        self.customer_users = [self.generate_customer_user(i, random.choice(self.customer_ids)) for i in self.user_ids]
         self.propertyset_properties = [self.generate_prop_propset(i, *self.property_propertyset_combinations.pop()) for i in self.propertyset_property_ids]
         self.user_customer_roles = [self.generate_user_customer_role(i, *self.user_customer_role_combinations.pop()) for i in self.user_customer_role_ids]
         self.user_properties = [self.generate_user_property(i, *self.user_property_combinations.pop()) for i in self.user_property_ids]
@@ -178,8 +165,6 @@ class Generator(object):
         self.push_data(self.users)
         self.push_data(self.roles)
         self.push_data(self.commercial_subscriptions)
-        self.push_data(self.propset_hpaths)
-        self.push_data(self.cust_hpaths)
         self.push_data(self.cust_properties)
         self.push_data(self.partner_user_relations)
         self.push_data(self.customer_users)
@@ -187,14 +172,26 @@ class Generator(object):
         self.push_data(self.user_customer_roles)
         self.push_data(self.user_properties)
         self.push_data(self.user_propertysets)
-        self.session.commit()
         self.grant_permissions_to_apps()
+        self.prepare_user()
+
+    def prepare_user(self):
+        self.application_id = random.choice(self.application_ids)
+        self.role_id = str(self.engine.execute("select id from role where application_id = '%s' limit 1;" % self.application_id).first()[0])
+        self.customer_id = str(self.engine.execute("select customer_id from commercialsubscription where application_id = '%s';" % self.application_id).first()[0])
+        self.user_id = str(self.engine.execute("select user_id from user_customer where customer_id = '%s' limit 1;" % self.customer_id).first()[0])
+        self.engine.execute("insert into roleassignment (id, user_id, customer_id, role_id) select uuid_generate_v4(), '%s', '%s', '%s';" % (self.user_id, self.customer_id, self.role_id))
+        self.engine.execute("insert into rolepermission (id, application_id, role_id, platform_operation_id) select uuid_generate_v4(), '%s', '%s', id from platformoperation;" % (self.application_id, self.role_id))
+        self.app_version_id = str(self.engine.execute("select id from applicationversion where application_id = '%s'" % self.application_id).first()[0])
+        self.property_id = str(self.engine.execute("select property_id from commercialsubscription where customer_id = '%s' and application_id = '%s';" % (self.customer_id, self.application_id)).first()[0])
+        self.engine.execute("insert into user_property (id, user_id, property_id, is_active, version) values (uuid_generate_v4(), '%s', '%s', true, '%s');" % (self.user_id, self.property_id, self.gen_etag()))
+
 
     def gen_etag(self):
         return self.genuuid().replace('-', '')
 
     def gen_randstr(self, num):
-        return ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(num))
+        return 'CoreQA' + ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(num))
 
     def gen_randnum(self, num):
         return ''.join(random.choice(string.digits) for _ in range(num))
@@ -216,15 +213,14 @@ class Generator(object):
                        city=self.gen_randstr(5),
                        zip_code=self.gen_randnum(6),
                        country_code=random.choice(self.country_codes),
-                       region=None
+                       region_code=None
                        )
 
     def generate_customer(self, provided_id):
         return Customer(id=provided_id,
                         parent_id=None,
                         type='HOTEL',
-                        hospitality_id=None,
-                        salesforce_id=self.gen_randstr(15),
+                        salesforce_id=self.gen_randstr(9),
                         name=self.gen_randstr(10),
                         code=self.gen_randstr(10),
                         phone=None,
@@ -284,14 +280,6 @@ class Generator(object):
                           )
         return result
 
-    def generate_customer_hpath(self, provided_id):
-        return Customer_Hierarchy_Path(parent_id=provided_id,
-                                       child_id=provided_id)
-
-    def generate_propset_hpath(self, provided_id):
-        return PropertySet_Hierarchy_Path(parent_id=provided_id,
-                                          child_id=provided_id)
-
     def generate_customer_property(self, provided_id, customer_id, property_id):
         return Customer_Property(id=provided_id,
                                  customer_id=customer_id,
@@ -303,8 +291,8 @@ class Generator(object):
                                  version=self.gen_etag()
                                  )
 
-    def generate_customer_user(self, provided_id, customer_id, user_id):
-        return Customer_User(id=provided_id,
+    def generate_customer_user(self, user_id, customer_id):
+        return Customer_User(id=self.genuuid(),
                              customer_id=customer_id,
                              user_id=user_id,
                              is_primary=True,
@@ -334,7 +322,6 @@ class Generator(object):
     def generate_property(self, provided_id):
         return Property(id=provided_id,
                         name=self.gen_randstr(12),
-                        hospitality_id=None,
                         salesforce_id=None,
                         code=self.gen_randstr(12),
                         website=self.gen_website(),
@@ -429,7 +416,7 @@ class Address(Base):
     city = Column(String(250))
     zip_code = Column(String(100))
     country_code = Column(String(100))
-    region = Column(String(100))
+    region_code = Column(String(100))
 
 
 class Application(Base):
@@ -473,7 +460,6 @@ class Customer(Base):
     id = Column(String(36), primary_key=True)
     parent_id = Column(String(36))
     type = Column(String(40))
-    hospitality_id = Column(String(36))
     salesforce_id = Column(String(18))
     name = Column(String(255))
     code = Column(String(50))
@@ -487,12 +473,6 @@ class Customer(Base):
     timezone = Column(String(50))
     is_active = Column(Boolean, default=True)
     version = Column(String(32))
-
-
-class Customer_Hierarchy_Path(Base):
-    __tablename__ = "customerhierarchypath"
-    parent_id = Column(String(36), primary_key=True)
-    child_id = Column(String(36), primary_key=True)
 
 
 class Customer_Property(Base):
@@ -542,7 +522,6 @@ class Property(Base):
     __tablename__ = "property"
     id = Column(String(36), primary_key=True)
     name = Column(String(255))
-    hospitality_id = Column(String(36))
     salesforce_id = Column(String(18))
     code = Column(String(50))
     website = Column(String(255))
@@ -555,12 +534,6 @@ class Property(Base):
     description = Column(String(500))
     is_active = Column(Boolean, default=True)
     version = Column(String(32))
-
-
-class PropertySet_Hierarchy_Path(Base):
-    __tablename__ = "propertysethierarchypath"
-    parent_id = Column(String(36), primary_key=True)
-    child_id = Column(String(36), primary_key=True)
 
 
 class Property_PropertySet(Base):
@@ -645,14 +618,9 @@ if __name__ == '__main__':
     generator = Generator(load_config('config.yaml'))
     generator.pregenerate_ids()
     generator.doyourjob()
-    res = generator.engine.execute(generator.find_app_versions_string)
-    user_app_version = []
-    for row in res:
-        user_app_version.append(row)
 
     with open("test_data.txt", "w") as f:
         f.write("snapshot_user_id: %s\n" % generator.snapshot_user_id)
-        f.write("""Random selection of users type customers and corresponding
-commercial application versions they have access to:\nuser_id                              | app_version_id\n""")
-        for i in user_app_version:
-            f.write("%s | %s\n" % (str(i[0]), str(i[1])))
+        f.write("""Test user id and app_id to use\n""")
+        f.write("user_id:        %s\n" % generator.user_id)
+        f.write("app_version_id: %s" % generator.app_version_id)
