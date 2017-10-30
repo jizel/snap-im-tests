@@ -1,10 +1,14 @@
 package travel.snapshot.dp.qa.junit.tests.notification;
 
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
 
@@ -71,11 +75,12 @@ public class PropertySetNotificationTests extends CommonTest{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createPropertySetPropertyNotificationTest");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "deletePropertySetPropertyNotificationTest");
         UUID createdPropertySetId = entityIsCreated(testPropertySet1);
+        UUID createdPropertyId = entityIsCreated(testProperty1);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        propertySetHelpers.addPropertyToPropertySet(testProperty1.getId(), createdPropertySetId, true);
+        UUID relationId = entityIsCreated(constructPropertySetPropertyRelationship(createdPropertySetId, createdPropertyId, true));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        propertySetHelpers.removePropertyFromPropertySet(testProperty1.getId(), createdPropertySetId);
+        entityIsDeleted(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
@@ -85,12 +90,12 @@ public class PropertySetNotificationTests extends CommonTest{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createPropertySetUserNotificationTest");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "deletePropertySetUserNotificationTest");
         UUID createdPropertySetId = entityIsCreated(testPropertySet1);
-        UserDto createdUser = userHelpers.userIsCreated(entitiesLoader.getUserDtos().get("user1"));
+        UUID createdUserId = entityIsCreated(testUser1);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        propertySetHelpers.addUserToPropertySet(createdUser.getId(), createdPropertySetId, true);
+        UUID relationId = entityIsCreated(constructUserPropertySetRelationshipDto(createdUserId, createdPropertySetId, true));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        propertySetHelpers.removeUserFromPropertySet(createdUser.getId(), createdPropertySetId);
+        entityIsDeleted(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }

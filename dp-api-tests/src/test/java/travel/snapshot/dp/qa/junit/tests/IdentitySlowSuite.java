@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.identity;
+package travel.snapshot.dp.qa.junit.tests;
 
 import com.googlecode.junittoolbox.ExcludeCategories;
 import com.googlecode.junittoolbox.SuiteClasses;
@@ -12,7 +12,7 @@ import travel.snapshot.dp.qa.junit.tests.Categories;
  * This class has to be located in a super package of all the classes it runs.
  */
 @RunWith(WildcardPatternSuite.class)
-@SuiteClasses("*/*.class")
+@SuiteClasses("**/identity/*.class")
 @ExcludeCategories(Categories.Authorization.class)
 public class IdentitySlowSuite {
 

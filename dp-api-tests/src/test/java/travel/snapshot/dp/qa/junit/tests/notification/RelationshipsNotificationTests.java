@@ -15,10 +15,13 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipUpdate;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationshipUpdate;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipUpdate;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupPropertyRelationship;
@@ -39,6 +42,7 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipCreateDto;
@@ -48,7 +52,6 @@ import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCrea
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
@@ -57,11 +60,7 @@ import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipCre
 import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
@@ -94,7 +93,7 @@ public class RelationshipsNotificationTests extends CommonTest {
         jmsSteps.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
     }
 
-
+    @Ignore("Remove it once multi-tenancy is back again")
     @Test
     public void userCustomerRelationshipNotificationTest() throws Exception {
         UUID customerId = entityIsCreated(testCustomer1);
@@ -102,15 +101,13 @@ public class RelationshipsNotificationTests extends CommonTest {
         Map<String, Object> expectedUpdateNotification = getSingleTestData(notificationTestsData, "userCustomerRelationshipNotificationUpdate");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "userCustomerRelationshipNotificationDelete");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        UserCustomerRelationshipCreateDto testUserCustomerRelationship = constructUserCustomerRelationshipDto(createdUserId, customerId, true, true);
-        UserCustomerRelationshipCreateDto createdRelationship = entityIsCreatedAs(UserCustomerRelationshipDto.class, testUserCustomerRelationship);
+        UUID relationId = entityIsCreated(constructUserCustomerRelationshipDto(createdUserId, customerId, true, true));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        UserCustomerRelationshipUpdateDto update = constructUserCustomerRelationshipUpdate(false, false);
-        commonHelpers.updateEntityPost(USER_CUSTOMER_RELATIONSHIPS_PATH, createdRelationship.getId(), update);
+        entityIsUpdated(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId, constructUserCustomerRelationshipUpdate(false, false));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedUpdateNotification, receivedNotification);
-        deleteEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, createdRelationship.getId());
+        entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
@@ -122,15 +119,14 @@ public class RelationshipsNotificationTests extends CommonTest {
         Map<String, Object> expectedUpdateNotification = getSingleTestData(notificationTestsData, "userPartnerRelationshipNotificationUpdate");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "userPartnerRelationshipNotificationDelete");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        UserPartnerRelationshipCreateDto testUserPartnerRelationship = constructUserPartnerRelationshipDto(createdUserId, partnerId, true);
-        UserPartnerRelationshipCreateDto createdUserPartnerRelationship = entityIsCreatedAs(UserPartnerRelationshipDto.class, testUserPartnerRelationship);
+        UUID relationId = entityIsCreated(constructUserPartnerRelationshipDto(createdUserId, partnerId, true));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
         UserPartnerRelationshipUpdateDto update = constructUserPartnerRelationshipUpdateDto(false);
-        commonHelpers.updateEntityPost(USER_PARTNER_RELATIONSHIPS_PATH, createdUserPartnerRelationship.getId(), update);
+        entityIsUpdated(USER_PARTNER_RELATIONSHIPS_PATH, relationId, update);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedUpdateNotification, receivedNotification);
-        deleteEntity(USER_PARTNER_RELATIONSHIPS_PATH, createdUserPartnerRelationship.getId());
+        entityIsDeleted(USER_PARTNER_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
@@ -142,15 +138,14 @@ public class RelationshipsNotificationTests extends CommonTest {
         Map<String, Object> expectedUpdateNotification = getSingleTestData(notificationTestsData, "userPropertyRelationshipNotificationUpdate");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "userPropertyRelationshipNotificationDelete");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        UserPropertyRelationshipCreateDto testUserPropertyRelationship = constructUserPropertyRelationshipDto(createdUserId, propertyId, true);
-        UserPropertyRelationshipCreateDto createdRelationship = entityIsCreatedAs(UserPropertyRelationshipDto.class, testUserPropertyRelationship);
+        UUID relationId = entityIsCreated(constructUserPropertyRelationshipDto(createdUserId, propertyId, true));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
         UserPropertyRelationshipUpdateDto update = constructUserPropertyRelationshipUpdateDto(false);
-        commonHelpers.updateEntityPost(USER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), update);
+        entityIsUpdated(USER_PROPERTY_RELATIONSHIPS_PATH, relationId, update);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedUpdateNotification, receivedNotification);
-        deleteEntity(USER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
+        entityIsDeleted(USER_PROPERTY_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
@@ -162,15 +157,14 @@ public class RelationshipsNotificationTests extends CommonTest {
         Map<String, Object> expectedUpdateNotification = getSingleTestData(notificationTestsData, "userPropertySetRelationshipNotificationUpdate");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "userPropertySetRelationshipNotificationDelete");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        UserPropertySetRelationshipCreateDto testUserPropertySetRelationship = constructUserPropertySetRelationshipDto(createdUserId, propertySetId, true);
-        UserPropertySetRelationshipCreateDto createdRelationship = entityIsCreatedAs(UserPropertySetRelationshipDto.class, testUserPropertySetRelationship);
+        UUID relationId = entityIsCreated(constructUserPropertySetRelationshipDto(createdUserId, propertySetId, true));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
         UserPropertySetRelationshipUpdateDto update = constructUserPropertySetRelationshipUpdateDto(false);
-        commonHelpers.updateEntityPost(USER_PROPERTY_SET_RELATIONSHIPS_PATH, createdRelationship.getId(), update);
+        entityIsUpdated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedUpdateNotification, receivedNotification);
-        deleteEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, createdRelationship.getId());
+        entityIsDeleted(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
@@ -186,16 +180,16 @@ public class RelationshipsNotificationTests extends CommonTest {
                 customerId, propertyId, true, DATA_OWNER, LocalDate.now(), LocalDate.now().plusMonths(6));
 
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        CustomerPropertyRelationshipCreateDto customerPropertyRelationship = entityIsCreatedAs(CustomerPropertyRelationshipDto.class, testCustomerPropertyRelationship);
+        UUID relationId = entityIsCreated(constructCustomerPropertyRelationshipDto(customerId, propertyId, true, DATA_OWNER, LocalDate.now(), LocalDate.now().plusMonths(6)));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
 
         CustomerPropertyRelationshipUpdateDto update = constructCustomerPropertyRelationshipUpdate(false,
                 OWNER, LocalDate.now().minusDays(5), LocalDate.now());
-        commonHelpers.updateEntityPost(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, customerPropertyRelationship.getId(), update);
+        entityIsUpdated(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId, update);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedUpdateNotification, receivedNotification);
-        deleteEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, customerPropertyRelationship.getId());
+        entityIsDeleted(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
@@ -207,19 +201,14 @@ public class RelationshipsNotificationTests extends CommonTest {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "propertySetPropertyRelationshipNotificationCreate");
         Map<String, Object> expectedUpdateNotification = getSingleTestData(notificationTestsData, "propertySetPropertyRelationshipNotificationUpdate");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "propertySetPropertyRelationshipNotificationDelete");
-        PropertySetPropertyRelationshipCreateDto testPropertySetPropertyRelationship = constructPropertySetPropertyRelationship(
-                propertySetId, propertyId, true);
-        PropertySetPropertyRelationshipUpdateDto propertySetPropertyRelationshipUpdate = relationshipsHelpers
-                .constructPropertySetPropertyRelationshipUpdate(false);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        PropertySetPropertyRelationshipCreateDto createdRelationship = entityIsCreatedAs(PropertySetPropertyRelationshipDto.class, testPropertySetPropertyRelationship);
+        UUID relationId = entityIsCreated(constructPropertySetPropertyRelationship(propertySetId, propertyId, true));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        commonHelpers.updateEntityPost(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), propertySetPropertyRelationshipUpdate);
-        responseCodeIs(SC_NO_CONTENT);
+        entityIsUpdated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId, constructPropertySetPropertyRelationshipUpdate(false));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedUpdateNotification, receivedNotification);
-        deleteEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
+        entityIsDeleted(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
@@ -232,15 +221,13 @@ public class RelationshipsNotificationTests extends CommonTest {
         Map<String, Object> expectedUpdateNotification = getSingleTestData(notificationTestsData, "userGroupPropertyRelationshipNotificationUpdate");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "userGroupPropertyRelationshipNotificationDelete");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        UserGroupPropertyRelationshipCreateDto testUserGroupPropertyRelationship = constructUserGroupPropertyRelationship(userGroupId, propertyId, true);
-        UserGroupPropertyRelationshipCreateDto createdRelationship = entityIsCreatedAs(UserGroupPropertyRelationshipDto.class, testUserGroupPropertyRelationship);
+        UUID relationId = entityIsCreated(constructUserGroupPropertyRelationship(userGroupId, propertyId, true));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        UserGroupPropertyRelationshipUpdateDto update = constructUserGroupPropertyRelationshipUpdate(false);
-        commonHelpers.updateEntityPost(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), update);
+        entityIsUpdated(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, relationId, constructUserGroupPropertyRelationshipUpdate(false));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedUpdateNotification, receivedNotification);
-        deleteEntity(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
+        entityIsDeleted(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
@@ -253,17 +240,13 @@ public class RelationshipsNotificationTests extends CommonTest {
         Map<String, Object> expectedUpdateNotification = getSingleTestData(notificationTestsData, "userGroupPropertySetRelationshipNotificationUpdate");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "userGroupPropertySetRelationshipNotificationDelete");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        UserGroupPropertySetRelationshipCreateDto testUserGroupPropertySetRelationship = constructUserGroupPropertySetRelationship(userGroupId, propertySetId, true);
-        UserGroupPropertySetRelationshipCreateDto createdRelationship = entityIsCreatedAs(UserGroupPropertySetRelationshipDto.class, testUserGroupPropertySetRelationship);
+        UUID relationId = entityIsCreated(constructUserGroupPropertySetRelationship(userGroupId, propertySetId, true));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        commonHelpers.updateEntityPost(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH,
-                createdRelationship.getId(),
-                constructUserGroupPropertySetRelationshipUpdate(false));
-
+        entityIsUpdated(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, constructUserGroupPropertySetRelationshipUpdate(false));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedUpdateNotification, receivedNotification);
-        deleteEntity(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, createdRelationship.getId());
+        entityIsDeleted(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
@@ -275,16 +258,13 @@ public class RelationshipsNotificationTests extends CommonTest {
         Map<String, Object> expectedUpdateNotification = getSingleTestData(notificationTestsData, "userGroupUserRelationshipNotificationUpdate");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "userGroupUserRelationshipNotificationDelete");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        UserGroupUserRelationshipCreateDto userGroupUserRelationship = constructUserGroupUserRelationship(userGroupId, createdUserId, true);
-        UserGroupUserRelationshipCreateDto createdRelationship = entityIsCreatedAs(UserGroupUserRelationshipDto.class, userGroupUserRelationship);
+        UUID relationId = entityIsCreated(constructUserGroupUserRelationship(userGroupId, createdUserId, true));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        commonHelpers.updateEntityPost(USER_GROUP_USER_RELATIONSHIPS_PATH,
-                createdRelationship.getId(),
-                constructUserGroupUserRelationshipUpdate(false));
+        entityIsUpdated(USER_GROUP_USER_RELATIONSHIPS_PATH, relationId, constructUserGroupUserRelationshipUpdate(false));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedUpdateNotification, receivedNotification);
-        deleteEntity(USER_GROUP_USER_RELATIONSHIPS_PATH, createdRelationship.getId());
+        entityIsDeleted(USER_GROUP_USER_RELATIONSHIPS_PATH, relationId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }

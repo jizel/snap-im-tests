@@ -12,6 +12,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_PE
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.commercialSubscriptionIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ALL_ENDPOINTS;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
@@ -20,6 +21,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.readWriteEndpoints;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructRoleAssignment;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
@@ -50,7 +52,7 @@ public class RoleAssignmentTests extends CommonTest {
 
         testApplication1.setIsInternal(false);
         UUID createdAppId = entityIsCreated(testApplication1);
-        commercialSubscriptionHelpers.commercialSubscriptionIsCreated(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID, createdAppId);
+        commercialSubscriptionIsCreated(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID, createdAppId);
 
         testAppVersion1.setApplicationId(createdAppId);
         createdAppVersionId = entityIsCreated(testAppVersion1);
@@ -78,7 +80,7 @@ public class RoleAssignmentTests extends CommonTest {
     @Test
     public void roleWithWithoutPermissions() {
         entityIsCreated(constructRoleAssignment(createdRoleId, createdUserId));
-        ALL_ENDPOINTS.forEach(endpoint -> {
+        readWriteEndpoints().forEach(endpoint -> {
             log.info("Endpoint is " + endpoint);
             getEntitiesByUserForApp(createdUserId, createdAppVersionId, endpoint, emptyQueryParams())
                     .then()

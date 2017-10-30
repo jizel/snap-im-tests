@@ -1,10 +1,13 @@
 package travel.snapshot.dp.qa.junit.tests.notification;
 
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.helpers.RoleType.CUSTOMER;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
@@ -31,14 +34,12 @@ import java.util.UUID;
 public class UserNotificationTest extends CommonTest {
     private static Map<String, Map<String, Object>> notificationTestsData = loadTestData(String.format(YAML_DATA_PATH, "notifications/user_notification_tests.yaml"));
     private UUID createdUserId;
-    private UserCreateDto user2;
     private Map<String, Object> receivedNotification;
 
     @Before
     public void setUp() {
         super.setUp();
         createdUserId = entityIsCreated(testUser1);
-        user2 = entitiesLoader.getUserDtos().get("user2");
     }
 
     @After
@@ -51,7 +52,7 @@ public class UserNotificationTest extends CommonTest {
     public void createUserNotificationTest() throws Exception {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createUserNotificationTest");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        userHelpers.userIsCreated(user2);
+        entityIsCreated(testUser2);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -62,7 +63,7 @@ public class UserNotificationTest extends CommonTest {
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         UserUpdateDto userUpdate = new UserUpdateDto();
         userUpdate.setUsername("Updated Username");
-        userHelpers.updateUser(createdUserId, userUpdate);
+        entityIsUpdated(USERS_PATH, createdUserId, userUpdate);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -71,9 +72,9 @@ public class UserNotificationTest extends CommonTest {
     public void deleteUserNotificationTest() throws Exception {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "deleteUserNotificationTest");
 //        Customer type user cannot be deleted because it references customer and vice versa
-        UserDto testSnapshotUser = userHelpers.userIsCreated(testSnapshotUser1);
+        UUID snapshotUserId = entityIsCreated(testSnapshotUser1);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        userHelpers.deleteUser(testSnapshotUser.getId());
+        entityIsDeleted(USERS_PATH, snapshotUserId);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }

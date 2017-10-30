@@ -149,13 +149,6 @@ public class CommonRelationshipsTest extends CommonTest {
         testPropertySetPropertyRelationship2 = constructPropertySetPropertyRelationship(
                 testPropertySet1.getId(), testProperty2.getId(), true);
 
-        testUserCustomerRelationship1 = constructUserCustomerRelationshipDto(testUser1.getId(),
-                testCustomer1.getId(), true, true);
-        testUserCustomerRelationship2 = constructUserCustomerRelationshipDto(testUser1.getId(),
-                testCustomer2.getId(), true, true);
-        testUserCustomerRelationship3 = constructUserCustomerRelationshipDto(testUser2.getId(),
-                testCustomer1.getId(), true, true);
-
         testUserGroupPropertySetRelationship = constructUserGroupPropertySetRelationship(testUserGroup1.getId(), testPropertySet1.getId(), true);
 
         testUserGroupPropertyRelationship1 = constructUserGroupPropertyRelationship(testUserGroup1.getId(), testProperty1.getId(), true);
@@ -176,10 +169,6 @@ public class CommonRelationshipsTest extends CommonTest {
 
         entityIsCreated(testPropertySetPropertyRelationship1);
         entityIsCreated(testPropertySetPropertyRelationship2);
-
-        entityIsCreated(testUserCustomerRelationship1);
-        entityIsCreated(testUserCustomerRelationship2);
-        entityIsCreated(testUserCustomerRelationship3);
 
         entityIsCreated(testUserGroupPropertyRelationship1);
         entityIsCreated(testUserGroupPropertyRelationship2);

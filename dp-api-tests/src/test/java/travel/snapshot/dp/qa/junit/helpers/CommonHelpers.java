@@ -107,7 +107,7 @@ public class CommonHelpers {
             EFFECTIVE_PERMISSIONS_PATH
     );
 
-    public List<String> readWriteEndpoints() {
+    public static List<String> readWriteEndpoints() {
         List<String> endpoints = new ArrayList<>(ALL_ENDPOINTS);
         endpoints.removeAll(READONLY_ENDPOINTS);
         return endpoints;
