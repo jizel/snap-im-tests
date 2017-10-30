@@ -22,7 +22,7 @@ object LoadTestContext extends Enumeration {
   case class LoadTestContextValue(name: String, localContext: String, developmentContext: String, productionContext: String = "v1") extends Val(name)
 
   val CONFIGURATION = LoadTestContextInternalValue("configuration", "ConfigurationModule-1.0/api/", "ConfigurationModule-1.0/api/")
-  val IDENTITY = LoadTestContextInternalValue("identity", "api/", "api/")
+  val IDENTITY = LoadTestContextInternalValue("identity", "", "")
   val SOCIAL_COMMON = LoadTestContextInternalValue("social.common", "SocialMediaAnalyticsApi-1.0-SNAPSHOT/api/", "SocialMediaAnalyticsApi-1.0/api/")
   val SOCIAL_FACEBOOK = LoadTestContextInternalValue("social.facebook", "FacebookAnalyticsApi-1.0-SNAPSHOT/api/", "FacebookAnalyticsApi-1.0/api/")
   val SOCIAL_TWITTER = LoadTestContextInternalValue("social.twitter", "TwitterAnalyticsApi-1.0-SNAPSHOT/api/", "TwitterAnalyticsApi-1.0/api/")
@@ -66,7 +66,7 @@ trait SystemPropertiesGatherer {
 
   val productionEnvironmentProperties = Tuple5[String, String, String, String, LoadTestContext.LoadTestContextValue](
     System.getProperty("protocol", "https"),
-    System.getProperty("host", "euf-api.snapshot.technology"),
+    System.getProperty("host", "europewest-api.snapshot.technology"),
     System.getProperty("port", "443"),
     System.getProperty("version", "v1"),
     resolveScenario
@@ -176,8 +176,7 @@ object ProductionUrlResolver extends SystemPropertiesGatherer {
   val (protocol, host, port, version, scenario) = productionEnvironmentProperties
 
   def apply(): String = {
-//    s"$protocol://$host:$port/$version/${scenario.localContext}"
-    s"$protocol://$host/$version"
+    s"$protocol://$host/$version/${scenario.localContext}"
   }
 
   def resolveOauthUrl(): String = {

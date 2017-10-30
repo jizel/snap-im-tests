@@ -7,6 +7,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
+import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.JSON;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
@@ -42,6 +43,9 @@ public abstract class CommonValidationTests extends CommonTest {
     private static Predicate<ObjectField> nonNullInvalidFilter = (f) -> nonNull(f.getInvalid());
     private static Predicate<ObjectField> nonNullLongerFilter = (f) -> nonNull(f.getLonger());
     private static Predicate<ObjectField> requiredFilter = ObjectField::getRequired;
+//    Hack for User's user_customer_relationship which behaves absolutely differently than all the other attributes.
+//    It can be removed when user_customer_relationship is removed (hopefully soon)
+    private static Predicate<ObjectField> nonJsonFilter = (f) -> f.getType() != JSON;
 
     private static final int FILTERING_COUNT = 30;
 
@@ -54,10 +58,17 @@ public abstract class CommonValidationTests extends CommonTest {
 
     protected abstract List<ObjectField> getAttributesBoundaries();
     protected abstract String getPath();
-    protected abstract ObjectNode getValidUpdate();
     protected abstract EntityDto getTestEntity();
     protected abstract <DTO> Class<DTO> getDtoType();
     protected abstract <DTOA> Class<DTOA> getDtoArrayType();
+
+    /**
+     * Default method implementation. Valid updates may differ for various entities.
+     * Concrete test classes should override this.
+     */
+    protected ObjectNode getValidUpdate(ObjectNode objectNode) {
+        return objectNode;
+    }
 
     @Test
     public void createCorrectValues() {
@@ -69,7 +80,7 @@ public abstract class CommonValidationTests extends CommonTest {
     @Test
     public void updateCorrectValues() {
         UUID createdEntityId = entityIsCreated(getTestEntity());
-        ObjectNode updateObject = getValidUpdate();
+        ObjectNode updateObject = getValidUpdate(validationHelpers.getCorrectObject(getAttributesBoundaries()));
         updateEntity(getPath(), createdEntityId, updateObject)
                 .then()
                 .statusCode(SC_OK);
@@ -82,6 +93,7 @@ public abstract class CommonValidationTests extends CommonTest {
         getAttributesBoundaries().stream().filter(nonNullCorrectFilter).forEach(objectField -> {
             ObjectNode updateObject = (new JsonNodeFactory(false)).objectNode();
             validationHelpers.setFieldToCorrectValue(updateObject, objectField);
+            updateObject = getValidUpdate(updateObject);
             updateEntity(getPath(), createdEntityId, updateObject)
                     .then()
                     .statusCode(SC_OK);
@@ -120,7 +132,7 @@ public abstract class CommonValidationTests extends CommonTest {
 
     @Test
     public void createMissingValues() {
-        getAttributesBoundaries().stream().filter(requiredFilter).forEach(objectField -> {
+        getAttributesBoundaries().stream().filter(requiredFilter).filter(nonJsonFilter).forEach(objectField -> {
             ObjectNode entity = validationHelpers.getCorrectObject(getAttributesBoundaries());
             validationHelpers.removeNodeField(entity, objectField);
             createEntity(getPath(), entity)

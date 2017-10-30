@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
 import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.BOOL;
 import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.ENUM;
+import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.INTEGER;
 import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.JSON;
 import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.STRING;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
@@ -109,6 +110,8 @@ public class ValidationHelpers {
                         .extract().response();
                 if (field.getType().equals(BOOL)) {
                     response.then().body(field.getName(), hasItem(Boolean.valueOf(value)));
+                } else if (field.getType().equals(INTEGER)) {
+                    response.then().body(field.getName(), hasItem(Integer.valueOf(value)));
                 } else {
                     response.then().body(field.getName(), hasItem(value));
                 }
