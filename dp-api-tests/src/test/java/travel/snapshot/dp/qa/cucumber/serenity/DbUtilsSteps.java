@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.cucumber.serenity;
 
 import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Fail.fail;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.ADDRESS_LINE1_PATTERN;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
@@ -223,6 +224,9 @@ public class DbUtilsSteps {
     }
 
     public void cleanDatabase() {
+        if (! dbHelper.DB_URI.contains("localhost")) {
+            fail("You are trying to run destructive tests against public environment. Don't do that!");
+        }
         dbHelper.identityDb().update(DELETE_ROLE_PERMISSION);
         dbHelper.identityDb().update(DELETE_ROLE_ASSIGNMENT);
         dbHelper.identityDb().update(DELETE_APPLICATION_PERMISSION);

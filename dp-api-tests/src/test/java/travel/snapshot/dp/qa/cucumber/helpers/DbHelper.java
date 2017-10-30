@@ -22,9 +22,11 @@ public class DbHelper {
     private final JdbcTemplate identityDb;
     private final JdbcTemplate ttiDb;
     private static PropertiesHelper propertiesHelper = new PropertiesHelper();
+    public String DB_URI;
 
     public DbHelper() {
-        identityDb = new JdbcTemplate(createDataSource(propertiesHelper.getProperty("identity.db.connectionString"),
+        DB_URI = propertiesHelper.getProperty("identity.db.connectionString");
+        identityDb = new JdbcTemplate(createDataSource(DB_URI,
                 propertiesHelper.getProperty(DB_USERNAME), propertiesHelper.getProperty(DB_PASSWORD)));
 
         ttiDb = new JdbcTemplate(createDataSource(propertiesHelper.getProperty("tti.db.connectionString"),
