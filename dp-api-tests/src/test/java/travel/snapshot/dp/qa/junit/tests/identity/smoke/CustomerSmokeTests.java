@@ -56,8 +56,8 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         authorizationHelpers.getEntity(CUSTOMERS_PATH, customerIds.get(0));
         responseCodeIs(SC_OK);
         bodyContainsEntityWith("customer_code");
-        bodyContainsEntityWith("name", "Creation test company4");
-        bodyContainsEntityWith("email", "s4@tenants.biz");
+        bodyContainsEntityWith("name", "Creation test company1");
+        bodyContainsEntityWith("email", "s1@tenants.biz");
         //update
         CustomerUpdateDto update = new CustomerUpdateDto();
         update.setIsActive(false);
