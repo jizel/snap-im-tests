@@ -1,6 +1,5 @@
 package travel.snapshot.dp.qa.junit.tests.notification;
 
-import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.DATA_OWNER;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.OWNER;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
@@ -12,9 +11,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
@@ -46,24 +43,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 

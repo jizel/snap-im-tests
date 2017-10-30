@@ -2,7 +2,6 @@ package travel.snapshot.dp.qa.junit.tests.identity.relationships;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_PRECONDITION_FAILED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,8 +15,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtag;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipUpdate;
@@ -110,9 +109,7 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
                 .statusCode(SC_PRECONDITION_FAILED)
                 .assertThat().body(RESPONSE_CODE, is(CC_INVALID_ETAG));
 
-        updateEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), update)
-                .then()
-                .statusCode(SC_NO_CONTENT);
+        entityIsUpdated(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), update);
         CustomerPropertyRelationshipCreateDto returnedRelationship = getEntityAsType(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH,
                 CustomerPropertyRelationshipDto.class, createdRelationship.getId());
         assertThat(returnedRelationship.getIsActive(), is(false));

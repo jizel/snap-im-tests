@@ -7,9 +7,7 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.UUID;
 
-import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
