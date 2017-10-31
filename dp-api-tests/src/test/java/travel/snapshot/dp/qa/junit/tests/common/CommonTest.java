@@ -3,7 +3,6 @@ package travel.snapshot.dp.qa.junit.tests.common;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
-import static org.assertj.core.api.Fail.fail;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 
@@ -158,10 +157,6 @@ public abstract class CommonTest {
 
     @Before
     public void setUp() {
-        String dbConnString = propertiesHelper.getProperty("identity.db.connectionString");
-        if (! dbConnString.contains("localhost")) {
-            fail("You are trying to run destructive tests against public environment. Don't do that!");
-        }
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
         loadDefaultTestEntities();
     }
