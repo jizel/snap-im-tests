@@ -6,6 +6,7 @@ import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
@@ -56,7 +57,11 @@ public class UserPartnerRelationshipTests extends CommonTest{
     @Test
     public void createUserPartnerRelationshipErrors() {
         testUserPartnerRelationship = constructUserPartnerRelationshipDto(NON_EXISTENT_ID, createdPartnerId, true);
-        entityIsCreated(testUserPartnerRelationship);
+        createEntity(testUserPartnerRelationship)
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_NON_EXISTING_REFERENCE));
         testUserPartnerRelationship = constructUserPartnerRelationshipDto(createdUserId, NON_EXISTENT_ID, true);
         createEntity(USER_PARTNER_RELATIONSHIPS_PATH, testUserPartnerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);

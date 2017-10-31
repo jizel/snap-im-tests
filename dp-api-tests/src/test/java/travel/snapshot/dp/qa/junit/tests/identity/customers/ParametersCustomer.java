@@ -51,13 +51,6 @@ public class ParametersCustomer extends CommonTest {
         super.setUp();
     }
 
-    @After
-    public void cleanUp() throws Throwable {
-        super.cleanUp();
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-    }
-
-
     //    TODO: This test should be rather defined in CustomerCommercialSubscriptionTests class but since it requires JUnit params
     @FileParameters(COMM_SUBSCRIPTIONS_ERROR_EXAMPLES)
     @Test
