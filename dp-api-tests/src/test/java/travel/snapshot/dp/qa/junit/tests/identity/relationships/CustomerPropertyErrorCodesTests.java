@@ -1,6 +1,5 @@
 package travel.snapshot.dp.qa.junit.tests.identity.relationships;
 
-import com.jayway.restassured.response.Response;
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
 import org.junit.Before;

@@ -17,7 +17,6 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Map;

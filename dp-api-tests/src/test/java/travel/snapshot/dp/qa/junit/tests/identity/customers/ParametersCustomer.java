@@ -1,6 +1,19 @@
 package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 
+import junitparams.FileParameters;
+import junitparams.JUnitParamsRunner;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.qa.junit.tests.Categories;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+
+import java.util.UUID;
+
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.Matchers.hasItem;
@@ -14,19 +27,6 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_DETAILS
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_MESSAGE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
-
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
-import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-
-import java.util.UUID;
 
 /**
  * Example of JUnit tests using Parameters. It can be used for multiline data driven testing where every line of data

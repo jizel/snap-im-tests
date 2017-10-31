@@ -12,7 +12,7 @@ import travel.snapshot.dp.qa.junit.tests.Categories;
  * This class has to be located in a super package of all the classes it runs.
  */
 @RunWith(WildcardPatternSuite.class)
-@SuiteClasses("**/identity/*.class")
+@SuiteClasses("**/identity/**/*.class")
 @ExcludeCategories(Categories.Authorization.class)
 public class IdentitySlowSuite {
 

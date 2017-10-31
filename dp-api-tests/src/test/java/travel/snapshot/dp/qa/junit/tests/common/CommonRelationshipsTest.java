@@ -1,7 +1,5 @@
 package travel.snapshot.dp.qa.junit.tests.common;
 
-import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
-import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.ASSET_MANAGEMENT;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.CHAIN;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.MEMBERSHIP;
@@ -14,28 +12,19 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
-import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupPropertySetRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupUserRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPartnerRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
-import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping.endpointDtoMap;
 
-import com.jayway.restassured.response.Response;
-import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
@@ -55,9 +44,8 @@ import java.util.List;
 @RunWith(JUnitParamsRunner.class)
 public class CommonRelationshipsTest extends CommonTest {
 
-    private static final String EXAMPLES = "src/test/resources/csv/relationships/";
 
-    private static final List<String> ALL_RELATIONSHIPS_ENDPOINTS = Arrays.asList(
+    protected static final List<String> ALL_RELATIONSHIPS_ENDPOINTS = Arrays.asList(
             CUSTOMER_PROPERTY_RELATIONSHIPS_PATH,
             PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
             USER_CUSTOMER_RELATIONSHIPS_PATH,
@@ -95,34 +83,11 @@ public class CommonRelationshipsTest extends CommonTest {
         super.setUp();
     }
 
-    @Test
-    @Jira("DPIM-56")
-    @FileParameters(EXAMPLES + "getParamsExamples.csv")
-    public void getAllFilteringSorting(String limit, String cursor, String filter, String sort, String sortDesc, String returned) throws Exception {
-        // Create relationships for test
-        constructAndCreateTestRelationshipsDtos();
-        ALL_RELATIONSHIPS_ENDPOINTS.forEach(endpoint -> {
-            getEntities(endpoint, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
-            responseCodeIs(SC_OK);
-            numberOfEntitiesInResponse(endpointDtoMap.get(endpoint), Integer.valueOf(returned));
-        });
-    }
-
-    @Test
-    @Jira("DPIM-56")
-    @FileParameters(EXAMPLES + "invalidGetParamsExamples.csv")
-    public void relationshipsFilteringTest(String limit, String cursor, String filter, String sort, String sortDesc) throws Exception {
-        ALL_RELATIONSHIPS_ENDPOINTS.forEach(endpoint -> {
-            Response response = getEntities(endpoint, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
-            responseCodeIs(SC_BAD_REQUEST);
-            customCodeIs(CC_BAD_PARAMS);
-        });
-    }
 
 
 //    Help methods
 
-    private void constructAndCreateTestRelationshipsDtos() throws Exception {
+    protected void constructAndCreateTestRelationshipsDtos() throws Exception {
         //        Prepare data for tests - basic entities
         entityIsCreated(testProperty1);
         entityIsCreated(testProperty2);
