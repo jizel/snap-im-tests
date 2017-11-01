@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.jms;
+package travel.snapshot.dp.qa.jms.test.etl;
 
 import static travel.snapshot.dp.qa.jms.messages.Provider.SOCIALMEDIA_TWITTER;
 

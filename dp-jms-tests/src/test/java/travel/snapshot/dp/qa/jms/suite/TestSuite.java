@@ -5,11 +5,11 @@ import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import travel.snapshot.dp.qa.jms.FacebookEtlTest;
-import travel.snapshot.dp.qa.jms.GoogleAnalyticsEtlTest;
-import travel.snapshot.dp.qa.jms.InstagramEtlTest;
-import travel.snapshot.dp.qa.jms.TripAdvisorEtlTest;
-import travel.snapshot.dp.qa.jms.TwitterEtlTest;
+import travel.snapshot.dp.qa.jms.test.etl.FacebookEtlTest;
+import travel.snapshot.dp.qa.jms.test.etl.GoogleAnalyticsEtlTest;
+import travel.snapshot.dp.qa.jms.test.etl.InstagramEtlTest;
+import travel.snapshot.dp.qa.jms.test.etl.TripAdvisorEtlTest;
+import travel.snapshot.dp.qa.jms.test.etl.TwitterEtlTest;
 
 @Ignore("Test suite is used for manual run in IDE")
 @RunWith(Suite.class)

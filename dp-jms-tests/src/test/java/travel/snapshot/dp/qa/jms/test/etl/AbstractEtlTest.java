@@ -1,9 +1,10 @@
-package travel.snapshot.dp.qa.jms;
+package travel.snapshot.dp.qa.jms.test.etl;
 
 import static org.apache.commons.collections4.CollectionUtils.intersection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.qa.jms.messages.Notification.etlNotification;
 import static travel.snapshot.dp.qa.jms.messages.Notification.failureNotification;
+import static travel.snapshot.dp.qa.jms.util.JsonConverter.convertToJson;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -26,7 +27,6 @@ import travel.snapshot.dp.qa.jms.messages.Provider;
 import travel.snapshot.dp.qa.jms.util.Jms;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -36,10 +36,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Predicate;
 
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.TextMessage;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -125,24 +122,4 @@ public abstract class AbstractEtlTest {
             throw new RuntimeException(e);
         }
     }
-
-    // TODO use message converter
-    String convertToJson(Message message) {
-        try {
-            if (message instanceof TextMessage) {
-                return ((TextMessage)message).getText();
-            }
-            if (message instanceof BytesMessage) {
-                BytesMessage bytesMessage = (BytesMessage) message;
-                byte[] bytes = new byte[(int) bytesMessage.getBodyLength()];
-                bytesMessage.readBytes(bytes);
-                return new String(bytes, Charset.forName("utf-8"));
-            }
-        } catch (JMSException e) {
-            throw new IllegalStateException("Cannot convert message: " + message.toString(), e);
-        }
-
-        throw new IllegalStateException("Unprocessed message: " + message.toString());
-    }
-
 }
