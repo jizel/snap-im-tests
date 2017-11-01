@@ -30,7 +30,6 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'net.serenity-bdd.aggregator'
 apply plugin: 'groovy'
 
 version = '1.0-SNAPSHOT'

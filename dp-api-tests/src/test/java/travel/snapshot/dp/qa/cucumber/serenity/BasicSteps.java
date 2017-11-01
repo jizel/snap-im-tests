@@ -81,11 +81,13 @@ public class BasicSteps {
     public static final String DEFAULT_SNAPSHOT_TIMEZONE = "Europe/Prague";
     public static final String DEFAULT_SNAPSHOT_SALESFORCE_ID = "DEFAULTSFID0001";
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
+    public static final String NON_EXISTENT_ETAG = "11111111111111111111111111111112";
     public static final String DEFAULT_SNAPSHOT_PARTNER_NAME = "CoreQA Partner";
     public static final UUID NON_EXISTENT_ID = UUID.fromString("00000000-0000-4000-a000-000000000000");
     public static final String SESSION_RESPONSE = "response";
     public static final String SESSION_TOKEN = "token";
     public static final String KEYCLOAK_TOKEN = "keycloak_token";
+    public static final String DEFAULT_SNAPSHOT_APPLICATION_NAME = "Default Snapshot Test App";
 
     public static final String SESSION_RESPONSE_MAP = "response_map";
     public static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";

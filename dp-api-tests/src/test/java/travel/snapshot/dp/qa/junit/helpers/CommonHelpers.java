@@ -34,8 +34,13 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_COMMERCIAL_SUBSCRIPTION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_IF_MATCH;
@@ -101,6 +106,16 @@ public class CommonHelpers {
             PLATFORM_OPERATIONS_PATH,
             APPLICATION_PERMISSIONS_PATH,
             EFFECTIVE_PERMISSIONS_PATH
+    );
+
+    public static final List<String> ENDPOINTS_WITH_IDS = asList(
+            String.format("%s/%s", APPLICATIONS_PATH, DEFAULT_SNAPSHOT_APPLICATION_ID),
+            String.format("%s/%s", APPLICATION_VERSIONS_PATH, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID),
+            String.format("%s/%s", PROPERTIES_PATH, DEFAULT_PROPERTY_ID),
+            String.format("%s/%s", CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID),
+            String.format("%s/%s", USERS_PATH, DEFAULT_SNAPSHOT_USER_ID),
+            String.format("%s/%s", PARTNERS_PATH, DEFAULT_SNAPSHOT_PARTNER_ID),
+            String.format("%s/%s", COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID)
     );
 
     public static final List<String> READONLY_ENDPOINTS = asList(
@@ -186,7 +201,6 @@ public class CommonHelpers {
                 .head("/{id}", entityId)
                 .getHeader(HEADER_ETAG);
     }
-
 
     // Create
 

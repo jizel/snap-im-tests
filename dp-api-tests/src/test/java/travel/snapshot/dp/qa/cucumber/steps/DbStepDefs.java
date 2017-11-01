@@ -8,6 +8,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ADDRESS
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_COMMERCIAL_SUBSCRIPTION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_NAME;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
@@ -128,7 +129,7 @@ public class DbStepDefs {
     @Given("^Default application is created$")
     public void defaultSnapshotApplicationIsCreated() {
         ApplicationDto defaultApp = new ApplicationDto();
-        defaultApp.setName("Default Snapshot Test App");
+        defaultApp.setName(DEFAULT_SNAPSHOT_APPLICATION_NAME);
         defaultApp.setDescription("Default Snapshot Test App created in test background");
         defaultApp.setPartnerId(DEFAULT_SNAPSHOT_PARTNER_ID);
         defaultApp.setIsInternal(true);
