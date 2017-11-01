@@ -1,6 +1,6 @@
-package travel.snapshot.dp.qa.jms;
+package travel.snapshot.dp.qa.jms.test.etl;
 
-import static travel.snapshot.dp.qa.jms.messages.Provider.SOCIALMEDIA_INSTAGRAM;
+import static travel.snapshot.dp.qa.jms.messages.Provider.REVIEW_TRIPADVISOR;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,17 +12,17 @@ import java.time.ZoneId;
 import java.util.Set;
 
 @Getter
-public class InstagramEtlTest extends AbstractEtlTest {
+public class TripAdvisorEtlTest extends AbstractEtlTest {
 
-    Provider provider = SOCIALMEDIA_INSTAGRAM;
+    Provider provider = REVIEW_TRIPADVISOR;
 
-    @Value("${integration.instagram.start.queue}")
+    @Value("${integration.tripadvisor.start.queue}")
     String startQueue;
-    @Value("${integration.instagram.start.message} ")
+    @Value("${integration.tripadvisor.start.message} ")
     String startMessage;
-    @Value("#{'${integration.instagram.affected.properties}'.split(',')}")
+    @Value("#{'${integration.tripadvisor.affected.properties}'.split(',')}")
     Set<String> affectedProperties;
-    @Value("${integration.instagram.timezone}")
+    @Value("${integration.tripadvisor.timezone}")
     String timezone;
 
     private Instant timestamp = Instant.now();
