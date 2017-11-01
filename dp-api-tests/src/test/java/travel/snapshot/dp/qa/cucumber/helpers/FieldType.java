@@ -21,8 +21,9 @@ public enum FieldType {
     },
     STRING,
     INTEGER,
-    ENUM ,
-    BOOL;
+    ENUM,
+    BOOL,
+    ID;
 
     private static final JsonNodeFactory factory = new JsonNodeFactory(false);
 
