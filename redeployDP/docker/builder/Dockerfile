@@ -8,8 +8,6 @@ ENV NONPMS_REPO_URL git@bitbucket.org:bbox/$NONPMS_REPO_NAME.git
 
 WORKDIR /root
 
-RUN dnf -y install git
-
 ADD gradle /root/.gradle
 
 ADD runner.sh /root/runner.sh
@@ -29,5 +27,7 @@ WORKDIR /root/$NONPMS_REPO_NAME
 RUN ./gradlew build -x test
 RUN find . -iname *.jar -exec rm -f {} \;
 RUN git reset --hard
+# Now let's clean up extra 98M
+RUN dnf remove iptables-libs -y
 VOLUME /data
 CMD /root/runner.sh
