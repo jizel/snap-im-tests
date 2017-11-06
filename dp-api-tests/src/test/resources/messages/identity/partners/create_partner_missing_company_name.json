@@ -1,12 +1,4 @@
 {
-    "phone": "+420123456789",
     "email": "test1@tenants.biz",
-    "website": "http://www.snapshot.travel",
-    "address": {
-    	"address_line1": "string",
-    	"city": "string",
-    	"zip_code": "string",
-    	"country": "CZ"
-    },
-    "status": "active"
+    "website": "http://www.snapshot.travel"
 }

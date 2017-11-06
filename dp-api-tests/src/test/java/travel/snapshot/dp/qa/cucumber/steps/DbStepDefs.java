@@ -11,6 +11,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_NAME;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_EMAIL;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_NAME;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_VAT_ID;
@@ -121,7 +122,7 @@ public class DbStepDefs {
         defaultPartner.setName(DEFAULT_SNAPSHOT_PARTNER_NAME);
         defaultPartner.setWebsite(SNAPSHOT_WEBSITE);
         defaultPartner.setIsActive(true);
-        defaultPartner.setEmail("somemail@snapshot.travel");
+        defaultPartner.setEmail(DEFAULT_SNAPSHOT_PARTNER_EMAIL);
         defaultPartner.setVatId(DEFAULT_SNAPSHOT_PARTNER_VAT_ID);
         dbSteps.createDBPartner(defaultPartner);
     }

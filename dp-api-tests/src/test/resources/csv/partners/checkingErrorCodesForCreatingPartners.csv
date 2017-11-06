@@ -1,0 +1,4 @@
+/src/test/resources/messages/identity/partners/create_partner_missing_company_name.json
+/src/test/resources/messages/identity/partners/create_partner_missing_email.json
+/src/test/resources/messages/identity/partners/create_partner_incorrect_website_value.json
+/src/test/resources/messages/identity/partners/create_partner_incorrect_email_value.json

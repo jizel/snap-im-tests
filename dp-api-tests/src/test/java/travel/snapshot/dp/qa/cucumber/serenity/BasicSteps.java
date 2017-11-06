@@ -83,6 +83,7 @@ public class BasicSteps {
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
     public static final String NON_EXISTENT_ETAG = "11111111111111111111111111111112";
     public static final String DEFAULT_SNAPSHOT_PARTNER_NAME = "CoreQA Partner";
+    public static final String DEFAULT_SNAPSHOT_PARTNER_EMAIL = "somemail@snapshot.travel";
     public static final UUID NON_EXISTENT_ID = UUID.fromString("00000000-0000-4000-a000-000000000000");
     public static final String SESSION_RESPONSE = "response";
     public static final String SESSION_TOKEN = "token";
@@ -151,7 +152,7 @@ public class BasicSteps {
         }
     }
 
-    public String getRequestDataFromFile(InputStream inputStream) throws IOException {
+    public static String getRequestDataFromFile(InputStream inputStream) throws IOException {
         return IOUtils.toString(inputStream, Charset.forName("utf-8"));
     }
 

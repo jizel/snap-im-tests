@@ -1,12 +1,4 @@
 {
-    "company_name": "Partner name test 1",
-    "phone": "+420123456789",
-    "website": "http://www.snapshot.travel",
-    "address": {
-    	"address_line1": "string",
-    	"city": "string",
-    	"zip_code": "string",
-    	"country": "CZ"
-    },
-    "status": "active"
+    "name": "Partner name test 1",
+    "website": "http://www.snapshot.travel"
 }

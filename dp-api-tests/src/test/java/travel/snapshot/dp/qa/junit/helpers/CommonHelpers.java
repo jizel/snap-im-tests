@@ -47,6 +47,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_IF_MATCH
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_USER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getRequestDataFromFile;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
@@ -64,6 +65,7 @@ import travel.snapshot.dp.api.model.EntityDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -362,20 +364,6 @@ public class CommonHelpers {
      * @param body            - the relationship object, usually Dto
      * @return response of the request
      */
-    public Response createRelationship(String basePath, UUID firstLevelEntityId, String secondLevelPath, Object body) {
-        return createRelationshipByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, firstLevelEntityId, secondLevelPath, body);
-    }
-
-    public Response createRelationshipByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID firstLevelEntityId, String secondLevelResource, Object body) {
-        spec.basePath(basePath);
-        Response response = givenContext(userId, applicationVersionId)
-                .spec(spec)
-                .body(body)
-                .post("{id}/{secondLevelName}", firstLevelEntityId, stripSlash(secondLevelResource));
-        setSessionResponse(response);
-
-        return response;
-    }
 
 //    Second level entities generic methods - GET
 
@@ -474,6 +462,11 @@ public class CommonHelpers {
                 .spec(spec)
                 .body(body)
                 .post();
+    }
+
+    public static String parseResourceFile(String filename) throws IOException {
+        FileInputStream inputStream = new FileInputStream(filename);
+        return getRequestDataFromFile(inputStream);
     }
 
 }

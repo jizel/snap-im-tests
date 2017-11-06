@@ -44,46 +44,26 @@ public class UserHelpers extends UsersSteps {
         return userId;
     }
 
-    public UserDto userWithCustomerIsCreated(UserCreateDto createdUser, UUID customerId) {
-        Response response = createUserWithCustomer(createdUser, customerId, true, true);
-        responseCodeIs(SC_CREATED);
-        return response.as(UserDto.class);
-    }
-
-    public Response getUserByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId) {
-        Response response = getEntityByUserForApplication(requestorId, applicationVersionId, userId);
-        setSessionResponse(response);
-        return response;
-    }
-
-    public Response getAllUserPropertiesByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId) {
+    public void getAllUserPropertiesByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId) {
         Response response = getSecondLevelEntitiesByUserForApp(requestorId, applicationVersionId, userId, PROPERTIES_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
-        return response;
     }
 
-    public Response createUserByUserForApp(UUID requestorId, UUID applicationVersionId, UserCreateDto user) {
-        return createEntityByUserForApplication(requestorId, applicationVersionId, user);
+    public void createUserByUserForApp(UUID requestorId, UUID applicationVersionId, UserCreateDto user) {
+        createEntityByUserForApplication(requestorId, applicationVersionId, user);
     }
 
-    public Response updateUserByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId, UserUpdateDto userUpdate) {
-        Response response = null;
+    public void updateUserByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId, UserUpdateDto userUpdate) {
         try {
             JSONObject userData = retrieveData(userUpdate);
-            response = updateEntityByUserForApplication(requestorId, applicationVersionId, userId, userData.toString(), getEntityEtag(userId));
+            updateEntityByUserForApplication(requestorId, applicationVersionId, userId, userData.toString(), getEntityEtag(userId));
         } catch (JsonProcessingException e) {
             fail("Error while retrieving data from UserUpdate object: " + e.getMessage());
         }
-        return response;
     }
 
-    public Response deleteUserByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId) {
-        return deleteEntityByUserForApplication(requestorId, applicationVersionId, userId, getEntityEtag(userId));
-    }
-
-    public void getPartnersForUserByUserForApp(UUID userId, UUID requestorId, UUID appVersionId) {
-        Response response = getSecondLevelEntitiesByUserForApp(requestorId, appVersionId, userId, PARTNERS_RESOURCE, null, null, null, null, null, null);
-        setSessionResponse(response);
+    public void deleteUserByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId) {
+        deleteEntityByUserForApplication(requestorId, applicationVersionId, userId, getEntityEtag(userId));
     }
 
     public void deleteExistingUserCustomerRelationship(UUID userId) {
