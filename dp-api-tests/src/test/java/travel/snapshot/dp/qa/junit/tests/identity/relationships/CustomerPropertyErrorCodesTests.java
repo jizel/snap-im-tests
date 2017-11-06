@@ -1,28 +1,14 @@
 package travel.snapshot.dp.qa.junit.tests.identity.relationships;
 
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.qa.junit.tests.common.CommonRelationshipsTest;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.IS_ACTIVE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.PROPERTY_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.RELATIONSHIP_TYPE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.VALID_FROM;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.VALID_TO;
@@ -34,17 +20,29 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTyp
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.sendPostWithBody;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 
-@RunWith(JUnitParamsRunner.class)
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.qa.junit.tests.common.CommonRelationshipsTest;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+
 public class CustomerPropertyErrorCodesTests extends CommonRelationshipsTest {
 
-    private static final String EXAMPLES = "src/test/resources/csv/relationships/";
-    private UUID createdPropertyId1 = null;
+    private static final String EXAMPLES = "/csv/relationships/";
 
-    @Before
+    @Override
+    @BeforeEach
     public void setUp() {
         super.setUp();
         entityIsCreated(testCustomer1);
-        createdPropertyId1 = entityIsCreated(testProperty1);
+        UUID createdPropertyId1 = entityIsCreated(testProperty1);
         entityIsCreated(constructCustomerPropertyRelationshipDto(
                 DEFAULT_SNAPSHOT_CUSTOMER_ID,
                 createdPropertyId1,
@@ -53,8 +51,9 @@ public class CustomerPropertyErrorCodesTests extends CommonRelationshipsTest {
                 validFrom, validTo));
     }
 
-    @FileParameters(EXAMPLES + "checkingErrorCodesForCreatingCustomerProperty.csv")
-    @Test
+
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "checkingErrorCodesForCreatingCustomerProperty.csv")
     public void checkingErrorCodesForCreatingCustomerProperty(String property_code,
                                                               String type,
                                                               Integer customer_index,
@@ -63,7 +62,7 @@ public class CustomerPropertyErrorCodesTests extends CommonRelationshipsTest {
                                                               String error_code,
                                                               String custom_code) {
         Map<String, String> params = buildQueryParamMapForPaging(null, null, String.format("property_code==%s", property_code), null, null, null);
-        UUID propertyId = null;
+        UUID propertyId;
         try {
             propertyId = getEntitiesAsType(PROPERTIES_PATH, PropertyDto.class, params).get(0).getId();
         } catch (IndexOutOfBoundsException e) {
@@ -83,4 +82,5 @@ public class CustomerPropertyErrorCodesTests extends CommonRelationshipsTest {
                 .assertThat()
                 .body(RESPONSE_CODE, is(Integer.valueOf(custom_code)));
     }
+
 }

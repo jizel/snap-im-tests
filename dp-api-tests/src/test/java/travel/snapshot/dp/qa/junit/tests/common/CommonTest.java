@@ -10,6 +10,7 @@ import com.jayway.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.jupiter.api.BeforeEach;
 import qa.tools.ikeeper.test.IKeeperJUnitConnector;
 import travel.snapshot.dp.api.identity.model.ApplicationCreateDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionCreateDto;
@@ -156,6 +157,7 @@ public abstract class CommonTest {
     );
 
     @Before
+    @BeforeEach
     public void setUp() {
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
         loadDefaultTestEntities();

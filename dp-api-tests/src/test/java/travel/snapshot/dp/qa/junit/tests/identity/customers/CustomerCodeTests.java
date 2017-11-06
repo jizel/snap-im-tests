@@ -7,10 +7,9 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
@@ -25,12 +24,12 @@ import java.util.UUID;
  * - Customer code is generated from his name, country and city according to rules specified in DP-1222
  * - Customer code always contains only CAPITAL english (latin) letters. Even when customer's name contains chinese, arabic or any other characters.
  */
-@RunWith(JUnitParamsRunner.class)
 public class CustomerCodeTests extends CommonTest{
     private static final String EXAMPLES = "src/test/resources/csv/customers/";
 
-    @Test
-    @FileParameters(EXAMPLES + "generatedCustomerCodeTestExamples.csv")
+
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "generatedCustomerCodeTestExamples.csv")
     public void generatedCustomerCodeTests(String name) throws Exception {
         testCustomer1.setName(name);
         entityIsCreated(testCustomer1);
@@ -59,8 +58,8 @@ public class CustomerCodeTests extends CommonTest{
         responseIsUnprocessableEntity();
     }
 
-    @Test
-    @FileParameters(EXAMPLES + "correctGeneratedCustomerCodeTestExamples.csv")
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "correctGeneratedCustomerCodeTestExamples.csv")
     public void correctCustomerCodeIsReturnedBasedOnAddress(String name, String line1, String city, String zipCode, String countryCode, String region, String resultCode) {
         AddressDto address = commonHelpers.constructAddressDto(line1, city, zipCode, countryCode);
         address.setRegionCode(transformNull(region));

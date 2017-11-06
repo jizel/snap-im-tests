@@ -1,15 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests.identity.commercial_subscriptions;
 
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-
-import java.util.Map;
-
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
@@ -17,13 +8,18 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParam
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 
-@RunWith(JUnitParamsRunner.class)
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+
+import java.util.Map;
+
 public class ParameterizedCommercialSubscriptionTests extends CommonTest{
-    private static final String EXAMPLES = "src/test/resources/csv/commercial_subscriptions/";
+    private static final String EXAMPLES = "/csv/commercial_subscriptions/";
 
 
-    @FileParameters(EXAMPLES + "errorCodesForGettingListOfApplicationsCommercialSubscriptions.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "errorCodesForGettingListOfApplicationsCommercialSubscriptions.csv")
     public void errorCodesForGettingListOfApplicationsCommercialSubscriptions(
             String limit,
             String cursor,

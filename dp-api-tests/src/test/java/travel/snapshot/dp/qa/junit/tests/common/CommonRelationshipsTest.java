@@ -22,9 +22,6 @@ import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.construct
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
-import junitparams.JUnitParamsRunner;
-import org.junit.Before;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
@@ -41,7 +38,6 @@ import java.util.List;
 /**
  * Common tests for all relationships endpoints
  */
-@RunWith(JUnitParamsRunner.class)
 public class CommonRelationshipsTest extends CommonTest {
 
 
@@ -76,13 +72,6 @@ public class CommonRelationshipsTest extends CommonTest {
     private UserPropertyRelationshipCreateDto testUserPropertyRelationship4;
     private UserPartnerRelationshipCreateDto testUserPartnerRelationship;
     private UserGroupPropertySetRelationshipCreateDto testUserGroupPropertySetRelationship;
-
-
-    @Before
-    public void setUp() {
-        super.setUp();
-    }
-
 
 
 //    Help methods

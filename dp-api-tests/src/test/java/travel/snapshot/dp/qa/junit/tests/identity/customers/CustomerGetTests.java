@@ -10,13 +10,11 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitie
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
@@ -26,14 +24,13 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 /**
  * GET, filtering, sorting etc. tests for Customer entity. 50+ customers created for testing (pagination)
  */
-@RunWith(JUnitParamsRunner.class)
 @Category(Categories.SlowTests.class)
 public class CustomerGetTests extends CommonTest{
 
-    private static final String FILTERING_CUSTOMERS_EXAMPLES = "src/test/resources/csv/customers/filteringCustomers.csv";
+    private static final String FILTERING_CUSTOMERS_EXAMPLES = "/csv/customers/filteringCustomers.csv";
     private static DbStepDefs dbStepDefs;
 
-    @BeforeClass
+    @BeforeAll
     public static void createTestCustomers() throws Exception {
 //        Create 50+ test customers but only once for all tests!
         dbStepDefs = new DbStepDefs();
@@ -57,13 +54,14 @@ public class CustomerGetTests extends CommonTest{
     }
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() {
         // Override CommonTest setup and don't delete all created customers
     }
 
-    @FileParameters(FILTERING_CUSTOMERS_EXAMPLES)
-    @Test
+
+    @ParameterizedTest
+    @CsvFileSource(resources = FILTERING_CUSTOMERS_EXAMPLES)
     public void filteringCustomers(String limit, String cursor, Integer returned, Integer total, String filter, String sort, String sortDesc, String linkHeader) {
         getEntities(CUSTOMERS_PATH, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
         responseCodeIs(SC_OK);
@@ -73,4 +71,5 @@ public class CustomerGetTests extends CommonTest{
             headerIs("Link", linkHeader);
         }
     }
+
 }

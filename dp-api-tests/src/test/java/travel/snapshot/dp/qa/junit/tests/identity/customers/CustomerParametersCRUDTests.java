@@ -9,11 +9,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 
 import com.jayway.restassured.response.Response;
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
@@ -23,34 +20,28 @@ import java.util.UUID;
 /**
  * Parametrized test for CRUD of Customer entity - error codes etc.
  */
-@RunWith(JUnitParamsRunner.class)
 public class CustomerParametersCRUDTests extends CommonTest{
 
-    private static final String EXAMPLES = "src/test/resources/csv/customers/";
+    private static final String EXAMPLES = "/csv/customers/";
 
-    @Override
-    @Before
-    public void setUp() {
-        super.setUp();
-    }
 
-    @Test
-    @FileParameters(EXAMPLES + "errorCodesCreateCustomer.csv")
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "errorCodesCreateCustomer.csv")
     public void errorCodesCreateCustomer(String jsonFileName) throws Exception {
         commonHelpers.useFileForSendDataTo(jsonFileName, POST.toString(), CUSTOMERS_PATH, "identity");
         responseIsUnprocessableEntity();
     }
 
-    @Test
-    @FileParameters(EXAMPLES + "foreignCustomers.csv")
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "foreignCustomers.csv")
     public void createForeignCustomer(String jsonFileName, String foreignName) throws Exception {
         commonHelpers.useFileForSendDataTo(jsonFileName, POST.toString(), CUSTOMERS_PATH, "identity");
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("name", foreignName);
     }
 
-    @Test
-    @FileParameters(EXAMPLES + "updateEachField.csv")
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "updateEachField.csv")
     public void updateCustomerEachField(String name, String email, String vatId, String phone, String website, String notes, String timezone) {
         UUID createdCustomerId = entityIsCreated(testCustomer1);
         CustomerUpdateDto customerUpdate = customerHelpers.constructCustomerUpdate(name, email, vatId, phone, website, notes , timezone);

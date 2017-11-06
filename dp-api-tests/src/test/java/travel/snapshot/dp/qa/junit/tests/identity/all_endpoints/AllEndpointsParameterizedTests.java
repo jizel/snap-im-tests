@@ -5,24 +5,23 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParam
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ALL_ENDPOINTS;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Map;
 
-@RunWith(JUnitParamsRunner.class)
+
 public class AllEndpointsParameterizedTests extends CommonTest {
 
-    private static final String EXAMPLES = "src/test/resources/csv/all_endpoints/";
+    private static final String EXAMPLES = "/csv/all_endpoints/";
 
-    @FileParameters(EXAMPLES + "checkingErrorCodesForGettingEntities.csv")
-    @Test
+
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "checkingErrorCodesForGettingEntities.csv")
     @Category(Categories.SlowTests.class)
     @Jira("DPIM-72")
     public void checkingErrorCodesForGettingEntities(
