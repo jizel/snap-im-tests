@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="travel.snapshot.dp.qa.nonpms.dwh.test.dal.FacebookDwhDao">
+
+    <select id="getDataGaps" resultType="Map">
+        SELECT pd.property_id, dd.date_id FROM
+            (
+                SELECT
+                    property_id, min(date_id) min_date_id
+                FROM Fact_facebook_cumulative
+                WHERE date_id >= #{since}
+                GROUP BY property_id
+            ) AS pd
+        JOIN
+            Dim_date dd
+            ON dd.date_id >= pd.min_date_id AND #{until} >= dd.date_id
+        LEFT JOIN
+            Fact_facebook_cumulative ffc
+            ON pd.property_id = ffc.property_id AND dd.date_id = ffc.date_id
+        WHERE
+            ffc.date_id IS NULL
+        ORDER BY property_id, date_id
+    </select>
+
+</mapper>
