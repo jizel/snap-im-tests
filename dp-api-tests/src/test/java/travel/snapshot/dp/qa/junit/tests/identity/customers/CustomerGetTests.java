@@ -66,7 +66,7 @@ public class CustomerGetTests extends CommonTest{
         getEntities(CUSTOMERS_PATH, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(CustomerDto.class, returned);
-        headerIs("X-Total-Count", String.valueOf(total));
+        headerIs(TOTAL_COUNT_HEADER, String.valueOf(total));
         if (! linkHeader.equals("/null")) {
             headerIs("Link", linkHeader);
         }

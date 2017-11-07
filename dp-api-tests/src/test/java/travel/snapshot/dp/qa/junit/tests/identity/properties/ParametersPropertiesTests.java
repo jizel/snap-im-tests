@@ -131,7 +131,7 @@ public class ParametersPropertiesTests extends CommonTest {
         getEntities(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, params);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(CustomerPropertyRelationshipDto.class, Integer.valueOf(returned));
-        headerIs("X-Total-Count", total);
+        headerIs(TOTAL_COUNT_HEADER, total);
     }
 
     @ParameterizedTest
@@ -184,7 +184,7 @@ public class ParametersPropertiesTests extends CommonTest {
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, null, null);
         getEntities(PROPERTIES_PATH, params);
         numberOfEntitiesInResponse(PropertyDto.class, Integer.parseInt(returned));
-        headerIs("X-Total-Count", total);
+        headerIs(TOTAL_COUNT_HEADER, total);
         if (!linkHeader.equals("/null")) {
             headerContains("Link", linkHeader);
         }
@@ -204,7 +204,7 @@ public class ParametersPropertiesTests extends CommonTest {
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, null, null, null, null);
         getEntities(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, params);
         numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, Integer.parseInt(returned));
-        headerIs("X-Total-Count", total);
+        headerIs(TOTAL_COUNT_HEADER, total);
     }
 
     @ParameterizedTest
@@ -226,7 +226,7 @@ public class ParametersPropertiesTests extends CommonTest {
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, null, null, null);
         getEntities(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, params);
         numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, Integer.parseInt(returned));
-        headerIs("X-Total-Count", total);
+        headerIs(TOTAL_COUNT_HEADER, total);
     }
 
     @ParameterizedTest
@@ -269,7 +269,7 @@ public class ParametersPropertiesTests extends CommonTest {
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, null, null, null);
         getEntities(USER_PROPERTY_RELATIONSHIPS_PATH, params);
         numberOfEntitiesInResponse(UserPropertyRelationshipDto.class, Integer.parseInt(returned));
-        headerIs("X-Total-Count", total);
+        headerIs(TOTAL_COUNT_HEADER, total);
     }
 
 }

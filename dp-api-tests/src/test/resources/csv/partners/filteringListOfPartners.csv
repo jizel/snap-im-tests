@@ -1,0 +1,6 @@
+5,0,5,52,name=='partner_*'
+5,2,5,52,name=='partner_*'
+/null,/null,1,1,notes=='*Notes 2'
+/null,/null,1,1,website==http://www.partner8.snapshot.travel
+/null,/null,11,11,name=='partner_*' and notes=='Notes 2*'
+5,3,5,11,name=='partner_2*'
