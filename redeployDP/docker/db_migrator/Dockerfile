@@ -6,8 +6,6 @@ ENV NONPMS_REPO_URL git@bitbucket.org:bbox/$NONPMS_REPO_NAME.git
 
 WORKDIR /root
 
-RUN dnf -y install git
-
 ADD gradle /root/.gradle
 
 ADD ssh /root/.ssh
@@ -19,5 +17,8 @@ RUN chmod 755 /root/db_migrate.sh
 
 RUN git clone $NONPMS_REPO_URL
 WORKDIR /root/$NONPMS_REPO_NAME
+
+# Now let's clean up extra 98M
+RUN dnf remove iptables-libs -y
 
 CMD /root/db_migrate.sh

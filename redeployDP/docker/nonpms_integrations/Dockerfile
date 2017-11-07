@@ -1,6 +1,4 @@
-FROM docker.snapshot.travel:5000/snapshot/java:8u131
-MAINTAINER oleg.fayans@snapshot.travel
-
+FROM openjdk:8-jre-alpine
 VOLUME /tmp
 VOLUME /data
 VOLUME /opt/integrations/config

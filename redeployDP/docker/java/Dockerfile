@@ -14,4 +14,3 @@ RUN wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=acc
     dnf -y install $JAVA_DOWNLOAD && \
     rm $JAVA_DOWNLOAD && \
     alternatives --install /usr/bin/java java /usr/java/latest/bin/java 1
-RUN rm $JAVA_DOWNLOAD
