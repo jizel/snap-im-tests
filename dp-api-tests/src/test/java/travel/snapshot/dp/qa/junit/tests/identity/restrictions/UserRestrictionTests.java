@@ -6,6 +6,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.type.HttpMethod.DELETE;
 import static travel.snapshot.dp.api.type.HttpMethod.GET;
 import static travel.snapshot.dp.api.type.HttpMethod.POST;
@@ -13,6 +14,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import org.junit.Before;
@@ -47,14 +49,14 @@ public class UserRestrictionTests extends CommonRestrictionTest{
         userHelpers.listOfUsersIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), "5", "0", "user_name==defaultSnapshotUser", "user_name", null);
         responseCodeIs(SC_OK);
 
-        userHelpers.getUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), createdUserId);
+        getEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), USERS_PATH, createdUserId);
         responseIsEndpointNotFound();
-        userHelpers.getUserByUserForApp(createdUserId, createdAppVersion.getId(), createdUserId);
+        getEntityByUserForApplication(createdUserId, createdAppVersion.getId(), USERS_PATH, createdUserId);
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_SINGLE_USER_ENDPOINT, GET);
-        userHelpers.getUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), createdUserId);
+        getEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), USERS_PATH, createdUserId);
         responseCodeIs(SC_OK);
-        userHelpers.getUserByUserForApp(createdUserId, createdAppVersion.getId(), createdUserId);
+        getEntityByUserForApplication(createdUserId, createdAppVersion.getId(), USERS_PATH, createdUserId);
         responseCodeIs(SC_OK);
     }
 

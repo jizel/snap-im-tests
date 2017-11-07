@@ -5,20 +5,26 @@ import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_COMMERCIAL_SUBSCRIPTION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_EMAIL;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_NAME;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTypeByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
@@ -33,10 +39,9 @@ import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PartnerUpdateDto;
-import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
@@ -62,17 +67,20 @@ public class PartnerTests extends CommonTest{
     }
 
     @Test
-    public void updatePartner() throws Exception {
+    public void partnerCRUD() throws Exception {
         PartnerUpdateDto partnerUpdate = new PartnerUpdateDto();
         partnerUpdate.setName("Updated name");
         partnerUpdate.setEmail("updated@snapshot.travel");
         partnerUpdate.setWebsite("http://www.updated.partner.com");
         partnerUpdate.setIsActive(false);
-        Response updateResponse = updateEntity(PARTNERS_PATH, createdPartner1Id, partnerUpdate);
-        responseCodeIs(SC_OK);
+        updateEntity(PARTNERS_PATH, createdPartner1Id, partnerUpdate).then().statusCode(SC_OK);
+        PartnerUpdateDto newUpdate = new PartnerUpdateDto();
+        newUpdate.setIsActive(true);
+        Response updateResponse = updateEntity(PARTNERS_PATH, createdPartner1Id, newUpdate);
+        updateResponse.then().statusCode(SC_OK);
         PartnerDto updateResponsePartner = updateResponse.as(PartnerDto.class);
-        PartnerDto requestedPartner = getEntityAsType(PARTNERS_PATH, PartnerDto.class, createdPartner1Id);
-        assertThat("Update response body differs from the same partner requested by GET ", updateResponsePartner, is(requestedPartner));
+        assertThat(getEntityAsType(PARTNERS_PATH, PartnerDto.class, createdPartner1Id)).isEqualToComparingFieldByField(updateResponsePartner);
+        entityIsDeleted(PARTNERS_PATH, createdPartner1Id);
     }
 
     @Test
@@ -90,15 +98,10 @@ public class PartnerTests extends CommonTest{
     }
 
     @Test
-    public void testDP2194() throws Throwable {
-        UUID requestorId = createdUserId;
-        partnerHelpers.createPartnerUserRelationship(createdPartner1Id, requestorId);
-        partnerHelpers.getUsersForPartnerByUserForApp(createdPartner1Id, requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
-        responseCodeIs(SC_OK);
-        numberOfEntitiesInResponse(PartnerUserRelationshipPartialDto.class, 1);
-        userHelpers.getPartnersForUserByUserForApp(requestorId, requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
-        responseCodeIs(SC_OK);
-        numberOfEntitiesInResponse(UserPartnerRelationshipPartialDto.class, 1);
+    @Jira("DP-2194")
+    public void partnerUserShouldSeeHisRelation() throws Throwable {
+        entityIsCreated(constructUserPartnerRelationshipDto(createdUserId, createdPartner1Id, true));
+        assertThat(getEntitiesAsTypeByUserForApp(createdUserId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PARTNER_RELATIONSHIPS_PATH, UserPartnerRelationshipDto.class, emptyQueryParams())).hasSize(1);
     }
 
     @Test
@@ -144,9 +147,21 @@ public class PartnerTests extends CommonTest{
 
     @Test
     @Jira("DPIM-174")
-    public void customerNameIsUnique() {
+    public void partnerNameIsUnique() {
         testPartner1.setName(DEFAULT_SNAPSHOT_PARTNER_NAME);
         testPartner1.setId(null);
         assertStatusCodes(createEntity(testPartner1), SC_CONFLICT, CC_CONFLICT_CODE);
+    }
+
+    @Test
+    @Jira("DPIM-186")
+    public void partnerEmailIsUnique() {
+        testPartner1.setEmail(DEFAULT_SNAPSHOT_PARTNER_EMAIL);
+        testPartner1.setId(null);
+        createEntity(testPartner1)
+                .then()
+                .statusCode(SC_CONFLICT)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_CONFLICT_CODE));
     }
 }

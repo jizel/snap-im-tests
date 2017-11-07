@@ -5,7 +5,6 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENDPOINTS_WITH_IDS;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.readWriteEndpoints;
 

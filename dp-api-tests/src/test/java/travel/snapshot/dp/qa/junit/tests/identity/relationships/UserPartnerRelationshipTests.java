@@ -1,13 +1,17 @@
 package travel.snapshot.dp.qa.junit.tests.identity.relationships;
 
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
@@ -38,7 +42,8 @@ public class UserPartnerRelationshipTests extends CommonTest{
     public void setUp() {
         super.setUp();
         createdPartnerId = entityIsCreated(testPartner1);
-        createdUserId = entityIsCreated(testUser1);
+        testUser3.setUserCustomerRelationship(null);
+        createdUserId = entityIsCreated(testUser3);
         testUserPartnerRelationship = constructUserPartnerRelationshipDto(createdUserId, createdPartnerId, true);
     }
 
@@ -66,5 +71,23 @@ public class UserPartnerRelationshipTests extends CommonTest{
         createEntity(USER_PARTNER_RELATIONSHIPS_PATH, testUserPartnerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_NON_EXISTING_REFERENCE);
+    }
+
+    @Test
+    public void partnerCannotBeDeletedIfHeHasRelationshipToExistingUser() {
+        UUID relationId = entityIsCreated(testUserPartnerRelationship);
+        deleteEntity(USERS_PATH, createdUserId)
+                .then()
+                .statusCode(SC_CONFLICT)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_ENTITY_REFERENCED));
+        deleteEntity(PARTNERS_PATH, createdPartnerId)
+                .then()
+                .statusCode(SC_CONFLICT)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_ENTITY_REFERENCED));
+        entityIsDeleted(USER_PARTNER_RELATIONSHIPS_PATH, relationId);
+        entityIsDeleted(USERS_PATH, createdUserId);
+        entityIsDeleted(PARTNERS_PATH, createdPartnerId);
     }
 }
