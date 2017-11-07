@@ -9,12 +9,15 @@ import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_ASSIGNMENTS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_PERMISSIONS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.commercialSubscriptionIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ALL_ENDPOINTS;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
@@ -31,6 +34,7 @@ import org.junit.Test;
 import travel.snapshot.dp.api.identity.model.RoleAssignmentDto;
 import travel.snapshot.dp.api.identity.model.RolePermissionDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.type.HttpMethod;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
@@ -111,11 +115,21 @@ public class RoleAssignmentTests extends CommonTest {
     }
 
     @Test
-    public void userCustomerRelationshipIsNeededToCreateRole() {
+    public void roleCanBeCreatedForCustomerUserWithRelationshipOnly() {
+//        Snapshot User cannot have roles (DPIM-181)
         createEntity(constructRoleAssignment(createdRoleId, DEFAULT_SNAPSHOT_USER_ID))
                 .then()
-                .statusCode(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(CC_NO_MATCHING_ENTITY);
+                .statusCode(SC_UNPROCESSABLE_ENTITY)
+                .body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS));
+//        Customer user has to have userCustomerRelationship
+        UUID userCustomerRelationshipId = getEntitiesAsType(
+                USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, filterParam("user_id==" + createdUserId))
+                .get(0).getId();
+        deleteEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationshipId);
+        createEntity(constructRoleAssignment(createdRoleId, createdUserId))
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY)
+                .body(RESPONSE_CODE, is(CC_NO_MATCHING_ENTITY));
     }
 
     @Test
@@ -140,7 +154,7 @@ public class RoleAssignmentTests extends CommonTest {
                 .statusCode(SC_CONFLICT);
     }
 
-    private RoleRelationshipDto constructTestRoleRelationship(UUID roleId){
+    private RoleRelationshipDto constructTestRoleRelationship(UUID roleId) {
         RoleRelationshipDto roleRelationshipDto = new RoleRelationshipDto();
         roleRelationshipDto.setRoleId(roleId);
         return roleRelationshipDto;
