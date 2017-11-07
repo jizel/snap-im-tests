@@ -28,17 +28,13 @@ import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.configuration.ConfigurationSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.jms.JmsSteps;
 import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
-import travel.snapshot.dp.qa.junit.helpers.ApplicationHelpers;
 import travel.snapshot.dp.qa.junit.helpers.AuthorizationHelpers;
 import travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers;
 import travel.snapshot.dp.qa.junit.helpers.CommonHelpers;
 import travel.snapshot.dp.qa.junit.helpers.ConfigurationHelpers;
 import travel.snapshot.dp.qa.junit.helpers.CustomerHelpers;
 import travel.snapshot.dp.qa.junit.helpers.KeycloakHelpers;
-import travel.snapshot.dp.qa.junit.helpers.PermissionHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PlatformOperationHelpers;
-import travel.snapshot.dp.qa.junit.helpers.PropertyHelpers;
-import travel.snapshot.dp.qa.junit.helpers.PropertySetHelpers;
 import travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers;
 import travel.snapshot.dp.qa.junit.helpers.RoleHelpers;
 import travel.snapshot.dp.qa.junit.helpers.UserHelpers;
@@ -47,6 +43,8 @@ import travel.snapshot.dp.qa.junit.utils.NonNullMapDecorator;
 import travel.snapshot.dp.qa.junit.utils.issueKeeperJiraCredentials.JiraCredentialsClient;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Map;
 
 
 /**
@@ -270,6 +268,10 @@ public abstract class CommonTest {
     protected static void responseIsEntityReferenced() {
         responseCodeIs(SC_CONFLICT);
         customCodeIs(CC_ENTITY_REFERENCED);
+    }
+
+    protected static Map<String, String> filterParam(String filterValue){
+        return Collections.singletonMap("filter", filterValue);
     }
 
     /**
