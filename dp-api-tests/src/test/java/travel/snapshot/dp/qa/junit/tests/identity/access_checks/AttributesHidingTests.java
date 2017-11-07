@@ -101,7 +101,7 @@ public class AttributesHidingTests extends CommonTest {
      * or the user/app version pair will not see any data.
      */
     private void setUserCustomerRights(UUID userId, UUID customerId) {
-        userHelpers.deleteExistingUserCustomerRelationship(userId);
+        userHelpers.deleteUserCustomerRelationshipIfExists(userId);
         entityIsCreated(constructUserCustomerRelationshipDto(
                 userId, customerId, true, true));
         entityIsCreated(constructCommercialSubscriptionDto(externalApplicationId, customerId, DEFAULT_PROPERTY_ID));
