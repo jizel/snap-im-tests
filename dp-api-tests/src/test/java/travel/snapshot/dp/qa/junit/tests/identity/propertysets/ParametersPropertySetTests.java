@@ -16,11 +16,9 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTyp
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
@@ -38,15 +36,15 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-@RunWith(JUnitParamsRunner.class)
+
 public class ParametersPropertySetTests extends CommonTest {
 
-    private static final String EXAMPLES = "src/test/resources/csv/property_sets/";
+    private static final String EXAMPLES = "/csv/property_sets/";
 
 
-    @FileParameters(EXAMPLES + "getPropertySets.csv")
-    @Test
     @Category(Categories.SlowTests.class)
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "getPropertySets.csv")
     public void getPropertySets(
         String limit,
         String cursor,
@@ -70,8 +68,8 @@ public class ParametersPropertySetTests extends CommonTest {
         headerContains("Link", linkHeader);
     }
 
-    @FileParameters(EXAMPLES + "incorrectPropertySets.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "incorrectPropertySets.csv")
     public void createIncorrectPropertySets(String sourceFile,
                                 String statusCode,
                                 String customCode) throws Exception {
@@ -80,16 +78,16 @@ public class ParametersPropertySetTests extends CommonTest {
         customCodeIs(Integer.valueOf(customCode));
     }
 
-    @FileParameters(EXAMPLES + "sendPOSTRequestWithEmptyBodyToAllPropertySetEndpoints.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "sendPOSTRequestWithEmptyBodyToAllPropertySetEndpoints.csv")
     public void sendPOSTRequestWithEmptyBodyToAllPropertySetEndpoints(String endpoint) {
         sendBlankPost(PROPERTY_SETS_PATH, "identity");
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
     }
 
-    @FileParameters(EXAMPLES + "filteringListOfPropertySets.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "filteringListOfPropertySets.csv")
     public void filteringListOfPropertySets(
         String limit,
         String cursor,
@@ -135,8 +133,8 @@ public class ParametersPropertySetTests extends CommonTest {
 
     // PropertySets - Properties
 
-    @FileParameters(EXAMPLES + "filteringListOfPropertiesForPropertySet.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "filteringListOfPropertiesForPropertySet.csv")
     public void filteringListOfPropertiesForPropertySet(
         String limit,
         String cursor,
@@ -160,8 +158,8 @@ public class ParametersPropertySetTests extends CommonTest {
 
     // PropertySet - Users
 
-    @FileParameters(EXAMPLES + "filteringListOfUsersForPropertySet.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "filteringListOfUsersForPropertySet.csv")
     public void filteringListOfUsersForPropertySet(
         String limit,
         String cursor,

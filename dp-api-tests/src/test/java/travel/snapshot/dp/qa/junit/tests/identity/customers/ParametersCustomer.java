@@ -1,19 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
-import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-
-import java.util.UUID;
-
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.Matchers.hasItem;
@@ -28,17 +15,23 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_MESSAGE
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 
+import org.junit.experimental.categories.Category;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.qa.junit.tests.Categories;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+
+import java.util.UUID;
+
 /**
- * Example of JUnit tests using Parameters. It can be used for multiline data driven testing where every line of data
- * is reported as separate test but it cannot be used with Serenity Runner. Also it needs data set per test.
+ * Example of JUnit tests using Parameters. It can be used for multiline data driven testing where every line of data is
+ * reported as separate test but it cannot be used with Serenity Runner. Also it needs data set per test.
  */
-
-
-@RunWith(JUnitParamsRunner.class)
 @Category(Categories.SlowTests.class)
 public class ParametersCustomer extends CommonTest {
 
-    private static final String CUSTOMER_EXAMPLES = "src/test/resources/csv/customers/";
+    private static final String CUSTOMER_EXAMPLES = "/csv/customers/";
     private static final String COMM_SUBSCRIPTIONS_ERROR_EXAMPLES = CUSTOMER_EXAMPLES + "getCustomerCommSubscriptionErrorCodesTestExamples.csv";
     private static final String CORRECT_REGION_EXAMPLES = CUSTOMER_EXAMPLES + "validateCustomerRegionsBelongToCorrectCountry.csv";
     private static final String INVALID_REGIONS_EXAMPLES = CUSTOMER_EXAMPLES + "invalidRegions.csv";
@@ -46,14 +39,8 @@ public class ParametersCustomer extends CommonTest {
     private static final String VALID_VAT_ID_EXAMPLES = CUSTOMER_EXAMPLES + "validateValidVatId.csv";
 
 
-    @Before
-    public void setUp() {
-        super.setUp();
-    }
-
-    //    TODO: This test should be rather defined in CustomerCommercialSubscriptionTests class but since it requires JUnit params
-    @FileParameters(COMM_SUBSCRIPTIONS_ERROR_EXAMPLES)
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = COMM_SUBSCRIPTIONS_ERROR_EXAMPLES)
     public void checkErrorCodesForGettingListOfCustomerCommercialSubscriptionsUsingParams(String limit,
                                                                                           String cursor,
                                                                                           String filter,
@@ -68,8 +55,8 @@ public class ParametersCustomer extends CommonTest {
         customCodeIs(Integer.valueOf(customCode));
     }
 
-    @FileParameters(CORRECT_REGION_EXAMPLES)
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = CORRECT_REGION_EXAMPLES)
     public void validateCustomerRegionsBelongToCorrectCountry(String country,
                                                               String region,
                                                               String vatId) {
@@ -82,8 +69,8 @@ public class ParametersCustomer extends CommonTest {
                 .body("vat_id", is(vatId));
     }
 
-    @FileParameters(INVALID_VAT_ID_EXAMPLES)
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = INVALID_VAT_ID_EXAMPLES)
     public void validateCustomerHasInvalidVatId(String country, String vatId) {
         AddressDto address = createRandomAddress(5, 5, 6, country, null);
         testCustomer1.setAddress(address);
@@ -93,8 +80,8 @@ public class ParametersCustomer extends CommonTest {
                 .statusCode(SC_UNPROCESSABLE_ENTITY);
     }
 
-    @FileParameters(VALID_VAT_ID_EXAMPLES)
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = VALID_VAT_ID_EXAMPLES)
     public void validateCustomerHasValidVatId(String country, String vatId) throws Throwable {
         AddressDto address = createRandomAddress(5, 5, 6, country, null);
         testCustomer1.setAddress(address);
@@ -104,8 +91,8 @@ public class ParametersCustomer extends CommonTest {
                 .statusCode(SC_CREATED);
     }
 
-    @FileParameters(INVALID_REGIONS_EXAMPLES)
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = INVALID_REGIONS_EXAMPLES)
     public void checkErrorCodesForRegions(String country, String region) throws Exception {
         AddressDto address = createRandomAddress(10, 10, 5, country, region);
         testCustomer1.setAddress(address);
@@ -114,7 +101,7 @@ public class ParametersCustomer extends CommonTest {
                 .statusCode(SC_UNPROCESSABLE_ENTITY)
                 .assertThat()
                 .body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS))
-                .body(RESPONSE_MESSAGE, is( "Semantic validation errors in the request body."))
+                .body(RESPONSE_MESSAGE, is("Semantic validation errors in the request body."))
                 .body(RESPONSE_DETAILS, hasItem("The 'region' attribute is invalid for specified country"));
     }
 }

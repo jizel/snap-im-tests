@@ -29,11 +29,9 @@ import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.construct
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
-import junitparams.FileParameters;
-import junitparams.JUnitParamsRunner;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
@@ -53,13 +51,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@RunWith(JUnitParamsRunner.class)
+@Category(Categories.SlowTests.class)
 public class ParametersPropertiesTests extends CommonTest {
 
-    private static final String EXAMPLES = "src/test/resources/csv/properties/";
+    private static final String EXAMPLES = "/csv/properties/";
 
-    @FileParameters(EXAMPLES + "correctPropertyCodeIsReturnedWhenNoneSent.csv")
-    @Test
+
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "correctPropertyCodeIsReturnedWhenNoneSent.csv")
     public void correctPropertyCodeIsReturnedWhenNoneSent(String name) throws IOException {
         testProperty1.setName(name);
         testProperty1.setId(null);
@@ -71,8 +70,8 @@ public class ParametersPropertiesTests extends CommonTest {
         assertTrue("Property code contains invalid characters", propertyCode.matches("[A-Z0-9]+"));
     }
 
-    @FileParameters(EXAMPLES + "correctPropertyCodeIsReturnedAccordingToCustomersAddress.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "correctPropertyCodeIsReturnedAccordingToCustomersAddress.csv")
     public void correctPropertyCodeIsReturnedAccordingToCustomersAddress(
             String name,
             String line1,
@@ -97,8 +96,8 @@ public class ParametersPropertiesTests extends CommonTest {
         assertThat("Passed and returned property code mismatch", resultingPropertyCode, is(propertyCode));
     }
 
-    @FileParameters(EXAMPLES + "propertyCodeCanBeFilledManually.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "propertyCodeCanBeFilledManually.csv")
     public void propertyCodeCanBeFilledManually(String code) throws IOException {
         testProperty1.setId(null);
         testProperty1.setCode(code);
@@ -107,8 +106,8 @@ public class ParametersPropertiesTests extends CommonTest {
         assertThat("Passed and returned property code mismatch", propertyCode, is(code));
     }
 
-    @FileParameters(EXAMPLES + "filteringListOfCustomerProperties.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "filteringListOfCustomerProperties.csv")
     public void filteringListOfCustomerProperties(
             String limit,
             String cursor,
@@ -127,15 +126,16 @@ public class ParametersPropertiesTests extends CommonTest {
                             LocalDate.parse(VALID_TO_VALUE));
             entityIsCreated(relation);
         });
-        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, String.format(filter, customerIds.get(0).toString()), null, null, null);
+        filter = (filter==null)? null : String.format(filter, customerIds.get(0).toString());
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, null, null, null);
         getEntities(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, params);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(CustomerPropertyRelationshipDto.class, Integer.valueOf(returned));
         headerIs("X-Total-Count", total);
     }
 
-    @FileParameters(EXAMPLES + "validateThatPropertyRegionsBelongToTheCorrectCountry.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "validateThatPropertyRegionsBelongToTheCorrectCountry.csv")
     public void validateThatPropertyRegionsBelongToTheCorrectCountry(String country, String region) {
         AddressDto address = testProperty1.getAddress();
         address.setCountryCode(country);
@@ -145,8 +145,8 @@ public class ParametersPropertiesTests extends CommonTest {
         bodyContainsEntityWith("address.region", region);
     }
 
-    @FileParameters(EXAMPLES + "checkingErrorCodesForRegions.csv")
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "checkingErrorCodesForRegions.csv")
     public void checkingErrorCodesForRegions(String country, String region) {
         AddressDto address = testProperty1.getAddress();
         address.setCountryCode(country);
@@ -158,9 +158,8 @@ public class ParametersPropertiesTests extends CommonTest {
                 .body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS));
     }
 
-    @FileParameters(EXAMPLES + "gettingListOfProperties.csv")
-    @Test
-    @Category(Categories.SlowTests.class)
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "gettingListOfProperties.csv")
     public void gettingListOfProperties(
             String limit,
             String cursor,
@@ -192,9 +191,8 @@ public class ParametersPropertiesTests extends CommonTest {
 
     }
 
-    @FileParameters(EXAMPLES + "gettingListOfPropertiesPropertySets.csv")
-    @Test
-    @Category(Categories.SlowTests.class)
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "gettingListOfPropertiesPropertySets.csv")
     public void gettingListOfPropertiesPropertySets(String limit, String cursor, String returned, String total) {
         range(0, 30).forEachOrdered(n -> {
             testPropertySet1.setId(null);
@@ -209,9 +207,8 @@ public class ParametersPropertiesTests extends CommonTest {
         headerIs("X-Total-Count", total);
     }
 
-    @FileParameters(EXAMPLES + "filteringListOfPropertiesPropertySets.csv")
-    @Category(Categories.SlowTests.class)
-    @Test
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "filteringListOfPropertiesPropertySets.csv")
     public void filteringListOfPropertiesPropertySets(
             String limit,
             String cursor,
@@ -232,9 +229,8 @@ public class ParametersPropertiesTests extends CommonTest {
         headerIs("X-Total-Count", total);
     }
 
-    @FileParameters(EXAMPLES + "filteringListOfUsersForProperty.csv")
-    @Test
-    @Category(Categories.SlowTests.class)
+    @ParameterizedTest
+    @CsvFileSource(resources = EXAMPLES + "filteringListOfUsersForProperty.csv")
     public void filteringListOfUsersForProperty(
             String limit,
             String cursor,
