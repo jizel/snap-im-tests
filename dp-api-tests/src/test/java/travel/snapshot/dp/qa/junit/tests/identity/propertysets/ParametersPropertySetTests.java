@@ -64,7 +64,7 @@ public class ParametersPropertySetTests extends CommonTest {
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, null, null, null, null);
         getEntities(PROPERTY_SETS_PATH, params);
         numberOfEntitiesInResponse(PropertySetDto.class, Integer.parseInt(returned));
-        headerIs("X-Total-Count", total);
+        headerIs(TOTAL_COUNT_HEADER, total);
         headerContains("Link", linkHeader);
     }
 
@@ -128,7 +128,7 @@ public class ParametersPropertySetTests extends CommonTest {
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null);
         getEntities(PROPERTY_SETS_PATH, params);
         numberOfEntitiesInResponse(PropertySetDto.class, Integer.valueOf(returned));
-        headerIs("X-Total-Count", total);
+        headerIs(TOTAL_COUNT_HEADER, total);
     }
 
     // PropertySets - Properties
