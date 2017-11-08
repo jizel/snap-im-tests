@@ -97,6 +97,7 @@ public abstract class CommonTest {
     public static final int CC_CIRCULAR_DEPENDENCY = 40911;
     public static final int CC_ENTITY_REFERENCED = 40915;
     public static final int CC_BAD_PARAMS = 40002;
+    public static final int CC_MISSING_PARAMS = 40003;
     public static final int CC_SEMANTIC_ERRORS = 42201;
     public static final int CC_NON_EXISTING_REFERENCE = 42202;
     public static final int CC_NO_MATCHING_ENTITY = 42203;
@@ -270,7 +271,7 @@ public abstract class CommonTest {
         customCodeIs(CC_ENTITY_REFERENCED);
     }
 
-    protected static Map<String, String> filterParam(String filterValue){
+    public static Map<String, String> filterParam(String filterValue){
         return Collections.singletonMap("filter", filterValue);
     }
 

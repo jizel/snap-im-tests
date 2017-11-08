@@ -13,12 +13,12 @@ import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
@@ -53,25 +53,6 @@ public class CustomersCRUDTests extends CommonTest {
     }
 
     @Test
-    public void checkMandatoryAttributesCreateCustomer() throws Exception {
-        testCustomer1.setName(null);
-        createEntity(testCustomer1);
-        responseIsUnprocessableEntity();
-
-        testCustomer2.setTimezone(null);
-        createEntity(testCustomer2);
-        responseIsUnprocessableEntity();
-
-        testCustomer3.setEmail(null);
-        createEntity(testCustomer3);
-        responseIsUnprocessableEntity();
-
-        testCustomer4.setType(null);
-        createEntity(testCustomer4);
-        responseIsUnprocessableEntity();
-    }
-
-    @Test
     public void customerIdMustBeUnique() throws Exception {
         UUID createdCustomerId = entityIsCreated(testCustomer1);
         testCustomer1.setId(createdCustomerId);
@@ -93,16 +74,10 @@ public class CustomersCRUDTests extends CommonTest {
         responseCodeIs(SC_CONFLICT);
     }
 
-    @Test
-    public void createCustomerEmptyBody() throws Exception {
-        sendBlankPost(CUSTOMERS_PATH, "identity");
-        responseIsUnprocessableEntity();
-    }
-
     @Jira("DPIM-133")
     @Test
     public void updatePropertyCustomerCountry() {
-        UUID customerId = commonHelpers.entityIsCreated(testCustomer1);
+        UUID customerId = entityIsCreated(testCustomer1);
         AddressDto address = new AddressDto();
         address.setCountryCode("CZ");
         address.setLine1("CoreQA");
@@ -111,7 +86,7 @@ public class CustomersCRUDTests extends CommonTest {
         CustomerUpdateDto update = new CustomerUpdateDto();
         update.setVatId("CZ123456789");
         update.setAddress(address);
-        commonHelpers.entityIsUpdated(CUSTOMERS_PATH, customerId, update);
+        entityIsUpdated(CUSTOMERS_PATH, customerId, update);
     }
 
     @Test

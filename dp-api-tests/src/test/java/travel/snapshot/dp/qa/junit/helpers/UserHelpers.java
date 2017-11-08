@@ -4,6 +4,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
+import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.filterParam;
 
 import com.jayway.restassured.response.Response;
 import lombok.extern.java.Log;
@@ -36,11 +37,10 @@ public class UserHelpers extends UsersSteps {
         setSessionResponse(response);
     }
 
-    public void deleteExistingUserCustomerRelationship(UUID userId) {
-        UUID existingRelationshipId = getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class,
-                buildQueryParamMapForPaging(null, null, "user_id==" + userId.toString(), null, null, null))
-                .get(0).getId();
-        entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, existingRelationshipId);
+    public void deleteUserCustomerRelationshipIfExists(UUID userId) {
+        getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, filterParam("user_id==" + userId))
+                .stream().findFirst()
+                .ifPresent(e -> entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, e.getId()));
     }
 
 }
