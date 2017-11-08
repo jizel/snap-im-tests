@@ -6,9 +6,9 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.EFFECTI
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.constructCommercialSubscriptionDto;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import org.junit.Before;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
@@ -50,14 +50,15 @@ public abstract class CommonRestrictionTest extends CommonTest {
 
     protected ApplicationDto restrictedApp;
     protected ApplicationVersionDto createdAppVersion;
+    protected UUID createdUserWithRelationshipsId;
 
 
     @Before
     public void setUp() {
         super.setUp();
         restrictedApp = entityIsCreatedAs(ApplicationDto.class, testApplication3);
-        entityIsCreated(relationshipsHelpers.constructUserPropertyRelationshipDto(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_PROPERTY_ID, true));
-        entityIsCreated(relationshipsHelpers.constructUserCustomerRelationshipDto(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true));
+        createdUserWithRelationshipsId = entityIsCreated(testUser3);
+        entityIsCreated(constructUserPropertyRelationshipDto(createdUserWithRelationshipsId, DEFAULT_PROPERTY_ID, true));
         entityIsCreated(constructCommercialSubscriptionDto(restrictedApp.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID));
 
         createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());
