@@ -45,13 +45,6 @@ public class PartnerGetTests extends CommonTest{
             testPartner1.setId(null);
             entityIsCreated(testPartner1);
         });
-        // The following is needed to test partner filtering/sorting by address.country DPIM-116
-        AddressDto address = createRandomAddress(5, 5, 6, "CZ", null);
-        testPartner1.setVatId("CZ123456789");
-        testPartner1.setName("partner_52");
-        testPartner1.setEmail("partner-52@snapshot.travel");
-        testPartner1.setWebsite("http://www.partner52.snapshot.travel");
-        testPartner1.setId(null);
     }
 
     @Override
