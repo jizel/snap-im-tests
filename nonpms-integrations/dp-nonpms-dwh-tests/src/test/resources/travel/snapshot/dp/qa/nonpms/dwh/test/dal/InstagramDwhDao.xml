@@ -3,7 +3,7 @@
 <mapper namespace="travel.snapshot.dp.qa.nonpms.dwh.test.dal.InstagramDwhDao">
 
     <select id="getDataGaps" resultType="Map">
-        SELECT pd.property_id, dd.date_id FROM
+        SELECT pd.property_id, p.property_key, dd.date_id FROM
             (
                 SELECT
                     property_id, min(date_id) min_date_id
@@ -17,6 +17,9 @@
         LEFT JOIN
             Fact_instagram_daily ffc
             ON pd.property_id = ffc.property_id AND dd.date_id = ffc.date_id
+        JOIN
+            Dim_property p
+            ON pd.property_id = p.property_id
         WHERE
             ffc.date_id IS NULL
         ORDER BY property_id, date_id
