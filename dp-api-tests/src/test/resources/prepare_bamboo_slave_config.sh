@@ -31,4 +31,8 @@ keyCloakPassword=${KEYCLOAK_PASSWORD}
 testProperty.id=${PROPERTY_ID}
 testCustomer.id=${CUSTOMER_ID}
 testLocation.id=${LOCATION_ID}
+client.id=${CLIENT_ID}
+client.secret=${CLIENT_SECRET}
+user.name=${API_USER_NAME}
+user.password=${API_USER_PASSWORD}
 EOF
