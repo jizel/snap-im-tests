@@ -35,4 +35,5 @@ client.id=${CLIENT_ID}
 client.secret=${CLIENT_SECRET}
 user.name=${API_USER_NAME}
 user.password=${API_USER_PASSWORD}
+version=/v1
 EOF
