@@ -3,8 +3,7 @@ package travel.snapshot.dp.qa.junit.tests.nonpms;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
-import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
-
+import travel.snapshot.dp.qa.junit.tests.common.CommonProductionTest;
 
 import java.time.LocalDate;
 import static java.util.Collections.singletonMap;
@@ -26,7 +25,7 @@ import static travel.snapshot.dp.qa.junit.helpers.AnalyticsHelpers.SOCIAL_MEDIA_
 import static travel.snapshot.dp.qa.junit.helpers.AnalyticsHelpers.WEB_PERFORMANCE_ENDPOINTS;
 import static travel.snapshot.dp.qa.junit.helpers.AnalyticsHelpers.propertyId;
 
-public class AnalyticsApiGetOnlyTests extends CommonSmokeTest {
+public class AnalyticsApiGetOnlyTests extends CommonProductionTest {
 
     Map RATE_SHOPPER_PARAMETERS;
     Map SINCE_UNTIL;
