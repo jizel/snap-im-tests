@@ -27,8 +27,7 @@ public class UserSmokeTests extends CommonSmokeTest {
         // create
         UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         userCustomerRelationId = relationshipsHelpers
-               .getUserCustomerRelationsForUserWithAuth(userId)
-               .get(0)
+               .getDefaultUserCustomerRelationForUserWithAuth(userId)
                .getId();
         // request
         authorizationHelpers.getEntity(USERS_PATH, userId);

@@ -27,7 +27,7 @@ public class UserHelpers extends UsersSteps {
     public UUID userIsCreatedWithAuth(UserCreateDto userObject) {
         UUID userId = authorizationHelpers.entityIsCreated(userObject);
         // now we need to mark default user_customer relationship for deletion
-        UserCustomerRelationshipDto relation = relationshipHelpers.getUserCustomerRelationsForUserWithAuth(userId).get(0);
+        UserCustomerRelationshipDto relation = relationshipHelpers.getDefaultUserCustomerRelationForUserWithAuth(userId);
         authorizationHelpers.updateRegistryOfDeletables(USER_CUSTOMER_RELATIONSHIPS_PATH, relation.getId());
         return userId;
     }
