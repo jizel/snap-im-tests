@@ -53,6 +53,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.CC_ENTITY_NOT_FOUND;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.transformNull;
+import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping.endpointCreateDtoMap;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping.endpointDtoMap;
 import static travel.snapshot.dp.qa.junit.utils.EntityEndpointMapping.entityCreateDtoEndpointMap;
 import static travel.snapshot.dp.qa.junit.utils.RestAssuredConfig.setupRequestDefaults;
@@ -469,4 +470,8 @@ public class CommonHelpers {
         return getRequestDataFromFile(inputStream);
     }
 
+    public static <DTO> DTO findEntityByName(String basePath, String name) {
+        Map<String, String> params = buildQueryParamMapForPaging(null, null, String.format("name==%s", name), null, null, null);
+        return (DTO) getEntitiesAsType(basePath, endpointDtoMap.get(basePath), params).get(0);
+    }
 }

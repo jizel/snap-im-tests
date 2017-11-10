@@ -1,0 +1,8 @@
+5,0,5,52,name=='role_*'
+5,0,5,52,name=='role_*'
+5,2,5,52,name=='role_*'
+5,2,5,52,name=='role_*'
+5,4,5,52,name=='role_*'
+/null,/null,1,1,name=='role_6'
+/null,/null,2,2,description=='description_*'
+5,0,2,2,is_initial==true

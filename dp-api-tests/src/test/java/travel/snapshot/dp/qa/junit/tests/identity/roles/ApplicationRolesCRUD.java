@@ -1,25 +1,34 @@
 package travel.snapshot.dp.qa.junit.tests.identity.roles;
 
+import static com.sun.javafx.util.Utils.contains;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonMap;
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_PRECONDITION_FAILED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLES_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtag;
 
 import org.junit.Test;
 import qa.tools.ikeeper.annotation.Jira;
@@ -47,16 +56,46 @@ public class ApplicationRolesCRUD extends CommonTest {
 
         updateAndCheckRole(createdRole);
 
-        deleteAndCheckRole(createdRole);
+        entityIsDeleted(ROLES_PATH, createdRole.getId());
     }
 
     @Test
     public void applicationRoleCrudErrors() {
-        createEntity(ROLES_PATH, singletonMap("name", "invalid role")).then().statusCode(SC_UNPROCESSABLE_ENTITY);
-
+        testRole1.setApplicationId(null);
+        createEntity(ROLES_PATH, testRole1)
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY);
+        testRole1.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
+        testRole1.setName(null);
+        createEntity(ROLES_PATH, testRole1)
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY);
+        testRole1.setName("Some name");
         createdRole = entityIsCreatedAs(RoleDto.class, testRole1);
+        RoleUpdateDto updateDto = new RoleUpdateDto();
+        updateDto.setDescription("New desc");
+        updateEntityWithEtag(ROLES_PATH, createdRole.getId(), updateDto, DEFAULT_SNAPSHOT_ETAG)
+                .then()
+                .statusCode(SC_PRECONDITION_FAILED)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_INVALID_ETAG));
         updateEntity(ROLES_PATH, createdRole.getId(), singletonMap("unrecognizable_field", "anyvalue"))
                 .then().statusCode(SC_UNPROCESSABLE_ENTITY);
+    }
+
+    @Jira({"DP-1661", "DPIM-198"})
+    @Test
+    public void roleNameIsUniqueWithinApplication() {
+        entityIsCreated(testRole1);
+        createEntity(testRole1)
+                .then()
+                .statusCode(SC_CONFLICT)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_CONFLICT_VALUES))
+                .body("message", is("The tuple (application_id, name) must be unique."));
+        UUID applicationId = entityIsCreated(testApplication1);
+        testRole1.setApplicationId(applicationId);
+        entityIsCreated(testRole1);
     }
 
     @Test
@@ -117,10 +156,6 @@ public class ApplicationRolesCRUD extends CommonTest {
         assertThat(updatedRole.getIsActive(), is(false));
     }
 
-    private void deleteAndCheckRole(RoleDto role) {
-        deleteEntity(ROLES_PATH, role.getId()).then().statusCode(SC_NO_CONTENT);
-        getEntity(ROLES_PATH, role.getId()).then().statusCode(SC_NOT_FOUND);
-    }
 
     private void booleanFiltering(){
         Map<String, String> params = buildQueryParamMapForPaging("5", null, "is_initial==false", "name", null, null);
