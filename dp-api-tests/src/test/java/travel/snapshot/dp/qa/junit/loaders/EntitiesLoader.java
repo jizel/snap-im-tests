@@ -32,6 +32,7 @@ public class EntitiesLoader {
     private NonNullMapDecorator<String, CustomerCreateDto> customerDtos;
     private NonNullMapDecorator<String, UserCreateDto> userDtos;
     private NonNullMapDecorator<String, UserCreateDto> snapshotUserDtos;
+    private NonNullMapDecorator<String, UserCreateDto> partnerUserDtos;
     private NonNullMapDecorator<String, PropertyCreateDto> propertyDtos;
     private NonNullMapDecorator<String, PropertySetCreateDto> propertySetDtos;
     private NonNullMapDecorator<String, RoleCreateDto> roleDtos;
@@ -47,6 +48,7 @@ public class EntitiesLoader {
         loadCustomers();
         loadUsers();
         loadSnapshotUsers();
+        loadPartnerUsers();
         loadProperties();
         loadPropertySets();
         loadRoles();
@@ -80,6 +82,11 @@ public class EntitiesLoader {
     private void loadSnapshotUsers() {
         Map<String, Object> yamlCustomers = loadEntities(String.format(YAML_DATA_PATH, "entities/users.yaml"));
         snapshotUserDtos = NonNullMapDecorator.of((Map<String, UserCreateDto>) yamlCustomers.get("snapshotUsers"));
+    }
+
+    private void loadPartnerUsers() {
+        Map<String, Object> yamlCustomers = loadEntities(String.format(YAML_DATA_PATH, "entities/users.yaml"));
+        partnerUserDtos = NonNullMapDecorator.of((Map<String, UserCreateDto>) yamlCustomers.get("partnerUsers"));
     }
 
     private void loadProperties() {

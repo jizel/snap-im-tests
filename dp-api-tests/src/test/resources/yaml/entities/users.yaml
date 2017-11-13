@@ -27,10 +27,9 @@ users:
   user3: !user {
     <<: *BASIC_USER,
     id: 0b000000-0000-4444-8888-000000000003,
-    type: PARTNER,
-    username: partnerUser,
-    firstName: Partner,
-    lastName: User,
+    username: gorchev,
+    firstName: Dmitry,
+    lastName: Gorchev,
     email: dpcoreqa3@dpcoreqa-snapshot.com
 
 }

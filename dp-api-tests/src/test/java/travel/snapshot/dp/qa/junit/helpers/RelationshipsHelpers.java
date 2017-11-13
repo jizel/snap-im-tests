@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
@@ -49,9 +50,14 @@ public class RelationshipsHelpers extends BasicSteps {
 
     //    User Customer Relationships
 
-    public List<UserCustomerRelationshipDto> getUserCustomerRelationsForUserWithAuth(UUID userId) {
+    public UserCustomerRelationshipDto getDefaultUserCustomerRelationForUserWithAuth(UUID userId) {
         Map<String, String> queryParams = buildQueryParamMapForPaging(null, null, String.format("user_id==%s", userId), null, null, null);
-        return authorizationHelpers.getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, queryParams);
+        return authorizationHelpers.getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, queryParams).get(0);
+    }
+
+    public static UserCustomerRelationshipDto getDefaultUserCustomerRelationForUser(UUID userId) {
+        Map<String, String> queryParams = buildQueryParamMapForPaging(null, null, String.format("user_id==%s", userId), null, null, null);
+        return getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, queryParams).get(0);
     }
 
     //    Help methods for relationship objects construction.

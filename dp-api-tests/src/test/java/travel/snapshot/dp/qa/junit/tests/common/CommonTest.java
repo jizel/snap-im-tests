@@ -116,6 +116,7 @@ public abstract class CommonTest {
     protected static UserCreateDto testUser2;
     protected static UserCreateDto testUser3;
     protected static UserCreateDto testSnapshotUser1;
+    protected static UserCreateDto testPartnerUser1;
     protected static CustomerCreateDto testCustomer1;
     protected static CustomerCreateDto testCustomer2;
     protected static CustomerCreateDto testCustomer3;
@@ -183,6 +184,7 @@ public abstract class CommonTest {
         testUser2 = userDtos.get("user2");
         testUser3 = userDtos.get("user3");
         testSnapshotUser1 = entitiesLoader.getSnapshotUserDtos().get("snapshotUser1");
+        testPartnerUser1 = entitiesLoader.getPartnerUserDtos().get("partnerUser1");
         testCustomer1 = customerDtos.get("customer1");
         testCustomer2 = customerDtos.get("customer2");
         testCustomer3 = customerDtos.get("customer3");
