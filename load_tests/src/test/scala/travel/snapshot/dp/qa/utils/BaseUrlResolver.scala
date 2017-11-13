@@ -57,7 +57,7 @@ trait SystemPropertiesGatherer {
   )
 
   val testEnvironmentProperties = Tuple5[String, String, String, String, LoadTestContext.LoadTestContextValue](
-    System.getProperty("protocol", "https"),
+    System.getProperty("protocol", "http"),
     System.getProperty("host", "europewest-sso-test1.snapshot.technology"),
     System.getProperty("port", "8080"),
     System.getProperty("version", "v1"),
@@ -141,7 +141,7 @@ object LocalUrlResolver extends SystemPropertiesGatherer {
 
   def apply(): String = {
     val (protocol, host, port, scenario) = localEnvironmentProperties
-    s"$protocol://$host:$port/${scenario.localContext}"
+    s"$protocol://$host:$port/api/${scenario.localContext}"
   }
 }
 
@@ -167,7 +167,7 @@ object TestingUrlResolver extends SystemPropertiesGatherer {
   }
 
   def resolveOauthUrl(): String = {
-    s"$protocol://$host/oauth/token/"
+    s"$protocol://$host/oauth/token"
   }
 }
 
