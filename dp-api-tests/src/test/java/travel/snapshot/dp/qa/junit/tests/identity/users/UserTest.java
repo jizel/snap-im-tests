@@ -7,8 +7,11 @@ import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -16,7 +19,9 @@ import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.GUEST;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_MESSAGE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
@@ -25,11 +30,16 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupUserRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
@@ -139,6 +149,31 @@ public class UserTest extends CommonTest {
                 () -> assertFalse(relationship.getIsPrimary()),
                 () -> assertTrue(relationship.getIsActive())
         );
+    }
+
+
+    @Test
+    @Jira("DPIM-185")
+    public void dontAllowAssociationsOfSnapshotUsersWithAnyEntity() {
+        String message = "SNAPSHOT user cannot be used.";
+        createEntity(constructUserCustomerRelationshipDto(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true))
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY).assertThat().body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS))
+                .body("details", hasItem(message));
+        createEntity(constructUserPropertyRelationshipDto(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_PROPERTY_ID, true))
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY).assertThat().body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS))
+                .body("details", hasItem(message));
+        UUID psId = entityIsCreated(testPropertySet1);
+        createEntity(constructUserPropertySetRelationshipDto(DEFAULT_SNAPSHOT_USER_ID, psId, true))
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY).assertThat().body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS))
+                .body("details", hasItem(message));
+        UUID groupID = entityIsCreated(testUserGroup1);
+        createEntity(constructUserGroupUserRelationship(groupID,  DEFAULT_SNAPSHOT_USER_ID, true))
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY).assertThat().body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS))
+                .body("details", hasItem(message));
     }
 
     private UserUpdateDto getTestUpdate() {
