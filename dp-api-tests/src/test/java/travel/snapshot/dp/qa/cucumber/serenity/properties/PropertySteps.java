@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
@@ -24,6 +25,7 @@ import net.thucydides.core.annotations.Step;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
@@ -312,7 +314,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void deletePropertyCustomerRelationshipByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, UUID customerId) throws Throwable {
-        CustomerPropertyRelationshipDto[] propertyCustomerRelations = getPropertyCustomerRelationships(customerId, propertyId);
+        CustomerPropertyRelationshipPartialDto[] propertyCustomerRelations = getPropertyCustomerRelationships(customerId, propertyId);
         assertThat(propertyCustomerRelations, is(notNullValue()));
         deleteEntityWithEtagByUserForApp(userId, applicationVersionId, stream(propertyCustomerRelations).findFirst().orElse(null).getId());
     }
@@ -358,19 +360,19 @@ public class PropertySteps extends BasicSteps {
                 CUSTOMERS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
     }
 
-    public CustomerPropertyRelationshipDto[] getPropertyCustomerRelationships(UUID customerId, UUID propertyId) throws Throwable {
+    public CustomerPropertyRelationshipPartialDto[] getPropertyCustomerRelationships(UUID customerId, UUID propertyId) throws Throwable {
         return getPropertyCustomerRelationshipsByUser(DEFAULT_SNAPSHOT_USER_ID, customerId, propertyId);
     }
 
-    public CustomerPropertyRelationshipDto[] getPropertyCustomerRelationshipsByUser(UUID userId, UUID customerId, UUID propertyId) throws Throwable {
+    public CustomerPropertyRelationshipPartialDto[] getPropertyCustomerRelationshipsByUser(UUID userId, UUID customerId, UUID propertyId) throws Throwable {
         return getPropertyCustomerRelationshipsByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, customerId, propertyId);
     }
 
-    public CustomerPropertyRelationshipDto[] getPropertyCustomerRelationshipsByUserForApp(UUID userId, UUID appVersionId, UUID customerId, UUID propertyId) throws Throwable {
+    public CustomerPropertyRelationshipPartialDto[] getPropertyCustomerRelationshipsByUserForApp(UUID userId, UUID appVersionId, UUID customerId, UUID propertyId) throws Throwable {
 
-        Map<String, String> queryParams = buildQueryParamMapForPaging(null, null, String.format("customer_id==%s&property_id==%s", customerId, propertyId), null, null, null);
-        return getEntitiesByUserForApp(userId, appVersionId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, null, null, null, null, null,  queryParams)
-                .as(CustomerPropertyRelationshipDto[].class);
+        Map<String, String> queryParams = buildQueryParamMapForPaging(null, null, String.format("customer_id==%s", customerId), null, null, null);
+        return getSecondLevelEntitiesByUserForApp(userId, appVersionId, propertyId, CUSTOMERS_RESOURCE, null, null, null, null, null, queryParams)
+                .as(CustomerPropertyRelationshipPartialDto[].class);
     }
 
 
