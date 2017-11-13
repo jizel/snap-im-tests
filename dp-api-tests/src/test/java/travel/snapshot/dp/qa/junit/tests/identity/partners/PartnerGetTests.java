@@ -1,26 +1,26 @@
 package travel.snapshot.dp.qa.junit.tests.identity.partners;
 
-import org.junit.experimental.categories.Category;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
-import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.PartnerDto;
-import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
-import travel.snapshot.dp.qa.junit.tests.Categories;
-import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-
 import static java.util.stream.IntStream.range;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
-import static travel.snapshot.dp.qa.cucumber.helpers.AddressUtils.createRandomAddress;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
+
+import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import travel.snapshot.dp.api.identity.model.PartnerDto;
+import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
+import travel.snapshot.dp.qa.junit.tests.Categories;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+import travel.snapshot.dp.qa.junit.utils.QueryParams;
+
+import java.util.Map;
 
 /**
  * GET, filtering, sorting etc. tests for Partner entity. 50+ partners created for testing (pagination)
@@ -56,7 +56,11 @@ public class PartnerGetTests extends CommonTest{
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "gettingListOfPartners.csv")
     public void gettingListOfPartners(String limit, String cursor, Integer returned, Integer total, String linkHeader) {
-        getEntities(PARTNERS_PATH, buildQueryParamMapForPaging(limit, cursor, null, null, null, null));
+        Map<String, String> params = QueryParams.builder()
+                .limit(limit)
+                .cursor(cursor)
+                .build();
+        getEntities(PARTNERS_PATH, params);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(PartnerDto.class, returned);
         headerIs(TOTAL_COUNT_HEADER, String.valueOf(total));
@@ -68,7 +72,12 @@ public class PartnerGetTests extends CommonTest{
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "filteringListOfPartners.csv")
     public void filteringListOfPartners(String limit, String cursor, Integer returned, Integer total, String filter) {
-        getEntities(PARTNERS_PATH, buildQueryParamMapForPaging(limit, cursor, filter, null, null, null));
+        Map<String, String> params = QueryParams.builder()
+                .limit(limit)
+                .cursor(cursor)
+                .filter(filter)
+                .build();
+        getEntities(PARTNERS_PATH, params);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(PartnerDto.class, returned);
         headerIs(TOTAL_COUNT_HEADER, String.valueOf(total));

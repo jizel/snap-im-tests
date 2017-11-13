@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
+import static java.lang.String.format;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 
@@ -27,12 +28,10 @@ import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.api.type.HttpMethod;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
-import travel.snapshot.dp.qa.junit.tests.identity.roles.RoleAssignmentTests;
+import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -51,12 +50,12 @@ public class RelationshipsHelpers extends BasicSteps {
     //    User Customer Relationships
 
     public UserCustomerRelationshipDto getDefaultUserCustomerRelationForUserWithAuth(UUID userId) {
-        Map<String, String> queryParams = buildQueryParamMapForPaging(null, null, String.format("user_id==%s", userId), null, null, null);
+        Map<String, String> queryParams = QueryParams.builder().filter(format("user_id==%s", userId)).build();
         return authorizationHelpers.getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, queryParams).get(0);
     }
 
     public static UserCustomerRelationshipDto getDefaultUserCustomerRelationForUser(UUID userId) {
-        Map<String, String> queryParams = buildQueryParamMapForPaging(null, null, String.format("user_id==%s", userId), null, null, null);
+        Map<String, String> queryParams = QueryParams.builder().filter(format("user_id==%s", userId)).build();
         return getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, queryParams).get(0);
     }
 

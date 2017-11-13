@@ -29,6 +29,7 @@ import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDt
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
 import java.util.Arrays;
 import java.util.List;
@@ -187,7 +188,9 @@ public class ParametersPropertySetTests extends CommonTest {
             entityIsCreated(relation);
         });
         // Disable one of the relationships
-        Map<String, String> relationParams = buildQueryParamMapForPaging(null, null, String.format("property_set_id==%s", String.valueOf(psId)), null, null, null);
+        Map<String, String> relationParams = QueryParams.builder()
+                .filter(String.format("property_set_id==%s", String.valueOf(psId)))
+                .build();
         UUID relationId = getEntitiesAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, relationParams).get(0).getId();
         UserPropertySetRelationshipUpdateDto update = new UserPropertySetRelationshipUpdateDto();
         update.setIsActive(false);

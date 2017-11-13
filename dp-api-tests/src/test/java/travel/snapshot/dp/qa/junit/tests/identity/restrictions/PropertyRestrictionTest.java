@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests.identity.restrictions;
 
+import static java.util.Collections.emptyMap;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -29,6 +30,8 @@ import java.util.Map;
  *  Endpoint restrictions for properties
  */
 public class PropertyRestrictionTest extends CommonRestrictionTest{
+
+    private static Map<String, String> EMPTY_PARAMS = emptyMap();
 
     @Test
     public void getPropertyRestrictionTest(){
@@ -74,26 +77,37 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
 
     @Test
     public void getPropertySecondLevelEntitiesRestrictionTest() throws Throwable {
-        Map<String, String> emptyParams = buildQueryParamMapForPaging(null, null, null, null, null, null);
 //        Customers
-        commonHelpers.getRelationshipsByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, CUSTOMERS_RESOURCE, emptyParams);
+        commonHelpers.getRelationshipsByUserForApp(
+                createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, CUSTOMERS_RESOURCE, EMPTY_PARAMS
+        );
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_PROPERTY_CUSTOMERS_ENDPOINT, GET);
-        commonHelpers.getRelationshipsByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, CUSTOMERS_RESOURCE, emptyParams);
+        commonHelpers.getRelationshipsByUserForApp(
+                createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, CUSTOMERS_RESOURCE, EMPTY_PARAMS
+        );
         responseCodeIs(SC_OK);
 
 //        Users
-        commonHelpers.getRelationshipsByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, USERS_RESOURCE, emptyParams);
+        commonHelpers.getRelationshipsByUserForApp(
+                createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, USERS_RESOURCE, EMPTY_PARAMS
+        );
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_PROPERTY_USERS_ENDPOINT, GET);
-        commonHelpers.getRelationshipsByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, USERS_RESOURCE, emptyParams);
+        commonHelpers.getRelationshipsByUserForApp(
+                createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, USERS_RESOURCE, EMPTY_PARAMS
+        );
         responseCodeIs(SC_OK);
 
 //        Property Sets
-        commonHelpers.getRelationshipsByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, PROPERTY_SETS_RESOURCE, emptyParams);
+        commonHelpers.getRelationshipsByUserForApp(
+                createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, PROPERTY_SETS_RESOURCE, EMPTY_PARAMS
+        );
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_PROPERTY_PROPERTY_SETS_ENDPOINT, GET);
-        commonHelpers.getRelationshipsByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, PROPERTY_SETS_RESOURCE, emptyParams);
+        commonHelpers.getRelationshipsByUserForApp(
+                createdUserWithRelationshipsId, createdAppVersion.getId(), PROPERTIES_PATH, DEFAULT_PROPERTY_ID, PROPERTY_SETS_RESOURCE, EMPTY_PARAMS
+        );
         responseCodeIs(SC_OK);
     }
 }
