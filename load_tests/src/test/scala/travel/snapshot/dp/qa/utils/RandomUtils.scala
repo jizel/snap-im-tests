@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter
 import java.util.{TimeZone, UUID}
 import java.util.concurrent.ThreadLocalRandom
 
+import scala.util.Random
+
 class RandomUtils {
 
   def randomGranularity: Granularity.Granularity = Granularity.getRandom
@@ -39,6 +41,15 @@ class RandomUtils {
     * @return random boolean
     */
   def randomBoolean: Boolean = ThreadLocalRandom.current().nextBoolean()
+
+  /**
+    * Returns random string of given length
+    *
+    * @return random string of given length
+    */
+  def randomString(length: Int) = {
+    Random.alphanumeric take length mkString
+  }
 
   /**
     *

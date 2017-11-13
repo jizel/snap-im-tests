@@ -17,6 +17,6 @@ roles: 50
 user_customer_roles: 20
 user_properties: 200
 user_propertysets: 300
-multiplied_by: 200
+multiplied_by: 5
 db_url: postgresql://postgres:secret@localhost/identity
 #db_url: "mysql://root:root@127.0.0.1:3306/identity"

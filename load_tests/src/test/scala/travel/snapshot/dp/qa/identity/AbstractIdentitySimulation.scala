@@ -1,12 +1,14 @@
 package travel.snapshot.dp.qa.identity
 
-import io.gatling.core.Predef._
+import io.gatling.core.Predef.{exec, _}
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
+import io.gatling.http.request.builder.HttpRequestBuilder
 import travel.snapshot.dp.qa.AbstractSimulation
 import travel.snapshot.dp.qa.utils._
 import travel.snapshot.dp.qa.utils.SessionUtils._
 import org.apache.http.HttpStatus
+import EntityType._
 
 /**
   * Encapsulates all steps for some concrete identity simulation
@@ -27,33 +29,83 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
     )
   }
 
-  /**
-    * Creates properties and assigns it to a customer with id which was created in CreateCustomer object and saves
-    * property id to session.
-    *
-    * By default, it creates 1 property, this can be overridden by number specified in a constructor.
-    *
-    * Validity of a property will be randomly determined, roughly +50 years to the future from now.
-    */
-  object CreateAndAssignPropertiesToCustomer {
-    def apply() = repeat(1, "propertyNumber") {
-      exec(createProperty, assignPropertyToCustomer)
+  object CreatePartner extends AbstractRequest {
+    def apply() = exec(createPartner)
+
+    def createPartner: ChainBuilder = exec(http("create partner")
+      .post(session => s"identity/partners")
+      .headers(request_headers)
+      .header("Authorization", session => setAuthToken(session))
+      .body(StringBody(session => {
+        s"""
+         {
+           "name": "PerfPartner ${randomUtils.randomString(20)}",
+           "email": "user_${randomUtils.randomString(20)}@aaa.cz",
+           "notes": "${randomUtils.randomString(100)}",
+           "website": "http://www.validurl.com",
+           "is_active": ${randomUtils.randomBoolean}
+        }
+        """
+      }))
+      .check(status.is(201))
+      .check(jsonPath("$..partner_id").saveAs("partnerId"))
+    )
+  }
+
+  object CreatePartnerUser extends AbstractRequest {
+    def apply() = exec(createPartnerUser)
+
+    def apply(numberOfUsers: Integer) = repeat(numberOfUsers.toInt, "userNumber") {
+      exec(createPartnerUser)
     }
 
-    def apply(numberOfProperties: Integer) = repeat(numberOfProperties.toInt, "propertyNumber") {
-      exec(createProperty, assignPropertyToCustomer)
+//    def createSnapshotUser: HttpRequestBuilder = postRequest("Create snapshot user", generateSnapshotUser(), "identity/users", HttpStatus.SC_CREATED)
+//      .check(jsonPath("$..user_id").saveAs("userId"))
+
+    def createPartnerUser: ChainBuilder = exec(http("create partner user")
+      .post(session => s"identity/users")
+      .headers(request_headers)
+      .header("Authorization", session => setAuthToken(session))
+      .body(StringBody(session => {
+        s"""
+         {
+           "user_type": "partner",
+           "user_name": "Perf ${randomUtils.randomString(20)}",
+           "first_name": "${randomUtils.randomString(10)}",
+           "last_name": "${randomUtils.randomString(10)}",
+           "phone": "+420123456789",
+           "email": "user_${randomUtils.randomString(20)}@aaa.cz",
+           "timezone": "${randomUtils.randomTimezone}",
+           "culture": "${randomUtils.randomCulture}",
+           "comment": "${randomUtils.randomString(100)}",
+           "picture": "http://www.validurl.com",
+           "is_active": ${randomUtils.randomBoolean}
+        }
+        """
+      }))
+      .check(status.is(201))
+      .check(jsonPath("$..user_id").saveAs("userId"))
+    )
+  }
+
+  object CreateProperty extends AbstractRequest {
+    def apply() = repeat(1, "userNumber") {
+      exec(createProperty)
+    }
+
+    def apply(numberOfUsers: Integer) = repeat(numberOfUsers.toInt, "userNumber") {
+      exec(createProperty)
     }
 
     def createProperty: ChainBuilder = exec(http("create property")
-      .post(session => s"identity/properties?access_token=$accessTokenParam")
+      .post(session => s"identity/properties")
       .headers(request_headers)
+      .header("Authorization", session => setAuthToken(session))
       .body(StringBody(session => {
-        val propertyId = randomUtils.randomUUIDAsString
         s"""
         {
-          "property_id": "$propertyId",
-          "name": "testing property",
-          "property_code": "${propertyId}_code",
+          "name": "QA Perf property ${randomUtils.randomString(10)}",
+          "property_code": "${randomUtils.randomString(5)}_code",
           "website": "http://example.org",
           "email": "${getValue(session, "customerEmail")}",
           "is_demo_property": true,
@@ -72,6 +124,16 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
       .check(jsonPath("$..property_id").saveAs("propertyId"))
     )
 
+  }
+
+  object AssignPropertiesToCustomer {
+    def apply() = repeat(1, "propertyNumber") {
+      exec(assignPropertyToCustomer)
+    }
+
+    def apply(numberOfProperties: Integer) = repeat(numberOfProperties.toInt, "propertyNumber") {
+      exec(assignPropertyToCustomer)
+    }
 
     def assignPropertyToCustomer: ChainBuilder = exec(http("assign property to customer")
       .post(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/properties?access_token=$accessTokenParam")
@@ -126,6 +188,22 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
     }
   }
 
+  object DeleteSessionCustomer extends AbstractRequest {
+    def apply() = exec(deleteRequest("Delete customer stored in session by create", s"identity/customers", Customer, HttpStatus.SC_NO_CONTENT))
+  }
+
+  object DeleteSessionProperty extends AbstractRequest {
+    def apply() = exec(deleteRequest("Delete customer stored in session by create", s"identity/properties", Property, HttpStatus.SC_NO_CONTENT))
+  }
+
+  object DeleteSessionUser extends AbstractRequest {
+    def apply() = exec(deleteRequest("Delete customer stored in session by create", s"identity/users", User, HttpStatus.SC_NO_CONTENT))
+  }
+
+  object DeleteSessionPartner extends AbstractRequest {
+    def apply() = exec(deleteRequest("Delete partner stored in session by create", s"identity/partners", Partner, HttpStatus.SC_NO_CONTENT))
+  }
+
   /**
     * Creates users and assigns it to a customer with id which was created in CreateCustomer object. Id of a user
     * is saved to session.
@@ -145,12 +223,9 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
       .post(session => s"identity/users?access_token=$accessTokenParam")
       .headers(request_headers)
       .body(StringBody(session => {
-        val userId = randomUtils.randomUUIDAsString
-        val randomString = userId.reverse
         s"""
         {
-          "user_id": "$userId",
-          "user_type": "snapshot",
+          "user_type": "customer",
           "user_name": "${randomUtils.randomUUIDAsString}",
           "first_name": "FirstName",
           "last_name": "LastName",
@@ -158,7 +233,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
           "email": "user_${randomUtils.randomInt(randomBound)}@aaa.cz",
           "timezone": "${randomUtils.randomTimezone}",
           "culture": "${randomUtils.randomCulture}",
-          "comment": "$randomString",
+          "comment": "${randomUtils.randomString(100)}",
           "picture": "http://www.validurl.com",
           "is_active": ${randomUtils.randomBooleanAsBinary}
         }
@@ -388,11 +463,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
 
   //  Helpers
 
-  /**
-    * Generates random customer
-    */
-  object generateCustomer {
-    def apply() = {
+    def generateCustomer() = {
       s"""
           {
             "name": "Company ${randomUtils.randomInt(randomBound)}",
@@ -411,6 +482,35 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
             "headquarters_timezone": "${randomUtils.randomTimezone}"
           }"""
     }
+
+    def generateSnapshotUser(): String = {
+      s"""
+         {
+           "user_type": "snapshot",
+           "user_name": "${randomUtils.randomString(20)}",
+           "first_name": "${randomUtils.randomString(10)}",
+           "last_name": "${randomUtils.randomString(10)}",
+           "phone": "+420123456789",
+           "email": "user_${randomUtils.randomString(20)}@aaa.cz",
+           "timezone": "${randomUtils.randomTimezone}",
+           "culture": "${randomUtils.randomCulture}",
+           "comment": "${randomUtils.randomString(100)}",
+           "picture": "http://www.validurl.com",
+           "is_active": ${randomUtils.randomBoolean}
+        }
+        """.stripMargin
+    }
+
+  def generatePartner(): String = {
+    s"""
+         {
+           "name": "${randomUtils.randomString(20)}",
+           "email": "user_${randomUtils.randomString(20)}@aaa.cz",
+           "notes": "${randomUtils.randomString(100)}",
+           "website": "http://www.validurl.com",
+           "is_active": ${randomUtils.randomBoolean}
+        }
+        """
   }
 
 
