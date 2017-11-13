@@ -82,8 +82,9 @@ public class ParametersCustomer extends CommonTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = VALID_VAT_ID_EXAMPLES)
-    public void validateCustomerHasValidVatId(String country, String vatId) throws Throwable {
+    public void validateCustomerHasValidVatId(String country, String vatId, String region) throws Throwable {
         AddressDto address = createRandomAddress(5, 5, 6, country, null);
+        address.setRegionCode(region);
         testCustomer1.setAddress(address);
         testCustomer1.setVatId(vatId);
         createEntity(testCustomer1)
