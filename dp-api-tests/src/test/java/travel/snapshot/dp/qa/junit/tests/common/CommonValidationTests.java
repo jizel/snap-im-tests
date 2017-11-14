@@ -4,14 +4,17 @@ import static java.util.Arrays.asList;
 import static java.util.Objects.nonNull;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_PRECONDITION_FAILED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.JSON;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ETAG;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtag;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -176,6 +179,17 @@ public abstract class CommonValidationTests extends CommonTest {
                     .then()
                     .statusCode(SC_UNPROCESSABLE_ENTITY);
         });
+    }
+
+    @Test
+    public void updateWithInvalidEtag() {
+        UUID createdEntityId = entityIsCreated(getTestEntity());
+        ObjectNode updateObject = getValidUpdate(validationHelpers.getCorrectObject(getAttributesBoundaries()));
+        updateEntityWithEtag(getPath(), createdEntityId, updateObject, NON_EXISTENT_ETAG)
+                .then()
+                .statusCode(SC_PRECONDITION_FAILED)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_INVALID_ETAG));
     }
 
 }

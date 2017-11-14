@@ -13,7 +13,6 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERT
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.commercialSubscriptionIsCreated;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ALL_ENDPOINTS;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
@@ -22,9 +21,10 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.readWriteEndpoints;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructRoleAssignment;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
+import static travel.snapshot.dp.qa.junit.utils.DpEndpoints.ALL_ENDPOINTS;
+import static travel.snapshot.dp.qa.junit.utils.DpEndpoints.READ_WRITE_ENDPOINTS;
 
 import lombok.extern.java.Log;
 import org.junit.Before;
@@ -81,7 +81,7 @@ public class RoleAssignmentTests extends CommonTest {
     @Test
     public void roleWithWithoutPermissions() {
         entityIsCreated(constructRoleAssignment(createdRoleId, createdUserId));
-        readWriteEndpoints().forEach(endpoint -> {
+        READ_WRITE_ENDPOINTS.forEach(endpoint -> {
             log.info("Endpoint is " + endpoint);
             getEntitiesByUserForApp(createdUserId, createdAppVersionId, endpoint, emptyQueryParams())
                     .then()

@@ -1,7 +1,6 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
 import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.asList;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
@@ -9,38 +8,9 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_PERMISSIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.EFFECTIVE_PERMISSIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PLATFORM_OPERATIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_USER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_COMMERCIAL_SUBSCRIPTION_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_IF_MATCH;
@@ -67,7 +37,6 @@ import travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -82,54 +51,6 @@ public class CommonHelpers {
     private BasicSteps basicSteps = new BasicSteps();
 
     public static final String ENTITIES_TO_DELETE = "deleteThese";
-
-    public static final List<String> ALL_ENDPOINTS = asList(
-            APPLICATIONS_PATH,
-            APPLICATION_VERSIONS_PATH,
-            ROLES_PATH,
-            USER_CUSTOMER_ROLES_PATH,
-            USER_PROPERTY_ROLES_PATH,
-            PROPERTIES_PATH,
-            CUSTOMERS_PATH,
-            USERS_PATH,
-            USER_GROUPS_PATH,
-            PROPERTY_SETS_PATH,
-            COMMERCIAL_SUBSCRIPTIONS_PATH,
-            PARTNERS_PATH,
-            CUSTOMER_PROPERTY_RELATIONSHIPS_PATH,
-            PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
-            USER_CUSTOMER_RELATIONSHIPS_PATH,
-            USER_PARTNER_RELATIONSHIPS_PATH,
-            USER_PROPERTY_RELATIONSHIPS_PATH,
-            USER_PROPERTY_SET_RELATIONSHIPS_PATH,
-            USER_GROUP_PROPERTY_RELATIONSHIPS_PATH,
-            USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH,
-            USER_GROUP_USER_RELATIONSHIPS_PATH,
-            PLATFORM_OPERATIONS_PATH,
-            APPLICATION_PERMISSIONS_PATH,
-            EFFECTIVE_PERMISSIONS_PATH
-    );
-
-    public static final List<String> ENDPOINTS_WITH_IDS = asList(
-            String.format("%s/%s", APPLICATIONS_PATH, DEFAULT_SNAPSHOT_APPLICATION_ID),
-            String.format("%s/%s", APPLICATION_VERSIONS_PATH, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID),
-            String.format("%s/%s", PROPERTIES_PATH, DEFAULT_PROPERTY_ID),
-            String.format("%s/%s", CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID),
-            String.format("%s/%s", USERS_PATH, DEFAULT_SNAPSHOT_USER_ID),
-            String.format("%s/%s", PARTNERS_PATH, DEFAULT_SNAPSHOT_PARTNER_ID),
-            String.format("%s/%s", COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID)
-    );
-
-    public static final List<String> READONLY_ENDPOINTS = asList(
-            EFFECTIVE_PERMISSIONS_PATH
-    );
-
-    public static List<String> readWriteEndpoints() {
-        List<String> endpoints = new ArrayList<>(ALL_ENDPOINTS);
-        endpoints.removeAll(READONLY_ENDPOINTS);
-        return endpoints;
-    }
-
 
     /**
      * Restassured initialization is copied from BasicSteps. This class should replace basic steps once all cucumber
@@ -317,11 +238,10 @@ public class CommonHelpers {
         if (etag != null) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
         }
-        Response response = requestSpecification
+        return requestSpecification
                 .body(data)
                 .when()
                 .patch("/{id}", entityId);
-        return response;
     }
 
     public static Response updateEntityWithEtag(String basePath, UUID entityId, Object data, String etag) {
@@ -476,11 +396,11 @@ public class CommonHelpers {
         return (DTO) getEntitiesAsType(basePath, endpointDtoMap.get(basePath), params).get(0);
     }
 
-    public static <DTO> List<? extends EntityDto> getEntitiesByPattern(String basePath, String fieldName, String pattern) {
+    public static List<? extends EntityDto> getEntitiesByPattern(String basePath, String fieldName, String pattern) {
         return getEntitiesByPatternByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, fieldName, pattern);
     }
 
-    public static <DTO> List<? extends EntityDto> getEntitiesByPatternByUserForApp(UUID userId, UUID appId, String basePath, String fieldName, String pattern) {
+    public static List<? extends EntityDto> getEntitiesByPatternByUserForApp(UUID userId, UUID appId, String basePath, String fieldName, String pattern) {
         Map<String, String> params = buildQueryParamMapForPaging(null, null, String.format("%s==%s", fieldName, pattern), null, null, null);
         return getEntitiesAsTypeByUserForApp(userId, appId, basePath, endpointDtoMap.get(basePath), params);
 
