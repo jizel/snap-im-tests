@@ -80,8 +80,9 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
         PropertySetPropertyRelationshipDto createdRelationship = entityIsCreatedAs(PropertySetPropertyRelationshipDto.class, testPropertySetPropertyRelationship);
         PropertySetPropertyRelationshipUpdateDto propertySetPropertyRelationshipUpdate = constructPropertySetPropertyRelationshipUpdate(false);
 
-        updateEntityWithEtag(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), propertySetPropertyRelationshipUpdate, createdRelationship.getVersion().toString());
-        responseCodeIs(SC_OK);
+        updateEntityWithEtag(
+                PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), propertySetPropertyRelationshipUpdate, createdRelationship.getVersion().toString()
+        ).then().statusCode(SC_OK);
         PropertySetPropertyRelationshipCreateDto returnedRelationship = getEntityAsType(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
                 PropertySetPropertyRelationshipDto.class, createdRelationship.getId());
         assertThat(returnedRelationship.getIsActive(), is(false));
