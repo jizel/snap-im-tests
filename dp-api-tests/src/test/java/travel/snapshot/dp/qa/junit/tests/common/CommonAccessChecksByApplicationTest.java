@@ -21,6 +21,7 @@ import java.util.UUID;
 
 public class CommonAccessChecksByApplicationTest extends CommonTest {
     public static UUID userId = null;
+    public static UUID appId = null;
     public static UUID appVersionId = null;
     public static UUID propertyId1 = null;
     public static UUID propertyId2 = null;
@@ -32,7 +33,7 @@ public class CommonAccessChecksByApplicationTest extends CommonTest {
         // Also create a user, connected to both properties
         propertyId1 = entityIsCreated(testProperty1);
         propertyId2 = entityIsCreated(testProperty2);
-        UUID appId = entityIsCreated(testApplication1);
+        appId = entityIsCreated(testApplication1);
         dbSteps.populateApplicationPermissionsTableForApplication(appId);
         testAppVersion1.setApplicationId(appId);
         appVersionId = entityIsCreated(testAppVersion1);
