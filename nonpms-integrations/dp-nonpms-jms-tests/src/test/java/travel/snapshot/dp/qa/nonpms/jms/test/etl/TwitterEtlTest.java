@@ -20,8 +20,8 @@ public class TwitterEtlTest extends AbstractEtlTest {
 
     @Value("${integration.twitter.start.queue}")
     String startQueue;
-    @Value("${integration.twitter.start.message} ")
-    String startMessage;
+    @Value("${integration.twitter.start.firetime}")
+    String fireTime;
     @Value("#{'${integration.twitter.affected.properties}'.split(',')}")
     Set<String> affectedProperties;
     @Value("${integration.twitter.timezone}")

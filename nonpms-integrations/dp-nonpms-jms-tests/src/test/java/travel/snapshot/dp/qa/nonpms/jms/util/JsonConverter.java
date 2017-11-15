@@ -1,6 +1,10 @@
 package travel.snapshot.dp.qa.nonpms.jms.util;
 
 
+import static travel.snapshot.dp.qa.nonpms.jms.util.ObjectMappers.createObjectMapper;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.nio.charset.Charset;
 
 import javax.jms.BytesMessage;
@@ -27,6 +31,10 @@ public class JsonConverter {
         }
 
         throw new IllegalStateException("Unprocessed message: " + message.toString());
+    }
+
+    public static <T> String convertToJson(T message) throws JsonProcessingException {
+        return createObjectMapper().writeValueAsString(message);
     }
 
 }

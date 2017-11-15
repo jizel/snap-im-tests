@@ -18,8 +18,8 @@ public class InstagramEtlTest extends AbstractEtlTest {
 
     @Value("${integration.instagram.start.queue}")
     String startQueue;
-    @Value("${integration.instagram.start.message} ")
-    String startMessage;
+    @Value("${integration.instagram.start.firetime}")
+    String fireTime;
     @Value("#{'${integration.instagram.affected.properties}'.split(',')}")
     Set<String> affectedProperties;
     @Value("${integration.instagram.timezone}")

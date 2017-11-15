@@ -18,8 +18,8 @@ public class TripAdvisorEtlTest extends AbstractEtlTest {
 
     @Value("${integration.tripadvisor.start.queue}")
     String startQueue;
-    @Value("${integration.tripadvisor.start.message} ")
-    String startMessage;
+    @Value("${integration.tripadvisor.start.firetime}")
+    String fireTime;
     @Value("#{'${integration.tripadvisor.affected.properties}'.split(',')}")
     Set<String> affectedProperties;
     @Value("${integration.tripadvisor.timezone}")
