@@ -2,7 +2,6 @@ package travel.snapshot.dp.qa.junit.tests.identity.applications;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.apache.http.HttpStatus.SC_PRECONDITION_FAILED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -16,7 +15,6 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.commercialSubscriptionIsCreated;
@@ -30,7 +28,6 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTyp
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsTypeByUserForApp;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtag;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_APPLICATIONS_ENDPOINT;
@@ -123,7 +120,6 @@ public class ApplicationsTests extends CommonTest {
                 .body("is_internal", is(true));
         ApplicationUpdateDto updateDto = new ApplicationUpdateDto();
         updateDto.setIsInternal(false);
-        updateApplicationWithInvalidEtag(applicationID, updateDto);
         entityIsUpdated(APPLICATIONS_PATH, applicationID, updateDto);
         getEntity(APPLICATIONS_PATH, applicationID).then().assertThat()
                 .body("is_internal", is(false));
@@ -174,11 +170,4 @@ public class ApplicationsTests extends CommonTest {
         commercialSubscriptionIsCreated(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID, externalAppId);
     }
 
-    private void updateApplicationWithInvalidEtag(UUID appId, ApplicationUpdateDto update) {
-        updateEntityWithEtag(APPLICATIONS_PATH, appId, update, NON_EXISTENT_ETAG)
-                .then()
-                .statusCode(SC_PRECONDITION_FAILED)
-                .assertThat()
-                .body(RESPONSE_CODE, is(CC_INVALID_ETAG));
-    }
 }

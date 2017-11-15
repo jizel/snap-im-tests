@@ -2,8 +2,8 @@ package travel.snapshot.dp.qa.junit.tests.identity.all_endpoints;
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ALL_ENDPOINTS;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
+import static travel.snapshot.dp.qa.junit.utils.DpEndpoints.ALL_ENDPOINTS;
 
 import org.junit.experimental.categories.Category;
 import org.junit.jupiter.params.ParameterizedTest;

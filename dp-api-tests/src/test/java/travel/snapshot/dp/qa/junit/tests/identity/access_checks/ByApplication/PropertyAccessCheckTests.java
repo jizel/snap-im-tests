@@ -1,11 +1,5 @@
 package travel.snapshot.dp.qa.junit.tests.identity.access_checks.ByApplication;
 
-import org.junit.Test;
-import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.qa.junit.tests.common.CommonAccessChecksByApplicationTest;
-
-import java.util.UUID;
-
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -23,11 +17,19 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityEtag;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtagByUserForApp;
 
+import org.junit.Test;
+import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
+import travel.snapshot.dp.qa.junit.tests.common.CommonAccessChecksByApplicationTest;
+
+import java.util.UUID;
+
 public class PropertyAccessCheckTests extends CommonAccessChecksByApplicationTest {
 
     @Test
     public void filteringPropertiesWithAccessChecks() {
-        assertThat(getEntitiesByPatternByUserForApp(userId, appVersionId, PROPERTIES_PATH, "name", "Property*")).hasSize(1);
+        assertThat(
+                getEntitiesByPatternByUserForApp(userId, appVersionId, PROPERTIES_PATH, "name", "Property*")
+        ).hasSize(1);
     }
 
     @Test
