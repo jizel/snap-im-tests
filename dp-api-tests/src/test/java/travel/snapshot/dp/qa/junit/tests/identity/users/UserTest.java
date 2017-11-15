@@ -2,7 +2,6 @@ package travel.snapshot.dp.qa.junit.tests.identity.users;
 
 import static java.util.Collections.singletonMap;
 import static java.util.UUID.randomUUID;
-import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
@@ -11,11 +10,9 @@ import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.GUEST;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
@@ -69,7 +66,7 @@ public class UserTest extends CommonTest {
 
     @ParameterizedTest
     @EnumSource(UserUpdateDto.UserType.class)
-    public void CRUDAllUserTypes(UserUpdateDto.UserType type) {
+    void CRUDAllUserTypes(UserUpdateDto.UserType type) {
         testUser2.setType(type);
         UUID userId = entityIsCreated(testUser2);
 
@@ -98,18 +95,11 @@ public class UserTest extends CommonTest {
         updateConflictUserName(createdUser2Id, testUser1.getUsername());
     }
 
-    @Test
-    void customerUserCannotBeCreatedWithoutCustomerRelationship() {
-        testUser2.setUserCustomerRelationship(null);
-        createEntity(testUser2)
-                .then().statusCode(SC_BAD_REQUEST)
-                .assertThat().body(RESPONSE_CODE, is(CC_MISSING_PARAMS));
-    }
-
     @ParameterizedTest
-    @EnumSource(value = UserUpdateDto.UserType.class, mode = EXCLUDE, names = {"CUSTOMER"})
-    void otherUsersDontNeedCustomerRelationship(UserUpdateDto.UserType type) {
-        testSnapshotUser1.setType(type);
+    @EnumSource(value = UserUpdateDto.UserType.class)
+    void usersDontNeedCustomerRelationship(UserUpdateDto.UserType type) {
+        testUser1.setUserCustomerRelationship(null);
+        testUser1.setType(type);
         createEntity(testSnapshotUser1).then().statusCode(SC_CREATED);
     }
 
