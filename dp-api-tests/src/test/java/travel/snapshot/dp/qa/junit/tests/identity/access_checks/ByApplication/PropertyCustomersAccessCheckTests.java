@@ -62,7 +62,7 @@ public class PropertyCustomersAccessCheckTests extends CommonTest {
         createRelation(propertyId2).then().statusCode(SC_CREATED);
         accessibleRelationId = getSessionResponse().as(CustomerPropertyRelationshipDto.class).getId();
         EntityVersion accessibleRelationEtag = getSessionResponse().as(CustomerPropertyRelationshipDto.class).getVersion();
-        createRelation(propertyId1).then().statusCode(SC_CREATED);
+        createRelation(propertyId1);
         responseIsReferenceDoesNotExist();
         inAccessibleRelationId = relationIsCreated(propertyId1);
         EntityVersion inAccessibleRelationEtag = getSessionResponse().as(CustomerPropertyRelationshipDto.class).getVersion();
