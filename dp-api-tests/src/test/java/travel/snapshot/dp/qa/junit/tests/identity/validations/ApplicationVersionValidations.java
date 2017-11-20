@@ -39,8 +39,9 @@ public class ApplicationVersionValidations extends CommonValidationTests {
     @Before
     public void setUp() {
         super.setUp();
-        testEntity = testAppVersion1;
         createdApplicationId = entityIsCreated(testApplication1);
+        testAppVersion1.setApplicationId(createdApplicationId);
+        testEntity = testAppVersion1;
         ApplicationVersionStatus randomApplicationVersionStatus = STATUSES.get(random.nextInt(STATUSES.size()));
         attributesBoundaries = asList(
                 ObjectField.of(

@@ -39,11 +39,13 @@ public class CustomerAccessCheckTests extends CommonTest {
         // Create two customers
         entityIsCreated(testCustomer1);
         entityIsCreated(testCustomer2);
-        // Create two applications
-        entityIsCreated(testApplication1);
-        entityIsCreated(testApplication2);
-        dbSteps.populateApplicationPermissionsTableForApplication(testApplication1.getId());
-        dbSteps.populateApplicationPermissionsTableForApplication(testApplication2.getId());
+        // Create three applications
+        UUID app1Id = entityIsCreated(testApplication1);
+        UUID app2Id = entityIsCreated(testApplication2);
+        UUID app3Id = entityIsCreated(testApplication3);
+        dbSteps.populateApplicationPermissionsTableForApplication(app1Id);
+        dbSteps.populateApplicationPermissionsTableForApplication(app2Id);
+        dbSteps.populateApplicationPermissionsTableForApplication(app3Id);
         // Make user belong to the correct customer
         UserCustomerRelationshipPartialDto userCustRelation = testUser1.getUserCustomerRelationship();
         userCustRelation.setCustomerId(testCustomer1.getId());
@@ -59,7 +61,7 @@ public class CustomerAccessCheckTests extends CommonTest {
         testAppVersion2.setApplicationId(testApplication2.getId());
         entityIsCreated(testAppVersion2);
         // Non-commercial version
-        testAppVersion3.setApplicationId(testApplication2.getId());
+        testAppVersion3.setApplicationId(testApplication3.getId());
         testAppVersion3.setIsNonCommercial(true);
         entityIsCreated(testAppVersion3);
         // Grant the user access to test property
