@@ -11,6 +11,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import org.junit.Before;
+import org.junit.Ignore;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionStatus;
 import travel.snapshot.dp.api.model.EntityDto;
@@ -24,6 +25,7 @@ import java.util.UUID;
 /**
  * Validations for IM Applications - boundary values testing
  */
+@Ignore
 @Getter
 public class ApplicationVersionValidations extends CommonValidationTests {
 
