@@ -31,6 +31,7 @@ import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
@@ -44,11 +45,12 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
     public static UUID inaccessibleEntityId;
     public static Map<String, String> update = new HashMap<String, String>();
     public static String PATTERN;
+    public static Optional FIELD_NAME;
+    public static String FIELD_DESCRIPTION = "description";
 
     @BeforeEach
     public void setUp() {
         super.setUp();
-        update.put("description", "New description");
         // Create 2 properties and an application that will have commercial subscription with only 1 property and a default customer
         // Also create a user, connected to both properties
         propertyId1 = entityIsCreated(testProperty1);
@@ -66,7 +68,7 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
 
     @Test
     public void filteringEntitiessWithAccessChecks() {
-        assertThat(getEntitiesByPatternByUserForApp(userId, appVersionId, PATH, "name", PATTERN)).hasSize(1);
+        assertThat(getEntitiesByPatternByUserForApp(userId, appVersionId, PATH, FIELD_NAME, PATTERN)).hasSize(1);
     }
 
     @Test

@@ -34,11 +34,13 @@ import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.model.EntityDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping;
+import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class CommonHelpers {
@@ -396,13 +398,16 @@ public class CommonHelpers {
         return (DTO) getEntitiesAsType(basePath, endpointDtoMap.get(basePath), params).get(0);
     }
 
-    public static List<? extends EntityDto> getEntitiesByPattern(String basePath, String fieldName, String pattern) {
+    public static List<? extends EntityDto> getEntitiesByPattern(String basePath, Optional fieldName, String pattern) {
         return getEntitiesByPatternByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, fieldName, pattern);
     }
 
-    public static List<? extends EntityDto> getEntitiesByPatternByUserForApp(UUID userId, UUID appId, String basePath, String fieldName, String pattern) {
-        Map<String, String> params = buildQueryParamMapForPaging(null, null, String.format("%s==%s", fieldName, pattern), null, null, null);
+    public static List<? extends EntityDto> getEntitiesByPatternByUserForApp(UUID userId, UUID appId, String basePath, Optional fieldName, String pattern) {
+        Map<String, String> params = null;
+        if (fieldName != null) {
+            String filter = String.format("%s==%s", fieldName, pattern);
+            params = QueryParams.builder().filter(filter).build();
+        }
         return getEntitiesAsTypeByUserForApp(userId, appId, basePath, endpointDtoMap.get(basePath), params);
-
     }
 }
