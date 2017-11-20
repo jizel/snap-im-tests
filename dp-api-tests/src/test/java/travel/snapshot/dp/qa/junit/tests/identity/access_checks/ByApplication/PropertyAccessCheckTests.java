@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonAccessChecksByApplicationTest;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
@@ -25,6 +26,8 @@ public class PropertyAccessCheckTests extends CommonAccessChecksByApplicationTes
         inaccessibleEntityId = propertyId2;
         PATH = PROPERTIES_PATH;
         PATTERN = "Property*";
+        FIELD_NAME = Optional.of("name");
+        update.put(FIELD_DESCRIPTION, "New description");
     }
 
     @Test
