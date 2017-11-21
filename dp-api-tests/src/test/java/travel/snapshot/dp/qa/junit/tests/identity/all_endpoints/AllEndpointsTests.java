@@ -13,6 +13,7 @@ import org.junit.Test;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Log
@@ -32,7 +33,7 @@ public class AllEndpointsTests extends CommonTest {
     @Test
     @Jira("DPIM-70")
     public void sendEmptyPostRequest() {
-        List<String> endpoints = READ_WRITE_ENDPOINTS;
+        List<String> endpoints = new ArrayList<>(READ_WRITE_ENDPOINTS);
         endpoints.addAll(ENDPOINTS_WITH_IDS);
         endpoints.forEach(endpoint -> {
             log.info("Endpoint is " + endpoint);
