@@ -22,7 +22,7 @@
             ON pd.dim_property_id = p.property_id
         WHERE
             ffc.dim_date_id IS NULL
-        ORDER BY dim_date_id DESC, dim_property_id
+        ORDER BY date_id DESC, dim_property_id
     </select>
 
 </mapper>
