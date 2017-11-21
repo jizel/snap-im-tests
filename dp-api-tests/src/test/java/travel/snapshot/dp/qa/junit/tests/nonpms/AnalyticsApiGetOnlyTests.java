@@ -1,17 +1,9 @@
 package travel.snapshot.dp.qa.junit.tests.nonpms;
 
-import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
-import org.junit.Test;
-import travel.snapshot.dp.qa.junit.tests.common.CommonProductionTest;
-
-import java.time.LocalDate;
 import static java.util.Collections.singletonMap;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XPROPERTY;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.PROPERTY_ID;
 import static travel.snapshot.dp.qa.junit.helpers.AnalyticsHelpers.CONFIGURATION_ENDPOINTS;
@@ -25,12 +17,24 @@ import static travel.snapshot.dp.qa.junit.helpers.AnalyticsHelpers.SOCIAL_MEDIA_
 import static travel.snapshot.dp.qa.junit.helpers.AnalyticsHelpers.WEB_PERFORMANCE_ENDPOINTS;
 import static travel.snapshot.dp.qa.junit.helpers.AnalyticsHelpers.propertyId;
 
+import com.jayway.restassured.response.Response;
+import com.google.common.collect.ImmutableMap;
+import org.junit.Before;
+import org.junit.Test;
+import travel.snapshot.dp.qa.junit.tests.common.CommonProductionTest;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
 public class AnalyticsApiGetOnlyTests extends CommonProductionTest {
 
-    Map RATE_SHOPPER_PARAMETERS;
-    Map SINCE_UNTIL;
-    Map PROPERTY_EQUALS;
-    Map HEADERS;
+    private Map<String, String> RATE_SHOPPER_PARAMETERS;
+    private Map<String, String> SINCE_UNTIL;
+    private Map<String, String> PROPERTY_EQUALS;
+    private Map<String, String> HEADERS;
+
+    private static String X_APP_CONTEXT_HEADER = "x-application-context";
 
     @Before
     public void setUp() {
@@ -50,67 +54,57 @@ public class AnalyticsApiGetOnlyTests extends CommonProductionTest {
 
     @Test
     public void TestConfigurationEndpoints() {
-        CONFIGURATION_ENDPOINTS.forEach(endpoint -> {
-            authorizationHelpers
-                    .sendGetRequest(endpoint, null, null)
-                    .then()
-                    .statusCode(SC_OK);
-        });
+        CONFIGURATION_ENDPOINTS.forEach(endpoint ->
+                assertResponseIsOk(authorizationHelpers.sendGetRequest(endpoint, null, null))
+        );
     }
 
     @Test
     public void TestRateShopperEndpoints() {
-        authorizationHelpers
-                .sendGetRequest(RATE_SHOPPER_ENDPOINTS.get(RS_MARKET), RATE_SHOPPER_PARAMETERS, null)
-                .then()
-                .statusCode(SC_OK);
+        assertResponseIsOk(
+                authorizationHelpers.sendGetRequest(RATE_SHOPPER_ENDPOINTS.get(RS_MARKET), RATE_SHOPPER_PARAMETERS, null)
+        );
 
-        authorizationHelpers
-                .sendGetRequest(RATE_SHOPPER_ENDPOINTS.get(RS_MARKET_PROPERTIES), PROPERTY_EQUALS, null)
-                .then()
-                .statusCode(SC_OK);
+        assertResponseIsOk(
+                authorizationHelpers.sendGetRequest(RATE_SHOPPER_ENDPOINTS.get(RS_MARKET_PROPERTIES), PROPERTY_EQUALS, null)
+        );
 
-        authorizationHelpers
-                .sendGetRequest(RATE_SHOPPER_ENDPOINTS.get(RS_PROPERTY), SINCE_UNTIL, null)
-                .then()
-                .statusCode(SC_OK);
+        assertResponseIsOk(
+                authorizationHelpers.sendGetRequest(RATE_SHOPPER_ENDPOINTS.get(RS_PROPERTY), SINCE_UNTIL, null)
+        );
     }
 
     @Test
     public void TestReviewEndpoints() {
-        REVIEW_ENDPOINTS.forEach(endpoint -> {
-            authorizationHelpers
-                    .sendGetRequest(endpoint, SINCE_UNTIL, HEADERS)
-                    .then()
-                    .statusCode(SC_OK);
-        });
+        REVIEW_ENDPOINTS.forEach(endpoint -> assertResponseIsOk(
+                authorizationHelpers.sendGetRequest(endpoint, SINCE_UNTIL, HEADERS)
+        ));
 
-        REVIEW_LOCATIONS_ENDPOINTS.forEach(endpoint -> {
-            authorizationHelpers
-                    .sendGetRequest(endpoint, null, HEADERS)
-                    .then()
-                    .statusCode(SC_OK);
-
-        });
+        REVIEW_LOCATIONS_ENDPOINTS.forEach(endpoint -> assertResponseIsOk(
+                authorizationHelpers.sendGetRequest(endpoint, null, HEADERS)
+        ));
     }
 
     @Test
     public void TestSocialMediaEndpoints() {
-        SOCIAL_MEDIA_ENDPOINTS.forEach(endpoint -> {
-            authorizationHelpers
-                    .sendGetRequest(endpoint, SINCE_UNTIL, HEADERS)
-                    .then()
-                    .statusCode(SC_OK);
-        });
+        SOCIAL_MEDIA_ENDPOINTS.forEach(endpoint -> assertResponseIsOk(
+                authorizationHelpers.sendGetRequest(endpoint, SINCE_UNTIL, HEADERS)
+        ));
     }
 
     @Test
     public void TestWebPerformanceEndpoints() {
-        WEB_PERFORMANCE_ENDPOINTS.forEach(endpoint -> {
-            authorizationHelpers
-                    .sendGetRequest(endpoint, SINCE_UNTIL, HEADERS)
-                    .then()
-                    .statusCode(SC_OK);
-        });
+        WEB_PERFORMANCE_ENDPOINTS.forEach(endpoint -> assertResponseIsOk(
+                authorizationHelpers.sendGetRequest(endpoint, SINCE_UNTIL, HEADERS)
+        ));
+    }
+
+    /**
+     * Checking also that x-application-context header is not present - DPNP-109
+     */
+    private void assertResponseIsOk(Response response) {
+        response.then()
+                .statusCode(SC_OK)
+                .header(X_APP_CONTEXT_HEADER, is(nullValue()));
     }
 }
