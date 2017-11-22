@@ -43,10 +43,11 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
     public static UUID propertyId2;
     public static UUID accessibleEntityId;
     public static UUID inaccessibleEntityId;
-    public static Map<String, String> update = new HashMap<String, String>();
+    public static Map<String, Object> update = new HashMap<String, Object>();
     public static String PATTERN;
     public static Optional FIELD_NAME;
     public static String FIELD_DESCRIPTION = "description";
+    public static Integer EXPECTED_CODE;
 
     @BeforeEach
     public void setUp() {
@@ -63,6 +64,7 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
         userId = entityIsCreated(testUser1);
         entityIsCreated(constructUserPropertyRelationshipDto(userId, propertyId1, true));
         entityIsCreated(constructUserPropertyRelationshipDto(userId, propertyId2, true));
+        EXPECTED_CODE = SC_CONFLICT;
     }
 
 
@@ -100,9 +102,7 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
                 .statusCode(SC_OK);
         deleteEntityByUserForApp(userId, appVersionId, PATH, accessibleEntityId)
                 .then()
-                .statusCode(SC_CONFLICT)
-                .assertThat()
-                .body(RESPONSE_CODE, is(CC_ENTITY_REFERENCED));
+                .statusCode(EXPECTED_CODE);
     }
 
     public static void activateUserCustomerRelation(UUID userId, UUID customerId) {
