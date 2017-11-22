@@ -73,6 +73,7 @@ public class ConfigurationsTests extends CommonTest {
     }
 
     @Test
+    @Jira("DPNP-176")
     public void deleteConfigurationTest() {
         ConfigurationRecordDto configurationRecord = configurationHelpers.configurationIsCreated(CONF_TYPE_IDENTIFIER, testConfigurationRecord1);
         configurationHelpers.tryDeleteConfiguration(configurationRecord.getKey(), CONF_TYPE_IDENTIFIER);
