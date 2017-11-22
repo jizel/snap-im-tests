@@ -61,7 +61,7 @@ public class UserValidations extends CommonValidationTests {
                 ObjectField.of(
                         "/timezone", STRING, true, "(Europe/Prague)", "UTC+01:00", null),
                 ObjectField.of(
-                        "/culture", STRING, true, randomCulture, null, "\\w{51}"),
+                        "/culture", STRING, true, randomCulture, "\\w{30}", "\\w{51}"),
                 ObjectField.of(
                         "/picture", STRING, false, "http:\\/\\/[a-z0-9]{63}\\.com", "\\.{10}", "\\w{1001}"),
                 ObjectField.of(
