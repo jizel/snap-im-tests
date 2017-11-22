@@ -12,7 +12,7 @@ import java.time.ZoneId;
 import java.util.Set;
 
 @Getter
-public class FacebookEtlTest extends AbstractEtlTest {
+public class FacebookEtlTest extends BasicEtlTest {
 
 	Provider provider = SOCIALMEDIA_FACEBOOK;
 

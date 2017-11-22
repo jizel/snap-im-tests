@@ -12,7 +12,7 @@ import java.time.ZoneId;
 import java.util.Set;
 
 @Getter
-public class TripAdvisorEtlTest extends AbstractEtlTest {
+public class TripAdvisorEtlTest extends BasicEtlTest {
 
     Provider provider = REVIEW_TRIPADVISOR;
 

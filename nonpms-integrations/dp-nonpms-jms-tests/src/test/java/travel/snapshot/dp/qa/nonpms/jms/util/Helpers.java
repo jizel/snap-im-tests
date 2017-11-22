@@ -1,5 +1,8 @@
 package travel.snapshot.dp.qa.nonpms.jms.util;
 
+import static travel.snapshot.dp.qa.nonpms.jms.util.JsonConverter.*;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import travel.snapshot.dp.qa.nonpms.jms.messages.SchedulerMessage;
@@ -31,6 +34,15 @@ public final class Helpers {
                 .propertyId(propertyId)
                 .integrationDate(LocalDate.parse(integrationDate))
                 .build();
+    }
+
+    public static String createSchedulerMessageJson(String fireTime) throws JsonProcessingException {
+        return convertToJson(createSchedulerMessage(fireTime));
+    }
+
+    public static String createSchedulerMessageJson(String fireTime, String propertyId, String integrationDate)
+            throws JsonProcessingException {
+        return convertToJson(createSchedulerMessage(fireTime, propertyId, integrationDate));
     }
 
 }

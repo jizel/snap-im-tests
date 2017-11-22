@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Ignore
 @Getter
-public class TwitterEtlTest extends AbstractEtlTest {
+public class TwitterEtlTest extends BasicEtlTest {
 
     Provider provider = SOCIALMEDIA_TWITTER;
 
