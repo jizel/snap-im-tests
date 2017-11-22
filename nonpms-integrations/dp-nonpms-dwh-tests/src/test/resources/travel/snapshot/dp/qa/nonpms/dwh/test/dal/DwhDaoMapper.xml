@@ -8,7 +8,7 @@
                 SELECT
                     property_id, min(date_id) min_date_id
                 FROM ${table}
-                WHERE date_id >= #{since}
+                WHERE date_id >= #{since} AND #{until} > date_id
                 GROUP BY property_id
             ) AS pd
         JOIN

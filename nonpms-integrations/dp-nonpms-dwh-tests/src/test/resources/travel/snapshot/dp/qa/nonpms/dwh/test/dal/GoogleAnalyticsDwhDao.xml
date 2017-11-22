@@ -8,7 +8,7 @@
                 SELECT
                     dim_property_id, min(dim_date_id) min_date_id
                 FROM Fact_web_performance_cumulative
-                WHERE dim_date_id >= #{since}
+                WHERE dim_date_id >= #{since} AND #{until} > dim_date_id
                 GROUP BY dim_property_id
             ) AS pd
         JOIN
