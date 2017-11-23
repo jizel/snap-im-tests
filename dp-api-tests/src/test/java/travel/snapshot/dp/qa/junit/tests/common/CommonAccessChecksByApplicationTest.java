@@ -21,6 +21,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUs
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtagByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
@@ -29,6 +30,7 @@ import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
+import javax.management.ImmutableDescriptor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -48,6 +50,7 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
     public static Optional FIELD_NAME;
     public static String FIELD_DESCRIPTION = "description";
     public static Integer EXPECTED_CODE;
+    public static Map<String, Object> INACTIVATE_UPDATE = ImmutableMap.of("is_active", false);
 
     @BeforeEach
     public void setUp() {
