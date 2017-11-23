@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.common;
+package travel.snapshot.dp.qa.junit.tests.identity.validations;
 
 import static java.util.Arrays.asList;
 import static java.util.Objects.nonNull;
@@ -26,6 +26,7 @@ import travel.snapshot.dp.api.model.VersionedEntityDto;
 import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
 import travel.snapshot.dp.qa.junit.helpers.ValidationHelpers;
 import travel.snapshot.dp.qa.junit.tests.Categories;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.List;
 import java.util.Random;

@@ -10,7 +10,6 @@ import org.junit.Before;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.model.EntityDto;
 import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
-import travel.snapshot.dp.qa.junit.tests.common.CommonValidationTests;
 
 import java.util.List;
 

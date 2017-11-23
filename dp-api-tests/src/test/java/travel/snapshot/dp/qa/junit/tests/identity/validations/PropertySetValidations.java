@@ -14,7 +14,6 @@ import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.model.EntityDto;
 import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
-import travel.snapshot.dp.qa.junit.tests.common.CommonValidationTests;
 
 import java.util.List;
 import java.util.UUID;
