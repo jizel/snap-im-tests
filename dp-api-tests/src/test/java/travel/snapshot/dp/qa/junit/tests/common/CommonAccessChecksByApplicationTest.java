@@ -30,7 +30,6 @@ import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
-import javax.management.ImmutableDescriptor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -69,7 +68,6 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
         entityIsCreated(constructUserPropertyRelationshipDto(userId, propertyId2, true));
         EXPECTED_CODE = SC_CONFLICT;
     }
-
 
     @Test
     public void filteringEntitiessWithAccessChecks() {
