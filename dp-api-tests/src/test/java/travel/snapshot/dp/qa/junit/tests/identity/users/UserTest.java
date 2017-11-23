@@ -20,6 +20,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERT
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_DETAILS;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_MESSAGE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
@@ -164,6 +165,21 @@ public class UserTest extends CommonTest {
                 .then()
                 .statusCode(SC_UNPROCESSABLE_ENTITY).assertThat().body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS))
                 .body("details", hasItem(message));
+    }
+
+    @Test
+    @Jira("DPIM-176")
+    public void testCultureUpdate() {
+        UserUpdateDto updateDto = new UserUpdateDto();
+        updateDto.setLanguageCode("En-us-AU");
+        updateEntity(USERS_PATH, createdUserId, updateDto)
+                .then()
+                .statusCode(SC_UNPROCESSABLE_ENTITY)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_SEMANTIC_ERRORS))
+                .body(RESPONSE_DETAILS, hasItem("The 'culture' attribute is not valid IETF language tag"));
+        updateDto.setLanguageCode("en-AU");
+        updateEntity(USERS_PATH, createdUserId, updateDto).then().statusCode(SC_OK);
     }
 
     private UserUpdateDto getTestUpdate() {
