@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -12,11 +13,17 @@ import java.util.List;
 public class FailureNotification extends Notification {
 
     @JsonProperty
-    private Provider provider;
+    Provider provider;
     @JsonProperty
-    private List<String> affectedProperties;
+    LocalDate affectedDate;
     @JsonProperty
-    private LocalDate affectedDate;
+    List<String> affectedProperties;
+    @JsonProperty
+    ErrorType errorType;
+    @JsonProperty
+    String integrationError;
+    @JsonProperty
+    ZonedDateTime timestamp;
 
     public FailureNotification() {
         super();
@@ -26,4 +33,11 @@ public class FailureNotification extends Notification {
     public boolean isFailure() {
         return true;
     }
+
+    public enum ErrorType {
+        SERVICE_DOWN,
+        AUTHORIZATION_PROBLEM,
+        UNEXPECTED_ERROR
+    }
+
 }
