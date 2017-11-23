@@ -56,7 +56,7 @@ Load tests exercising Data Platform REST API.
   
   * **atOnce** - works together with startUsers parameter (endUsers and ramp params are omitted). Injects all users at once at the beginning of the test. Each user
   makes all the requests specified in given simulation class and then the test ends. This kind of test has the shortest runtime.
-  * **rampSimple** - uses endUsers and ramp parameters(endUsers is omitted). Test begins with one user and during the ramp time the number of users
+  * **rampSimple** - uses endUsers and ramp parameters(startUsers is omitted). Test begins with one user and during the ramp time the number of users
   grows to endUsers. 
   * **rampPerSec** - **default value**, used if no injection method specified. Ramps users every second from startUsers to endUsers
   over the ramp time. Very aggressive method that generates a lot of requests. Use carefully.

@@ -102,6 +102,7 @@ public abstract class CommonTest {
     public static final int CC_NON_EXISTING_REFERENCE = 42202;
     public static final int CC_NO_MATCHING_ENTITY = 42203;
     public static final int CC_INVALID_ETAG = 41202;
+    public static final int CC_MISSING_ETAG = 41201;
 
     //    Basic test entities
     protected static NonNullMapDecorator<String, CustomerCreateDto> customerDtos;

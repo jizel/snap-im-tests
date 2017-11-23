@@ -182,14 +182,21 @@ public abstract class CommonValidationTests extends CommonTest {
     }
 
     @Test
-    public void updateWithInvalidEtag() {
+    public void updateInvalidMissingEtag() {
         UUID createdEntityId = entityIsCreated(getTestEntity());
         ObjectNode updateObject = getValidUpdate(validationHelpers.getCorrectObject(getAttributesBoundaries()));
+
         updateEntityWithEtag(getPath(), createdEntityId, updateObject, NON_EXISTENT_ETAG)
                 .then()
                 .statusCode(SC_PRECONDITION_FAILED)
                 .assertThat()
                 .body(RESPONSE_CODE, is(CC_INVALID_ETAG));
+
+        updateEntityWithEtag(getPath(), createdEntityId, updateObject, null)
+                .then()
+                .statusCode(SC_PRECONDITION_FAILED)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_MISSING_ETAG));
     }
 
 }
