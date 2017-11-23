@@ -43,8 +43,6 @@ public class UserValidations extends CommonValidationTests {
         super.setUp();
         testEntity = testUser1;
         createdCustomerId = entityIsCreated(testCustomer1);
-        List<Locale> availableLocales = asList(getAvailableLocales());
-        String randomCulture = availableLocales.get(random.nextInt(availableLocales.size())).toLanguageTag();
         UserUpdateDto.UserType randomUserType = USER_TYPES.get(random.nextInt(USER_TYPES.size()));
 
         attributesBoundaries = new ArrayList<>(asList(
@@ -61,7 +59,7 @@ public class UserValidations extends CommonValidationTests {
                 ObjectField.of(
                         "/timezone", STRING, true, "(Europe/Prague)", "UTC+01:00", null),
                 ObjectField.of(
-                        "/culture", STRING, true, randomCulture, "\\w{30}", "\\w{51}"),
+                        "/culture", STRING, true, getValidLocale(), "\\w{30}", "\\w{51}"),
                 ObjectField.of(
                         "/picture", STRING, false, "http:\\/\\/[a-z0-9]{63}\\.com", "\\.{10}", "\\w{1001}"),
                 ObjectField.of(
@@ -88,6 +86,17 @@ public class UserValidations extends CommonValidationTests {
         objectNode.remove("user_customer_relationship");
 
         return objectNode;
+    }
+
+    private String getValidLocale(){
+        List<Locale> availableLocales = asList(getAvailableLocales());
+        Locale randomLocale = availableLocales.get(random.nextInt(availableLocales.size()));
+        if(randomLocale.getCountry() == null || "".equals(randomLocale.getCountry())){
+        // Default value if random locale has no country set. That would result in IM invalid language tag.
+            randomLocale = new Locale("en","CA");
+        }
+
+        return randomLocale.toLanguageTag();
     }
 
 }
