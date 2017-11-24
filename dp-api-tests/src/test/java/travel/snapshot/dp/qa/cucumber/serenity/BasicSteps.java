@@ -128,6 +128,7 @@ public class BasicSteps {
     public static final String SNAPSHOT_PHONE = "+420530514301";
     public static final String DEFAULT_PASSWORD = "P@ssw0rd";
     public static final String DEFAULT_ENCRYPTED_PASSWORD = "$2a$10$vNTgpUAsWvhJQmJR2DkuYOTN5EgJQhMOqQ5xd0DmJOHdck4Sa2orq";
+    public static final String WRONG_ENCRYPTED_PASSWORD = "$2a$10$iIuyGtO./6izEUk0iOZdy.5moBMuhTj0dU6sQMoiVYswO2QSd1jnO";
     public static final String DEFAULT_CLIENT_SECRET = "a4000000-0000-4444-8888-000000000000";
     public static final String CUSTOMER_PROPERTIES = "customer_properties";
     public static final String CUSTOMER_USERS = "customer_users";
