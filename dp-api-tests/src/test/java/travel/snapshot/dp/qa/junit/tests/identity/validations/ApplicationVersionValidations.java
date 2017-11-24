@@ -16,7 +16,6 @@ import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionStatus;
 import travel.snapshot.dp.api.model.EntityDto;
 import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
-import travel.snapshot.dp.qa.junit.tests.common.CommonValidationTests;
 
 import java.time.LocalDate;
 import java.util.List;
