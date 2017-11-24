@@ -24,11 +24,9 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENTITIES_TO_DELETE;
 
 import net.serenitybdd.core.Serenity;
-import net.serenitybdd.junit.runners.SerenityRunner;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 import travel.snapshot.dp.qa.junit.tests.Categories;
@@ -45,21 +43,21 @@ import java.util.UUID;
  * Test classes extending this class use keycloak authorization and clean everything they made so they can be
  * performed on various environments without deleting whole DB.
  */
-@RunWith(SerenityRunner.class)
 @Category(Categories.Authorization.class)
 public class CommonSmokeTest extends CommonTest {
 
     protected final AuthorizationSteps authorizationSteps = new AuthorizationSteps();
     protected String clientId = null;
     protected String clientSecret = null;
+    protected EntitiesLoader loader;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         // To clean after normal tests we first remove all test entities
         dbStepDefs.defaultEntitiesAreDeleted();
         dbStepDefs.defaultEntitiesAreCreated();
-        EntitiesLoader loader = entitiesLoader.getInstance();
+        loader = entitiesLoader.getInstance();
         loadDefaultTestEntities();
         Map<String, Object> testClient1 = loader.getClients().get("client1");
         try {
@@ -67,14 +65,14 @@ public class CommonSmokeTest extends CommonTest {
         } catch (Exception e) {
             fail("Exception during client creation: " + e.getMessage());
         }
-        clientId = (String) testClient1.get("clientId");
-        clientSecret = (String) testClient1.get("secret");
+        clientId = testClient1.get("clientId").toString();
+        clientSecret = testClient1.get("secret").toString();
         authorizationSteps.getToken(DEFAULT_SNAPSHOT_USER_NAME, DEFAULT_PASSWORD, clientId, clientSecret);
         Map<String, List<String>> thingsToDelete = new HashMap<>();
         Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(thingsToDelete);
     }
 
-    @After
+    @AfterEach
     public void cleanUp() throws Throwable {
         removeCreatedEntities(Serenity.sessionVariableCalled(ENTITIES_TO_DELETE));
         dbStepDefs.defaultEntitiesAreDeleted();

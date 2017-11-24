@@ -1,0 +1,28 @@
+{
+  "clientId": "04000000-0000-4444-8888-000000000000",
+  "surrogateAuthRequired": false,
+  "enabled": true,
+  "clientAuthenticatorType": "client-secret",
+  "secret": "4675e430-0d25-40e9-93b5-2bbe450b253b",
+  "redirectUris": [
+    "*"
+  ],
+  "webOrigins": [],
+  "notBefore": 0,
+  "bearerOnly": false,
+  "consentRequired": false,
+  "standardFlowEnabled": true,
+  "implicitFlowEnabled": false,
+  "directAccessGrantsEnabled": true,
+  "serviceAccountsEnabled": false,
+  "publicClient": true,
+  "frontchannelLogout": false,
+  "protocol": "openid-connect",
+  "attributes": {},
+  "fullScopeAllowed": false,
+  "nodeReRegistrationTimeout": -1,
+  "clientTemplate": "Snapshot Template",
+  "useTemplateConfig": false,
+  "useTemplateScope": true,
+  "useTemplateMappers": true
+}
