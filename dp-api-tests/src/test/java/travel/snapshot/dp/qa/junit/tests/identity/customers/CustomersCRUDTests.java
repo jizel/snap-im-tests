@@ -149,7 +149,7 @@ public class CustomersCRUDTests extends CommonTest {
 
         updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), null)
                 .then().statusCode(SC_PRECONDITION_FAILED)
-                .body(RESPONSE_CODE, is(CC_INVALID_ETAG));
+                .body(RESPONSE_CODE, is(CC_MISSING_ETAG));
     }
 
     @Test
