@@ -3,7 +3,6 @@ package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 import static java.util.Collections.singletonMap;
 import static java.util.UUID.randomUUID;
-import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
@@ -12,9 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
@@ -23,7 +20,6 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtag;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Test;
@@ -130,26 +126,6 @@ public class CustomersCRUDTests extends CommonTest {
 
         updateEntity(CUSTOMERS_PATH, randomUUID(), invalidUpdate);
         responseIsEntityNotFound();
-    }
-
-    @Test
-    public void updateCustomerWithInvalidEtag() throws Exception {
-        UUID customerId = entityIsCreated(testCustomer1);
-        updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), DEFAULT_SNAPSHOT_ETAG)
-                .then().statusCode(SC_PRECONDITION_FAILED)
-                .body(RESPONSE_CODE, is(CC_INVALID_ETAG));
-
-        updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), "Invalid Etag")
-                .then().statusCode(SC_PRECONDITION_FAILED)
-                .body(RESPONSE_CODE, is(CC_INVALID_ETAG));
-
-        updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), "")
-                .then().statusCode(SC_PRECONDITION_FAILED)
-                .body(RESPONSE_CODE, is(CC_INVALID_ETAG));
-
-        updateEntityWithEtag(CUSTOMERS_PATH, customerId, new CustomerUpdateDto(), null)
-                .then().statusCode(SC_PRECONDITION_FAILED)
-                .body(RESPONSE_CODE, is(CC_MISSING_ETAG));
     }
 
     @Test
