@@ -1,7 +1,7 @@
 package travel.snapshot.dp.qa.junit.tests.identity.access_checks.ByApplication;
 
 import com.jayway.restassured.response.Response;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
@@ -22,7 +22,6 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUs
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityEtag;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtagByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipPartialDto;
@@ -57,7 +56,7 @@ public class PropertyCustomersAccessCheckTests extends CommonTest {
     }
 
     @Test
-    public void propertyCustomerRelationshipCRUDByApplicationWithAndWithoutAccess() {
+    void propertyCustomerRelationshipCRUDByApplicationWithAndWithoutAccess() {
         // Create
         createRelation(propertyId2).then().statusCode(SC_CREATED);
         accessibleRelationId = getSessionResponse().as(CustomerPropertyRelationshipDto.class).getId();

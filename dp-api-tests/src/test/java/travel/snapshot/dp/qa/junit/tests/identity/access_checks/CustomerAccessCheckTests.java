@@ -6,12 +6,13 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.commercialSubscriptionIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
@@ -53,7 +54,7 @@ public class CustomerAccessCheckTests extends CommonTest {
         // create user
         entityIsCreated(testUser1);
         // Create subscription for app 1
-        commercialSubscriptionHelpers.commercialSubscriptionIsCreated(testCustomer1.getId(), DEFAULT_PROPERTY_ID, testApplication1.getId());
+        commercialSubscriptionIsCreated(testCustomer1.getId(), DEFAULT_PROPERTY_ID, testApplication1.getId());
         // Create app version with subscription
         testAppVersion1.setApplicationId(testApplication1.getId());
         entityIsCreated(testAppVersion1);
@@ -71,7 +72,7 @@ public class CustomerAccessCheckTests extends CommonTest {
 
     @Test
     @Jira("DPIM-50")
-    public void thereIsActiveCommercialSubscriptionLinkingToTheApplicationVersion() throws Throwable {
+    void thereIsActiveCommercialSubscriptionLinkingToTheApplicationVersion() throws Throwable {
         getEntityByUserForApplication(testUser1.getId(), versionWithSubscriptionId, CUSTOMERS_PATH, testCustomer1.getId());
         responseCodeIs(SC_OK);
         getEntityByUserForApplication(testUser1.getId(), nonCommercialVersionId, CUSTOMERS_PATH, testCustomer1.getId());
@@ -83,7 +84,7 @@ public class CustomerAccessCheckTests extends CommonTest {
     }
 
     @Test
-    public void thereIsActiveCommercialSubscriptionWithParentCustomerEntity() throws Throwable {
+    void thereIsActiveCommercialSubscriptionWithParentCustomerEntity() throws Throwable {
         testCustomer3.setParentId(testCustomer1.getId());
         entityIsCreated(testCustomer3);
         testCustomer4.setParentId(testCustomer3.getId());
