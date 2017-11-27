@@ -24,13 +24,11 @@ import com.jayway.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.UUID;
@@ -55,7 +53,6 @@ public class UserCustomerRelationshipTests extends CommonTest{
     }
 
     @Test
-    @Category(Categories.SmokeTests.class)
     public void createUserCustomerRelationship() {
         Response response = createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_CREATED);

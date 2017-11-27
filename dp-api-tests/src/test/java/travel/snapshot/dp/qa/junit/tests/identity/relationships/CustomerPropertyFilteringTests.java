@@ -8,22 +8,22 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParam
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
+import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
 
-import org.junit.experimental.categories.Category;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Map;
 import java.util.UUID;
 
 
-@Category(Categories.SlowTests.class)
+@Tag(SLOW_TEST)
 public class CustomerPropertyFilteringTests extends CommonTest {
 
     private static final String EXAMPLES = "/csv/relationships/";

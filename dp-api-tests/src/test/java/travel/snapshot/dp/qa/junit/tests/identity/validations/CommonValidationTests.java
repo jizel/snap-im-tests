@@ -15,17 +15,17 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtag;
+import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import travel.snapshot.dp.api.model.EntityDto;
 import travel.snapshot.dp.api.model.VersionedEntityDto;
 import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
 import travel.snapshot.dp.qa.junit.helpers.ValidationHelpers;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.List;
@@ -40,7 +40,7 @@ import java.util.function.Predicate;
  */
 public abstract class CommonValidationTests extends CommonTest {
 
-    protected ValidationHelpers validationHelpers;
+    private ValidationHelpers validationHelpers;
     protected Random random = new Random();
 
     private static Predicate<ObjectField> nonNullCorrectFilter = (f) -> nonNull(f.getCorrect());
@@ -105,7 +105,7 @@ public abstract class CommonValidationTests extends CommonTest {
     }
 
     @Test
-    @Category(Categories.SlowTests.class)
+    @Tag(SLOW_TEST)
     public void filteringValidation() {
         List<VersionedEntityDto> createdEntities = validationHelpers.createNObjectsAs(
                 getDtoType(),

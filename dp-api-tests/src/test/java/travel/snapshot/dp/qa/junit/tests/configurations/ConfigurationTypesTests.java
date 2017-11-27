@@ -15,10 +15,8 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Arrays;
@@ -45,7 +43,6 @@ public class ConfigurationTypesTests extends CommonTest {
     }
 
     @Test
-    @Category(Categories.SmokeTests.class)
     public void createAndGetConfigurationTypeTest() {
         configurationHelpers.followingConfigurationTypeIsCreated(testConfigurationType1);
         responseCodeIs(SC_CREATED);
@@ -57,7 +54,6 @@ public class ConfigurationTypesTests extends CommonTest {
     }
 
     @Test
-    @Category(Categories.SmokeTests.class)
     public void updateConfigurationTypeTest() {
         configurationHelpers.followingConfigurationTypeIsCreated(testConfigurationType1);
         String updatedDescription = "Updated description";
@@ -67,7 +63,6 @@ public class ConfigurationTypesTests extends CommonTest {
     }
 
     @Test
-    @Category(Categories.SmokeTests.class)
     public void deleteConfigurationTypeTest() {
         configurationHelpers.followingConfigurationTypeIsCreated(testConfigurationType1);
         configurationHelpers.tryDeleteConfigurationType(CONF1_IDENTIFIER);

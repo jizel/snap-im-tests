@@ -14,12 +14,12 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_DETAILS
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_MESSAGE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
 
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.UUID;
@@ -28,7 +28,7 @@ import java.util.UUID;
  * Example of JUnit tests using Parameters. It can be used for multiline data driven testing where every line of data is
  * reported as separate test but it cannot be used with Serenity Runner. Also it needs data set per test.
  */
-@Category(Categories.SlowTests.class)
+@Tag(SLOW_TEST)
 public class ParametersCustomer extends CommonTest {
 
     private static final String CUSTOMER_EXAMPLES = "/csv/customers/";

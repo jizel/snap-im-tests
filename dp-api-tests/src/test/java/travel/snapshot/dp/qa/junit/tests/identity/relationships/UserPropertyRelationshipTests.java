@@ -21,12 +21,10 @@ import com.jayway.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.UUID;
@@ -48,8 +46,7 @@ public class UserPropertyRelationshipTests extends CommonTest {
         testUserPropertyRelationship = constructUserPropertyRelationshipDto(createdUserId, createdProperty1Id, true);
     }
 
-    
-    @Category(Categories.SmokeTests.class)
+
     @Test
     public void createUserPropertyRelationship() {
         Response response = createEntity(USER_PROPERTY_RELATIONSHIPS_PATH, testUserPropertyRelationship);

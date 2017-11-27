@@ -2,28 +2,27 @@ package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
+import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
 
 import com.jayway.restassured.specification.RequestSpecification;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
 import java.util.UUID;
 
 
-@Category(Categories.Authorization.class)
+@Tag(AUTHORIZATION_TEST)
 public class PropertySmokeTests extends CommonSmokeTest {
 
     protected RequestSpecification spec = null;

@@ -22,14 +22,14 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_NAME;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENTITIES_TO_DELETE;
+import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
 
 import net.serenitybdd.core.Serenity;
-import org.junit.experimental.categories.Category;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +43,7 @@ import java.util.UUID;
  * Test classes extending this class use keycloak authorization and clean everything they made so they can be
  * performed on various environments without deleting whole DB.
  */
-@Category(Categories.Authorization.class)
+@Tag(AUTHORIZATION_TEST)
 public class CommonSmokeTest extends CommonTest {
 
     protected final AuthorizationSteps authorizationSteps = new AuthorizationSteps();

@@ -1,12 +1,11 @@
 package travel.snapshot.dp.qa.junit.tests.common;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
+import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
+
 import org.junit.After;
 import org.junit.Before;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Tag;
 import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 
 /**
  * Non destructive smoke tests.
@@ -14,8 +13,7 @@ import travel.snapshot.dp.qa.junit.tests.Categories;
  * Test classes extending this class use keycloak authorization and clean everything they made so they can be
  * performed on various environments without deleting whole DB.
  */
-@RunWith(SerenityRunner.class)
-@Category(Categories.Authorization.class)
+@Tag(AUTHORIZATION_TEST)
 public class CommonProductionTest extends CommonTest {
 
     private final AuthorizationSteps authorizationSteps = new AuthorizationSteps();

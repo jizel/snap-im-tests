@@ -2,21 +2,20 @@ package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ENCRYPTED_PASSWORD;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
+import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
 
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
 import java.util.UUID;
 
-@Category(Categories.Authorization.class)
+@Tag(AUTHORIZATION_TEST)
 public class UserSmokeTests extends CommonSmokeTest {
     protected UUID userId;
     protected UUID userCustomerRelationId;

@@ -4,20 +4,20 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
+import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
 
 import com.jayway.restassured.specification.RequestSpecification;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
 import java.util.UUID;
 
-@Category(Categories.Authorization.class)
+@Tag(AUTHORIZATION_TEST)
 public class PropertySetSmokeTests extends CommonSmokeTest {
     protected RequestSpecification spec = null;
 

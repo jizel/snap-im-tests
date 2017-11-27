@@ -88,11 +88,11 @@ dependencies {
     testCompile 'com.github.mifmif:generex:0.0.4'
     testCompile 'org.apache.commons:commons-lang3:3.4'
     testCompile 'org.springframework:spring-jdbc:4.2.2.RELEASE'
-    testCompile 'com.googlecode.junit-toolbox:junit-toolbox:2.3'
 
     // JUnit Jupiter - API, TestEngine and parametrized test implementation
     testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testCompile("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
+    testCompile("org.junit.platform:junit-platform-runner:1.0.2")
     // Support JUnit 3 and JUnit 4 tests
     testCompile("junit:junit:${junit4Version}")
     // To avoid compiler warnings about @API annotations in JUnit code.

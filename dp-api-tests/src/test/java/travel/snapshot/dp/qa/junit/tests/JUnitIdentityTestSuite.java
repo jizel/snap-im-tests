@@ -1,12 +1,14 @@
 package travel.snapshot.dp.qa.junit.tests;
 
-import com.googlecode.junittoolbox.ExcludeCategories;
-import com.googlecode.junittoolbox.SuiteClasses;
-import com.googlecode.junittoolbox.WildcardPatternSuite;
+import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
+import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.suite.api.ExcludeTags;
+import org.junit.platform.suite.api.SelectPackages;
 import org.junit.runner.RunWith;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 
 
 /**
@@ -16,9 +18,9 @@ import travel.snapshot.dp.qa.junit.tests.Categories;
  *
  * This class has to be located in a super package of all the classes it runs.
  */
-@RunWith(WildcardPatternSuite.class)
-@SuiteClasses("**/identity/**/*.class")
-@ExcludeCategories({Categories.SlowTests.class, Categories.Authorization.class})
+@RunWith(JUnitPlatform.class)
+@SelectPackages("travel.snapshot.dp.qa.junit.tests.identity")
+@ExcludeTags({SLOW_TEST, AUTHORIZATION_TEST})
 public class JUnitIdentityTestSuite {
 
     @BeforeClass

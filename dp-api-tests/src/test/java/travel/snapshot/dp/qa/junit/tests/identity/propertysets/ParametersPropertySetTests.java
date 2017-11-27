@@ -15,8 +15,9 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
+import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
 
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
@@ -27,7 +28,6 @@ import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDt
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
@@ -43,7 +43,7 @@ public class ParametersPropertySetTests extends CommonTest {
     private static final String EXAMPLES = "/csv/property_sets/";
 
 
-    @Category(Categories.SlowTests.class)
+    @Tag(SLOW_TEST)
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "getPropertySets.csv")
     public void getPropertySets(
