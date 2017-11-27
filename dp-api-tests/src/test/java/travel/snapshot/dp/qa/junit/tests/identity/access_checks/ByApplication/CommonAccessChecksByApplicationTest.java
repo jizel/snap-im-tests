@@ -51,7 +51,8 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
     Integer expectedCode;
     static final Map<String, Object> INACTIVATE_UPDATE = ImmutableMap.of("is_active", false);
     int returnedEntities = 1;
-
+    UUID userPropertyRelationId1;
+    UUID userPropertyRelationId2;
     @BeforeEach
     public void setUp() {
         super.setUp();
@@ -65,8 +66,8 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
         appVersionId = entityIsCreated(testAppVersion1);
         commercialSubscriptionIsCreated(DEFAULT_SNAPSHOT_CUSTOMER_ID, propertyId1, appId);
         userId = entityIsCreated(testUser1);
-        entityIsCreated(constructUserPropertyRelationshipDto(userId, propertyId1, true));
-        entityIsCreated(constructUserPropertyRelationshipDto(userId, propertyId2, true));
+        userPropertyRelationId1 = entityIsCreated(constructUserPropertyRelationshipDto(userId, propertyId1, true));
+        userPropertyRelationId2 = entityIsCreated(constructUserPropertyRelationshipDto(userId, propertyId2, true));
         expectedCode = SC_CONFLICT;
         update = new HashMap<>();
     }
