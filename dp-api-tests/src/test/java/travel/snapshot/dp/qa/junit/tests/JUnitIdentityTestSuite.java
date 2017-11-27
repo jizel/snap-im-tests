@@ -6,6 +6,7 @@ import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.suite.api.ExcludePackages;
 import org.junit.platform.suite.api.ExcludeTags;
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)
 @SelectPackages("travel.snapshot.dp.qa.junit.tests.identity")
+@ExcludePackages("travel.snapshot.dp.qa.junit.tests.identity.smoke")
 @ExcludeTags({SLOW_TEST, AUTHORIZATION_TEST})
 public class JUnitIdentityTestSuite {
 
