@@ -1,16 +1,5 @@
 package travel.snapshot.dp.qa.junit.tests.identity.roles;
 
-import org.junit.experimental.categories.Category;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
-import travel.snapshot.dp.api.identity.model.RoleDto;
-import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
-import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
-import travel.snapshot.dp.qa.junit.tests.Categories;
-import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-
 import static java.util.stream.IntStream.range;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
@@ -19,14 +8,25 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByName;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByName;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
+import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
+import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 /**
  * GET, filtering, sorting etc. tests for Role entity. 50+ roles created for testing (pagination)
  */
-@Category(Categories.SlowTests.class)
+@Tag(SLOW_TEST)
 public class RolesGetTests extends CommonTest{
 
     private static final String EXAMPLES = "/csv/roles/";

@@ -9,22 +9,22 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
+import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
 
-import org.junit.experimental.categories.Category;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 /**
  * GET, filtering, sorting etc. tests for Customer entity. 50+ customers created for testing (pagination)
  */
-@Category(Categories.SlowTests.class)
+@Tag(SLOW_TEST)
 public class CustomerGetTests extends CommonTest{
 
     private static final String FILTERING_CUSTOMERS_EXAMPLES = "/csv/customers/filteringCustomers.csv";

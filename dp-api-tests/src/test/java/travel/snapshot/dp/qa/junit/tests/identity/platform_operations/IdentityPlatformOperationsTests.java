@@ -7,14 +7,14 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
+import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
 
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import travel.snapshot.dp.api.identity.model.PlatformOperationCreateDto;
 import travel.snapshot.dp.api.identity.model.PlatformOperationDto;
 import travel.snapshot.dp.api.identity.model.PlatformOperationUpdateDto;
 import travel.snapshot.dp.api.type.HttpMethod;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonPlatformOperationTest;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class IdentityPlatformOperationsTests extends CommonPlatformOperationTest
     }
 
     @Test
-    @Category(Categories.SlowTests.class)
+    @Tag(SLOW_TEST)
     public void identityPermissionCannotBeUpdatedOrDeleted() {
         List<PlatformOperationDto> allIdentityPlatformOperations = getEntitiesAsType(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class,
                 buildQueryParamMapForPaging(null, null, "uri_template==/identity/*", "uri_template", null, null));

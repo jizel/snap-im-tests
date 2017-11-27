@@ -2,16 +2,16 @@ package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUPS_PATH;
+import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
 
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
 import java.util.UUID;
 
-@Category(Categories.Authorization.class)
+@Tag(AUTHORIZATION_TEST)
 public class UserGroupSmokeTests extends CommonSmokeTest {
 
     @Test

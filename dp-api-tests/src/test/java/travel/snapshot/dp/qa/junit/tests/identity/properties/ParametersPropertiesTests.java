@@ -28,8 +28,9 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
+import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
 
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.AddressDto;
@@ -40,7 +41,6 @@ import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCrea
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
-import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.io.IOException;
@@ -51,15 +51,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Category(Categories.SlowTests.class)
-public class ParametersPropertiesTests extends CommonTest {
+@Tag(SLOW_TEST)
+class ParametersPropertiesTests extends CommonTest {
 
     private static final String EXAMPLES = "/csv/properties/";
 
 
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "correctPropertyCodeIsReturnedWhenNoneSent.csv")
-    public void correctPropertyCodeIsReturnedWhenNoneSent(String name) throws IOException {
+    void correctPropertyCodeIsReturnedWhenNoneSent(String name) throws IOException {
         testProperty1.setName(name);
         testProperty1.setId(null);
         testProperty1.setCode(null);
@@ -72,7 +72,7 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "correctPropertyCodeIsReturnedAccordingToCustomersAddress.csv")
-    public void correctPropertyCodeIsReturnedAccordingToCustomersAddress(
+    void correctPropertyCodeIsReturnedAccordingToCustomersAddress(
             String name,
             String line1,
             String city,
@@ -98,7 +98,7 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "propertyCodeCanBeFilledManually.csv")
-    public void propertyCodeCanBeFilledManually(String code) throws IOException {
+    void propertyCodeCanBeFilledManually(String code) throws IOException {
         testProperty1.setId(null);
         testProperty1.setCode(code);
         entityIsCreated(testProperty1);
@@ -108,7 +108,7 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "filteringListOfCustomerProperties.csv")
-    public void filteringListOfCustomerProperties(
+    void filteringListOfCustomerProperties(
             String limit,
             String cursor,
             String total,
@@ -136,7 +136,7 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "validateThatPropertyRegionsBelongToTheCorrectCountry.csv")
-    public void validateThatPropertyRegionsBelongToTheCorrectCountry(String country, String region) {
+    void validateThatPropertyRegionsBelongToTheCorrectCountry(String country, String region) {
         AddressDto address = testProperty1.getAddress();
         address.setCountryCode(country);
         address.setRegionCode(region);
@@ -147,7 +147,7 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "checkingErrorCodesForRegions.csv")
-    public void checkingErrorCodesForRegions(String country, String region) {
+    void checkingErrorCodesForRegions(String country, String region) {
         AddressDto address = testProperty1.getAddress();
         address.setCountryCode(country);
         address.setRegionCode(region);
@@ -160,7 +160,7 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "gettingListOfProperties.csv")
-    public void gettingListOfProperties(
+    void gettingListOfProperties(
             String limit,
             String cursor,
             String filter,
@@ -193,7 +193,7 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "gettingListOfPropertiesPropertySets.csv")
-    public void gettingListOfPropertiesPropertySets(String limit, String cursor, String returned, String total) {
+    void gettingListOfPropertiesPropertySets(String limit, String cursor, String returned, String total) {
         range(0, 30).forEachOrdered(n -> {
             testPropertySet1.setId(null);
             testPropertySet1.setName(String.format("New_set_%d", n));
@@ -209,7 +209,7 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "filteringListOfPropertiesPropertySets.csv")
-    public void filteringListOfPropertiesPropertySets(
+    void filteringListOfPropertiesPropertySets(
             String limit,
             String cursor,
             String returned,
@@ -231,7 +231,7 @@ public class ParametersPropertiesTests extends CommonTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = EXAMPLES + "filteringListOfUsersForProperty.csv")
-    public void filteringListOfUsersForProperty(
+    void filteringListOfUsersForProperty(
             String limit,
             String cursor,
             String returned,
