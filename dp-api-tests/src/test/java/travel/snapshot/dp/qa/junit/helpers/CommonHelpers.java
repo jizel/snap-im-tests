@@ -398,16 +398,18 @@ public class CommonHelpers {
         return (DTO) getEntitiesAsType(basePath, endpointDtoMap.get(basePath), params).get(0);
     }
 
-    public static List<? extends EntityDto> getEntitiesByPattern(String basePath, Optional fieldName, String pattern) {
+    public static List<? extends EntityDto> getEntitiesByPattern(String basePath, Optional<String> fieldName, Optional<String> pattern) {
         return getEntitiesByPatternByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, fieldName, pattern);
     }
 
-    public static List<? extends EntityDto> getEntitiesByPatternByUserForApp(UUID userId, UUID appId, String basePath, Optional fieldName, String pattern) {
+    public static List<? extends EntityDto> getEntitiesByPatternByUserForApp(UUID userId, UUID appId, String basePath,
+                                                                             Optional<String> fieldName, Optional<String> pattern) {
         Map<String, String> params = null;
-        if (fieldName != null) {
-            String filter = String.format("%s==%s", fieldName, pattern);
+        if (fieldName.isPresent()) {
+            String filter = String.format("%s==%s", fieldName.get(), pattern.orElse("*"));
             params = QueryParams.builder().filter(filter).build();
         }
+
         return getEntitiesAsTypeByUserForApp(userId, appId, basePath, endpointDtoMap.get(basePath), params);
     }
 }

@@ -1,18 +1,15 @@
 package travel.snapshot.dp.qa.junit.tests.identity.access_checks.ByApplication;
 
-import org.junit.jupiter.api.BeforeEach;
-import travel.snapshot.dp.qa.junit.tests.common.CommonAccessChecksByApplicationTest;
-
-import java.util.UUID;
-
+import static java.util.Optional.empty;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
-import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupUserRelationship;
-import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
+
+import org.junit.jupiter.api.BeforeEach;
+
+import java.util.UUID;
 
 public class UserGroupPropertyAccessCheckTests extends CommonAccessChecksByApplicationTest {
 
@@ -24,9 +21,9 @@ public class UserGroupPropertyAccessCheckTests extends CommonAccessChecksByAppli
         accessibleEntityId = entityIsCreated(constructUserGroupPropertyRelationship(ugId, propertyId1, true));
         inaccessibleEntityId = entityIsCreated(constructUserGroupPropertyRelationship(ugId, propertyId2, true));
         PATH = USER_GROUP_PROPERTY_RELATIONSHIPS_PATH;
-        PATTERN = null;
-        FIELD_NAME = null;
-        EXPECTED_CODE = SC_NO_CONTENT;
+        pattern = empty();
+        fieldName = empty();
+        expectedCode = SC_NO_CONTENT;
         update = INACTIVATE_UPDATE;
     }
 }

@@ -1,13 +1,5 @@
 package travel.snapshot.dp.qa.junit.tests.identity.access_checks.ByApplication;
 
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
-import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.qa.junit.tests.common.CommonAccessChecksByApplicationTest;
-
-import java.util.Optional;
-import java.util.UUID;
-
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
@@ -17,6 +9,13 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityEtag;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtagByUserForApp;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
+
+import java.util.Optional;
+import java.util.UUID;
+
 public class PropertyAccessCheckTests extends CommonAccessChecksByApplicationTest {
 
     @BeforeEach
@@ -25,13 +24,13 @@ public class PropertyAccessCheckTests extends CommonAccessChecksByApplicationTes
         accessibleEntityId = propertyId1;
         inaccessibleEntityId = propertyId2;
         PATH = PROPERTIES_PATH;
-        PATTERN = "Property*";
-        FIELD_NAME = Optional.of("name");
-        update.put(FIELD_DESCRIPTION, "New description");
+        pattern = Optional.of("Property*");
+        fieldName = Optional.of("name");
+        update.put(description, "New description");
     }
 
     @Test
-    public void anchorCustomerIdOfCustomerWithoutCommercialSubscriptionCannotBeUsedWhenCreatingOrUpdatingProperty() {
+    void anchorCustomerIdOfCustomerWithoutCommercialSubscriptionCannotBeUsedWhenCreatingOrUpdatingProperty() {
         UUID customerId = entityIsCreated(testCustomer1);
         PropertyUpdateDto updateDto = new PropertyUpdateDto();
         updateDto.setCustomerId(customerId);

@@ -1,18 +1,20 @@
 package travel.snapshot.dp.qa.junit.tests.identity.access_checks.ByApplication;
 
-import org.junit.jupiter.api.BeforeEach;
-import qa.tools.ikeeper.annotation.Jira;
-import travel.snapshot.dp.qa.junit.tests.common.CommonAccessChecksByApplicationTest;
-
-import java.util.UUID;
-
+import static java.util.Optional.empty;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import qa.tools.ikeeper.annotation.Jira;
+
+import java.util.UUID;
+
 @Jira("DPIM-206")
+@Disabled
 public class UserPropertySetAccessCheckTests extends CommonAccessChecksByApplicationTest {
 
     @BeforeEach
@@ -25,9 +27,10 @@ public class UserPropertySetAccessCheckTests extends CommonAccessChecksByApplica
         accessibleEntityId = entityIsCreated(constructUserPropertySetRelationshipDto(userId, ps1Id, true)) ;
         inaccessibleEntityId = entityIsCreated(constructUserPropertySetRelationshipDto(userId, ps2Id, true)) ;
         PATH = USER_PROPERTY_SET_RELATIONSHIPS_PATH;
-        PATTERN = null;
-        FIELD_NAME = null;
-        EXPECTED_CODE = SC_NO_CONTENT;
+        pattern = empty();
+        fieldName = empty();
+        expectedCode = SC_NO_CONTENT;
         update = INACTIVATE_UPDATE;
+        returnedEntities=2;
     }
 }
