@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.common;
+package travel.snapshot.dp.qa.junit.tests.identity.access_checks.ByApplication;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
@@ -28,6 +28,7 @@ import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
 import java.util.HashMap;
@@ -36,20 +37,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
-    public static String PATH;
-    public static UUID userId;
-    public static UUID appId;
-    public static UUID appVersionId;
-    public static UUID propertyId1;
-    public static UUID propertyId2;
-    public static UUID accessibleEntityId;
-    public static UUID inaccessibleEntityId;
-    public static Map<String, Object> update = new HashMap<String, Object>();
-    public static String PATTERN;
-    public static Optional FIELD_NAME;
-    public static String FIELD_DESCRIPTION = "description";
-    public static Integer EXPECTED_CODE;
-    public static Map<String, Object> INACTIVATE_UPDATE = ImmutableMap.of("is_active", false);
+    String PATH;
+    UUID userId;
+    UUID appVersionId;
+    UUID propertyId1;
+    UUID propertyId2;
+    UUID accessibleEntityId;
+    UUID inaccessibleEntityId;
+    Map<String, Object> update;
+    Optional<String> pattern;
+    Optional<String> fieldName;
+    String description = "description";
+    Integer expectedCode;
+    static final Map<String, Object> INACTIVATE_UPDATE = ImmutableMap.of("is_active", false);
+    int returnedEntities = 1;
 
     @BeforeEach
     public void setUp() {
@@ -58,7 +59,7 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
         // Also create a user, connected to both properties
         propertyId1 = entityIsCreated(testProperty1);
         propertyId2 = entityIsCreated(testProperty2);
-        appId = entityIsCreated(testApplication1);
+        UUID appId = entityIsCreated(testApplication1);
         dbSteps.populateApplicationPermissionsTableForApplication(appId);
         testAppVersion1.setApplicationId(appId);
         appVersionId = entityIsCreated(testAppVersion1);
@@ -66,16 +67,17 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
         userId = entityIsCreated(testUser1);
         entityIsCreated(constructUserPropertyRelationshipDto(userId, propertyId1, true));
         entityIsCreated(constructUserPropertyRelationshipDto(userId, propertyId2, true));
-        EXPECTED_CODE = SC_CONFLICT;
+        expectedCode = SC_CONFLICT;
+        update = new HashMap<>();
     }
 
     @Test
-    public void filteringEntitiessWithAccessChecks() {
-        assertThat(getEntitiesByPatternByUserForApp(userId, appVersionId, PATH, FIELD_NAME, PATTERN)).hasSize(1);
+    void filteringEntitiessWithAccessChecks() {
+        assertThat(getEntitiesByPatternByUserForApp(userId, appVersionId, PATH, fieldName, pattern)).hasSize(returnedEntities);
     }
 
     @Test
-    public void getEntityWithAndWithoutAccess() {
+    void getEntityWithAndWithoutAccess() {
         getEntityByUserForApplication(userId, appVersionId, PATH, accessibleEntityId)
                 .then()
                 .statusCode(SC_OK);
@@ -86,7 +88,7 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
     }
 
     @Test
-    public void applicationWithAndWithoutAccessUpdatesEntity() {
+    void applicationWithAndWithoutAccessUpdatesEntity() {
         String etag = getEntityEtag(PATH, inaccessibleEntityId);
         updateEntityWithEtagByUserForApp(userId, appVersionId, PATH, inaccessibleEntityId, update, etag)
                 .then()
@@ -103,7 +105,7 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
                 .statusCode(SC_OK);
         deleteEntityByUserForApp(userId, appVersionId, PATH, accessibleEntityId)
                 .then()
-                .statusCode(EXPECTED_CODE);
+                .statusCode(expectedCode);
     }
 
     public static void activateUserCustomerRelation(UUID userId, UUID customerId) {
