@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.junit.tests.identity.validations;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.Locale.getAvailableLocales;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.BOOL;
@@ -19,7 +20,6 @@ import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -87,15 +87,13 @@ public class UserValidations extends CommonValidationTests {
         return objectNode;
     }
 
-    private String getValidLocale(){
-        List<Locale> availableLocales = asList(getAvailableLocales());
-        Locale randomLocale = availableLocales.get(random.nextInt(availableLocales.size()));
-        if(randomLocale.getCountry() == null || "".equals(randomLocale.getCountry())){
-        // Default value if random locale has no country set. That would result in IM invalid language tag.
-            randomLocale = new Locale("en","CA");
-        }
-
-        return randomLocale.toLanguageTag();
+    private String getValidLocale() {
+        
+        return stream(getAvailableLocales())
+                .filter(locale -> locale.getCountry() != null && !"".equals(locale.getCountry()))
+                .findAny()
+                .orElseThrow(() -> new RuntimeException("No locale found for user"))
+                .toLanguageTag();
     }
 
 }
