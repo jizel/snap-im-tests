@@ -33,6 +33,7 @@ import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.construct
 import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_APPLICATIONS_ENDPOINT;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_SINGLE_APPLICATION_ENDPOINT;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.ApplicationCreateDto;
@@ -51,6 +52,14 @@ import java.util.UUID;
 public class ApplicationsTests extends CommonTest {
 
     private UUID externalAppId;
+    private UUID userId;
+
+    @BeforeEach
+    public void setUp() {
+        super.setUp();
+        userId = entityIsCreated(testUser1);
+        entityIsCreated(constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true));
+    }
 
     @Test
     @Jira("DPIM-77")
@@ -66,13 +75,13 @@ public class ApplicationsTests extends CommonTest {
         numberOfEntitiesInResponse(ApplicationDto.class, 2);
         applications.forEach(app -> assertThat(app.getPartnerId(), not(nullValue())));
 //        Get all apps with external context app
-        applications = getEntitiesAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
+        applications = getEntitiesAsTypeByUserForApp(userId, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(ApplicationDto.class, 2);
         applications.forEach(app -> assertNull(app.getPartnerId()));
 //        Check external commercial applications too
         externalAppVersion.setIsNonCommercial(false);
-        applications = getEntitiesAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
+        applications = getEntitiesAsTypeByUserForApp(userId, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(ApplicationDto.class, 2);
         applications.forEach(app -> assertNull(app.getPartnerId()));
@@ -94,18 +103,18 @@ public class ApplicationsTests extends CommonTest {
                 is(DEFAULT_SNAPSHOT_PARTNER_ID));
 //        Get single app with external context app
         assertNull(
-                getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, externalAppId)
+                getEntityAsTypeByUserForApp(userId, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, externalAppId)
                         .getPartnerId());
         assertNull(
-                getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, DEFAULT_SNAPSHOT_APPLICATION_ID)
+                getEntityAsTypeByUserForApp(userId, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, DEFAULT_SNAPSHOT_APPLICATION_ID)
                         .getPartnerId());
 //        Check external commercial applications too
         externalAppVersion.setIsNonCommercial(true);
         assertNull(
-                getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, externalAppId)
+                getEntityAsTypeByUserForApp(userId, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, externalAppId)
                         .getPartnerId());
         assertNull(
-                getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, DEFAULT_SNAPSHOT_APPLICATION_ID)
+                getEntityAsTypeByUserForApp(userId, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, DEFAULT_SNAPSHOT_APPLICATION_ID)
                         .getPartnerId());
     }
 
@@ -163,10 +172,6 @@ public class ApplicationsTests extends CommonTest {
         externalAppId = entityIsCreated(application);
         dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_APPLICATIONS_ENDPOINT, HttpMethod.GET);
         dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_SINGLE_APPLICATION_ENDPOINT, HttpMethod.GET);
-        entityIsCreated(constructUserCustomerRelationshipDto(
-                DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true));
-        entityIsCreated(constructUserPropertyRelationshipDto(
-                DEFAULT_SNAPSHOT_USER_ID, DEFAULT_PROPERTY_ID, true));
         commercialSubscriptionIsCreated(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID, externalAppId);
     }
 
