@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)
 @SelectPackages("travel.snapshot.dp.qa.junit.tests.identity")
-@ExcludePackages("travel.snapshot.dp.qa.junit.tests.identity.smoke")
 @ExcludeTags(AUTHORIZATION_TEST)
 public class IdentitySlowSuite {
 

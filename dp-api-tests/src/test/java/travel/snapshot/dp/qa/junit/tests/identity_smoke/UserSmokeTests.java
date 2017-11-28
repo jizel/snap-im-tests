@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.identity.smoke;
+package travel.snapshot.dp.qa.junit.tests.identity_smoke;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_OK;
