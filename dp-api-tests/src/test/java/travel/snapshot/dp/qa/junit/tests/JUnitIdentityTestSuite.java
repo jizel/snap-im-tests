@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 @IncludeEngines({"junit-jupiter", "junit-vintage"})
 @SelectPackages("travel.snapshot.dp.qa.junit.tests.identity")
-@ExcludeTags({SLOW_TEST, AUTHORIZATION_TEST})
+@ExcludeTags({SLOW_TEST})
 public class JUnitIdentityTestSuite {
 
     @BeforeClass

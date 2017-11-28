@@ -25,7 +25,7 @@ import java.util.UUID;
  * - Customer code always contains only CAPITAL english (latin) letters. Even when customer's name contains chinese, arabic or any other characters.
  */
 public class CustomerCodeTests extends CommonTest{
-    private static final String EXAMPLES = "src/test/resources/csv/customers/";
+    private static final String EXAMPLES = "/csv/customers/";
 
 
     @ParameterizedTest

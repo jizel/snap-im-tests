@@ -12,7 +12,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserF
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
@@ -72,7 +72,7 @@ public class CustomerAccessCheckTests extends CommonTest {
 
     @Test
     @Jira("DPIM-50")
-    void thereIsActiveCommercialSubscriptionLinkingToTheApplicationVersion() throws Throwable {
+    public void thereIsActiveCommercialSubscriptionLinkingToTheApplicationVersion() throws Throwable {
         getEntityByUserForApplication(testUser1.getId(), versionWithSubscriptionId, CUSTOMERS_PATH, testCustomer1.getId());
         responseCodeIs(SC_OK);
         getEntityByUserForApplication(testUser1.getId(), nonCommercialVersionId, CUSTOMERS_PATH, testCustomer1.getId());
@@ -84,7 +84,7 @@ public class CustomerAccessCheckTests extends CommonTest {
     }
 
     @Test
-    void thereIsActiveCommercialSubscriptionWithParentCustomerEntity() throws Throwable {
+    public void thereIsActiveCommercialSubscriptionWithParentCustomerEntity() throws Throwable {
         testCustomer3.setParentId(testCustomer1.getId());
         entityIsCreated(testCustomer3);
         testCustomer4.setParentId(testCustomer3.getId());
