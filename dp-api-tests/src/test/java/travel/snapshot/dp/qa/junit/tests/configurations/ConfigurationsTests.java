@@ -12,10 +12,8 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadYamlTables;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.selectExamplesForTestFromTable;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
 import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
@@ -30,7 +28,6 @@ import java.util.Map;
 /**
  * Configurations CRUD tests. Replacing Cucumber configurations.feature.
  */
-@RunWith(SerenityRunner.class)
 public class ConfigurationsTests extends CommonTest {
 
     private static Map<String, Map<String, List<String>>> configurationsTestsTables = loadYamlTables(String.format(YAML_DATA_PATH, "configurations/configuration_crud.yaml"));

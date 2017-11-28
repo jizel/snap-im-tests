@@ -21,9 +21,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTyp
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
@@ -33,7 +31,6 @@ import java.util.UUID;
 /**
  * Endpoint restrictions for customers
  */
-@RunWith(SerenityRunner.class)
 public class CustomerRestrictionsTests extends CommonRestrictionTest {
 
     @Test

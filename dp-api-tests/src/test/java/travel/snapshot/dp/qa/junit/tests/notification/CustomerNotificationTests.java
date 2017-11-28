@@ -8,11 +8,9 @@ import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNoti
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
@@ -23,7 +21,6 @@ import java.util.UUID;
  * JMS notification tests for Customer entity
  */
 
-@RunWith(SerenityRunner.class)
 public class CustomerNotificationTests extends CommonTest {
 
     private static Map<String, Map<String, Object>> notificationTestsData = loadTestData(String.format(YAML_DATA_PATH, "notifications/customer_notification_tests.yaml"));

@@ -17,10 +17,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
@@ -30,7 +28,6 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.UUID;
 
-@RunWith(SerenityRunner.class)
 public class PropertySetTests extends CommonTest {
 
     private PropertySetDto createdPropertySet;

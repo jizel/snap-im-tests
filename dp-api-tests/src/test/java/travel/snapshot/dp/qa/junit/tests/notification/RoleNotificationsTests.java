@@ -10,11 +10,9 @@ import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNoti
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
@@ -24,7 +22,6 @@ import java.util.UUID;
 /**
  * JMS notification tests for Roles. Only user-customer roles covered here.
  */
-@RunWith(SerenityRunner.class)
 public class RoleNotificationsTests extends CommonTest{
     private static Map<String, Map<String, Object>> notificationTestsData = loadTestData(String.format(YAML_DATA_PATH, "notifications/role_notification_tests.yaml"));
     private Map<String, Object> receivedCreateNotification;

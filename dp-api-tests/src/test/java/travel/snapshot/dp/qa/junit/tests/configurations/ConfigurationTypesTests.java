@@ -11,11 +11,9 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitie
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadYamlTables;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.selectExamplesForTestFromTable;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
@@ -26,7 +24,6 @@ import java.util.Map;
 /**
  * Configurations types CRUD tests. Replacing Cucumber configurations-types.feature.
  */
-@RunWith(SerenityRunner.class)
 public class ConfigurationTypesTests extends CommonTest {
 
     private static Map<String, Map<String, List<String>>> configurationTypesTestsTables = loadYamlTables(String.format(YAML_DATA_PATH, "configurations/configuration_types.yaml"));

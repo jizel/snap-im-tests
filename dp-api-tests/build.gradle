@@ -27,7 +27,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "net.serenity-bdd:serenity-gradle-plugin:1.1.26"
+//        classpath "net.serenity-bdd:serenity-gradle-plugin:1.1.26"
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
     }
 
 }
@@ -36,6 +37,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'groovy'
+//apply plugin: 'org.junit.platform.gradle.plugin'
 
 version = '1.0-SNAPSHOT'
 
@@ -76,10 +78,7 @@ dependencies {
 
     testCompile 'org.apache.activemq:activemq-client:5.12.1'
     testCompile 'javax.jms:jms:1.1'
-    testCompile "net.serenity-bdd:serenity-core:$serenityVersion"
-    testCompile "net.serenity-bdd:serenity-rest-assured:$serenityVersion"
     testCompile "net.serenity-bdd:serenity-cucumber:1.1.5"
-    testCompile "net.serenity-bdd:serenity-junit:$serenityVersion"
     testCompile "org.yaml:snakeyaml:1.18"
     testCompile "link.bek.tools:issue-keeper-junit:4.12.3"
     testCompile 'log4j:log4j:1.2.17'
@@ -88,6 +87,7 @@ dependencies {
     testCompile 'com.github.mifmif:generex:0.0.4'
     testCompile 'org.apache.commons:commons-lang3:3.4'
     testCompile 'org.springframework:spring-jdbc:4.2.2.RELEASE'
+    testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.9.0'
 
     // JUnit Jupiter - API, TestEngine and parametrized test implementation
     testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
@@ -100,6 +100,7 @@ dependencies {
     testRuntime(
             "org.junit.vintage:junit-vintage-engine:$junitVintageVersion",
             "org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion",
+            "org.junit.platform:junit-platform-launcher:1.0.2"
     )
 
     testRuntime 'mysql:mysql-connector-java:5.1.37'
@@ -113,6 +114,10 @@ configurations {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.3'
+}
+
+task JUnitIdentityTestSuite(type: Test) {
+    include 'JUnitIdentityTestSuite.class'
 }
 
 gradle.startParameter.continueOnFailure = true

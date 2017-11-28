@@ -4,9 +4,7 @@ import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
@@ -14,8 +12,6 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 /**
  * Tests for user type based restrictions
  */
-
-@RunWith(SerenityRunner.class)
 public class userPasswordRestrictionTests extends CommonTest {
 
     @Jira("DP-1985")
