@@ -36,12 +36,10 @@ import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.construct
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipUpdateDto;
@@ -56,7 +54,6 @@ import java.util.UUID;
 /**
  * JMS notification tests for entity relationship endpoints
  */
-@RunWith(SerenityRunner.class)
 public class RelationshipsNotificationTests extends CommonTest {
 
     private static Map<String, Map<String, Object>> notificationTestsData = loadTestData(String.format(YAML_DATA_PATH, "notifications/relationships_notification_tests.yaml"));

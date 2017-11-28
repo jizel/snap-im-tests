@@ -18,12 +18,11 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadExamplesYaml;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.selectExamplesForTest;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.LinkedHashMap;
@@ -34,7 +33,6 @@ import java.util.UUID;
 /**
  * JMS notification tests for Property entity
  */
-@RunWith(SerenityRunner.class)
 public class PropertyNotificationTests extends CommonTest{
 
     private static Map<String, Map<String, Object>> notificationTestsData = loadTestData(String.format(YAML_DATA_PATH, "notifications/property_notification_tests.yaml"));

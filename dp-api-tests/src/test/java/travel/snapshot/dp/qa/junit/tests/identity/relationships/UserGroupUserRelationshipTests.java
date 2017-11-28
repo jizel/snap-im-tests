@@ -13,10 +13,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupUserRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupUserRelationshipUpdate;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipUpdateDto;
@@ -27,7 +25,6 @@ import java.util.UUID;
 /**
  * Integration tests for /identity/user_group_user_relationships endpoint
  */
-@RunWith(SerenityRunner.class)
 public class UserGroupUserRelationshipTests extends CommonTest {
     private UUID createdUserId;
     private UUID createdUserGroupId;

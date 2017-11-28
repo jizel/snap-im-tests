@@ -18,10 +18,8 @@ import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.construct
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipUpdateDto;
 
 import com.jayway.restassured.response.Response;
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
@@ -32,7 +30,6 @@ import java.util.UUID;
 /**
  * Integration tests for /identity/user_property_set_relationships endpoint
  */
-@RunWith(SerenityRunner.class)
 public class UserPropertySetRelationshipTests extends CommonTest {
     private UUID createdPropertySetId;
     private UUID createdUserId;

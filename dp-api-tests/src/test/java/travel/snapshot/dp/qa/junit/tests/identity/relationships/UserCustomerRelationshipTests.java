@@ -21,10 +21,8 @@ import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.construct
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipUpdate;
 
 import com.jayway.restassured.response.Response;
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
@@ -36,7 +34,6 @@ import java.util.UUID;
 /**
  * Integration tests for /identity/user_customer_relationships endpoint
  */
-@RunWith(SerenityRunner.class)
 public class UserCustomerRelationshipTests extends CommonTest{
     private UUID createdUserId;
     private UUID createdCustomerId;

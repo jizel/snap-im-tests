@@ -1,25 +1,22 @@
 package travel.snapshot.dp.qa.junit.tests.identity_smoke;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
+import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
+import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
+import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadExamplesYaml;
+import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
-import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
-import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadExamplesYaml;
-import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
-
 /**
  * JMS notification tests for Property entity
  */
-@RunWith(SerenityRunner.class)
 public class PropertyNotificationSmokeTests extends CommonSmokeTest {
 
     private static Map<String, Map<String, Object>> notificationTestsData = loadTestData(String.format(YAML_DATA_PATH, "notifications/property_notification_tests.yaml"));
