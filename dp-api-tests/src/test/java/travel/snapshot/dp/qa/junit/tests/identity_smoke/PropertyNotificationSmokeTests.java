@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.identity.smoke;
+package travel.snapshot.dp.qa.junit.tests.identity_smoke;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;

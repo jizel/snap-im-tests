@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.identity.smoke;
+package travel.snapshot.dp.qa.junit.tests.identity_smoke;
 
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUPS_PATH;
