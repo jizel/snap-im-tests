@@ -23,7 +23,7 @@ import java.io.IOException;
 @DirtiesContext(classMode =  DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class BasicEtlTest extends AbstractEtlTest {
 
-    private static final String IGNORED_FIRE_TIME = "2017-01-01T00:00:00Z";
+    static final String IGNORED_FIRE_TIME = "2017-01-01T00:00:00Z";
 
     @Test(timeout = 60000)
     public void testEtl() throws InterruptedException, IOException {

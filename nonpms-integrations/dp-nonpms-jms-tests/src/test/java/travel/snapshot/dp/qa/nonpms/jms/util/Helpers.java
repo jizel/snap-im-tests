@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.nonpms.jms.util;
 
+import static travel.snapshot.dp.qa.nonpms.jms.util.DateUtils.toLocalDate;
 import static travel.snapshot.dp.qa.nonpms.jms.util.JsonConverter.convertToJson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,6 +62,10 @@ public final class Helpers {
 
     public static LocalDateTime extractTimestamp(Map<String, Object> map, String key) {
         return ((Timestamp)map.get(key)).toLocalDateTime();
+    }
+
+    public static LocalDate extractLocalDate(Map<String, Object> map, String key) {
+        return toLocalDate(((Long)map.get(key)).intValue());
     }
 
 }
