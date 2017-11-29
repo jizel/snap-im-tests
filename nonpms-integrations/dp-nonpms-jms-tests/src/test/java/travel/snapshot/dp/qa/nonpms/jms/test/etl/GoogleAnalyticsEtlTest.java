@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.Set;
 
 @Getter
-public class GoogleAnalyticsEtlTest extends AbstractEtlTest {
+public class GoogleAnalyticsEtlTest extends BasicEtlTest {
 
     Provider provider = WEBPERFORMANCE_GOOGLEANALYTICS;
 

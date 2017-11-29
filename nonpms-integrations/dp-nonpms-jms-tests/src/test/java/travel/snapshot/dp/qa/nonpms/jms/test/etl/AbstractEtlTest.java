@@ -4,13 +4,11 @@ import static org.apache.commons.collections4.CollectionUtils.intersection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.qa.nonpms.jms.messages.Notification.etlNotification;
 import static travel.snapshot.dp.qa.nonpms.jms.messages.Notification.failureNotification;
-import static travel.snapshot.dp.qa.nonpms.jms.util.Helpers.createSchedulerMessage;
 import static travel.snapshot.dp.qa.nonpms.jms.util.JsonConverter.convertToJson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -47,8 +45,6 @@ import javax.jms.Message;
 @DirtiesContext(classMode =  DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class AbstractEtlTest {
 
-    private static final String IGNORED_FIRE_TIME = "2017-01-01T00:00:00Z";
-
     protected abstract Provider getProvider();
     protected abstract String getAffectedDate();
     protected abstract Instant getTimestamp();
@@ -58,10 +54,10 @@ public abstract class AbstractEtlTest {
     protected abstract String getEndDate();
 
     @Autowired
-    Jms jms;
+    protected Jms jms;
 
-    BlockingQueue<Notification> notifications;
-    Set<String> processedProperties;
+    private BlockingQueue<Notification> notifications;
+    private Set<String> processedProperties;
 
     @Before
     public void setUp() {
@@ -69,23 +65,7 @@ public abstract class AbstractEtlTest {
         processedProperties = new HashSet<>();
     }
 
-    @Test(timeout = 60000)
-    public void testEtl() throws Exception {
-        jms.send(getStartQueue(), convertToJson(createSchedulerMessage(getFireTime())));
-
-        checkNotifications();
-    }
-
-    @Test(timeout = 60000)
-    public void testEtlForSelectedProperties() throws Exception {
-        for (String propertyId : getAffectedProperties()) {
-            jms.send(getStartQueue(), convertToJson(createSchedulerMessage(IGNORED_FIRE_TIME, propertyId, getAffectedDate())));
-        }
-
-        checkNotifications();
-    }
-
-    public void checkNotifications() throws JsonProcessingException, InterruptedException {
+    protected void checkNotifications() throws JsonProcessingException, InterruptedException {
 
         do {
             Notification notification = notifications.take();
@@ -135,7 +115,7 @@ public abstract class AbstractEtlTest {
     Predicate<EtlNotification> checkEndDate = e -> e.getAffectedDateRanges().stream().map(DateRange::getEndDate)
             .filter(d -> d.isEqual(LocalDate.parse(getEndDate()))).findAny().isPresent();
 
-    void putNotification(Notification notification) {
+    private void putNotification(Notification notification) {
         try {
             notifications.put(notification);
         } catch (InterruptedException e) {

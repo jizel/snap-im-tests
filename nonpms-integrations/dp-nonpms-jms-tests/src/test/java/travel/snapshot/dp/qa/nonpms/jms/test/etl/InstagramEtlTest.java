@@ -12,7 +12,7 @@ import java.time.ZoneId;
 import java.util.Set;
 
 @Getter
-public class InstagramEtlTest extends AbstractEtlTest {
+public class InstagramEtlTest extends BasicEtlTest {
 
     Provider provider = SOCIALMEDIA_INSTAGRAM;
 
