@@ -5,7 +5,6 @@ import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
@@ -18,6 +17,8 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_EMAIL;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_NAME;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ACTIVATE_RELATION;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
@@ -36,7 +37,6 @@ import com.jayway.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
 import qa.tools.ikeeper.annotation.Jira;
-import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PartnerUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
@@ -74,9 +74,7 @@ public class PartnerTests extends CommonTest{
         partnerUpdate.setWebsite("http://www.updated.partner.com");
         partnerUpdate.setIsActive(false);
         updateEntity(PARTNERS_PATH, createdPartner1Id, partnerUpdate).then().statusCode(SC_OK);
-        PartnerUpdateDto newUpdate = new PartnerUpdateDto();
-        newUpdate.setIsActive(true);
-        Response updateResponse = updateEntity(PARTNERS_PATH, createdPartner1Id, newUpdate);
+        Response updateResponse = updateEntity(PARTNERS_PATH, createdPartner1Id, ACTIVATE_RELATION);
         updateResponse.then().statusCode(SC_OK);
         PartnerDto updateResponsePartner = updateResponse.as(PartnerDto.class);
         assertThat(getEntityAsType(PARTNERS_PATH, PartnerDto.class, createdPartner1Id)).isEqualToComparingFieldByField(updateResponsePartner);
@@ -121,9 +119,7 @@ public class PartnerTests extends CommonTest{
         entityIsCreated(userPropertyRelation);
         getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);
-        CommercialSubscriptionUpdateDto update = new CommercialSubscriptionUpdateDto();
-        update.setIsActive(false);
-        entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, update);
+        entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, INACTIVATE_RELATION);
         getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);
     }
@@ -138,9 +134,7 @@ public class PartnerTests extends CommonTest{
         entityIsCreated(userPropertyRelation);
         getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);
-        CommercialSubscriptionUpdateDto update = new CommercialSubscriptionUpdateDto();
-        update.setIsActive(false);
-        entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, update);
+        entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, INACTIVATE_RELATION);
         getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         responseCodeIs(SC_OK);
     }

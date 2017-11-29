@@ -9,6 +9,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CU
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.commercialSubscriptionIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
@@ -21,13 +22,10 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUs
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityWithEtagByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
@@ -49,7 +47,6 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
     Optional<String> fieldName;
     String description = "description";
     Integer expectedCode;
-    static final Map<String, Object> INACTIVATE_UPDATE = ImmutableMap.of("is_active", false);
     int returnedEntities = 1;
     UUID userPropertyRelationId1;
     UUID userPropertyRelationId2;
@@ -110,22 +107,18 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
     }
 
     public static void activateUserCustomerRelation(UUID userId, UUID customerId) {
-        UserCustomerRelationshipUpdateDto update = new UserCustomerRelationshipUpdateDto();
-        update.setIsActive(true);
         Map<String, String> params = QueryParams.builder()
                 .filter(String.format("user_id==%s and customer_id==%s", userId, customerId))
                 .build();
         UUID relationId = getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, params).get(0).getId();
-        entityIsUpdated(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId, update);
+        entityIsUpdated(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId, ACTIVATE_RELATION);
     }
 
     public static void activateUserPropertyRelation(UUID userId, UUID propertyId) {
-        UserPropertyRelationshipUpdateDto update = new UserPropertyRelationshipUpdateDto();
-        update.setIsActive(true);
         Map<String, String> params = QueryParams.builder()
                 .filter(String.format("user_id==%s and property_id==%s", userId, propertyId))
                 .build();
         UUID relationId = getEntitiesAsType(USER_PROPERTY_RELATIONSHIPS_PATH, UserPropertyRelationshipDto.class, params).get(0).getId();
-        entityIsUpdated(USER_PROPERTY_RELATIONSHIPS_PATH, relationId, update);
+        entityIsUpdated(USER_PROPERTY_RELATIONSHIPS_PATH, relationId, ACTIVATE_RELATION);
     }
 }

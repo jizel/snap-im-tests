@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.access_checks.ByApplication;
 import static java.util.Optional.empty;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
@@ -30,7 +31,7 @@ public class UserPropertySetAccessCheckTests extends CommonAccessChecksByApplica
         pattern = empty();
         fieldName = empty();
         expectedCode = SC_NO_CONTENT;
-        update = INACTIVATE_UPDATE;
+        update = INACTIVATE_RELATION;
         returnedEntities=2;
     }
 }

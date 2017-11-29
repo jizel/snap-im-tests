@@ -165,7 +165,7 @@ public class DbStepDefs {
         customer.setNotes("Default customer created directly in DB to set in default commercial subscription");
         customer.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
         customer.setPhone("+420123456789");
-        customer.setVatId("DEF0000001");
+        customer.setVatId("CZ10000000");
         customer.setWebsite("https://www.defaultCustomerForTests.com");
         dbSteps.createDBCustomer(customer);
     }

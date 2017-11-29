@@ -5,6 +5,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ACTIVATE_RELATION;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
@@ -13,10 +15,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import org.junit.Test;
 import org.junit.jupiter.api.Tag;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
 import java.util.UUID;
@@ -43,9 +42,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
         bodyContainsEntityWith("timezone", "Europe/Prague");
         bodyContainsEntityWith("is_active", "false");
         // update
-        PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
-        propertyUpdate.setIsActive(true);
-        authorizationHelpers.entityIsUpdated(PROPERTIES_PATH, propertyId, propertyUpdate);
+        authorizationHelpers.entityIsUpdated(PROPERTIES_PATH, propertyId, ACTIVATE_RELATION);
         // make sure changes applied
         authorizationHelpers.getEntity(PROPERTIES_PATH, propertyId);
         bodyContainsEntityWith("is_active", "true");
@@ -67,9 +64,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
         bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID.toString());
         bodyContainsEntityWith("is_active", "true");
         // update
-        PropertySetPropertyRelationshipUpdateDto update = new PropertySetPropertyRelationshipUpdateDto();
-        update.setIsActive(false);
-        authorizationHelpers.entityIsUpdated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId, update);
+        authorizationHelpers.entityIsUpdated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
         // delete
         authorizationHelpers.entityIsDeleted(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
     }
@@ -88,9 +83,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
         bodyContainsEntityWith("user_id", userId.toString());
         bodyContainsEntityWith("is_active", "true");
         // update
-        UserPropertyRelationshipUpdateDto update = new UserPropertyRelationshipUpdateDto();
-        update.setIsActive(false);
-        authorizationHelpers.entityIsUpdated(USER_PROPERTY_RELATIONSHIPS_PATH, relationId, update);
+        authorizationHelpers.entityIsUpdated(USER_PROPERTY_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
         // make sure changes applied
         authorizationHelpers.getEntity(USER_PROPERTY_RELATIONSHIPS_PATH, relationId);
         bodyContainsEntityWith("is_active", "false");
