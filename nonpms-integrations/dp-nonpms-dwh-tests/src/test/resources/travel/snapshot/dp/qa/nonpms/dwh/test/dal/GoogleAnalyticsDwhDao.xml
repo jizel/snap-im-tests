@@ -21,7 +21,7 @@
             Dim_property p
             ON pd.dim_property_id = p.property_id
         WHERE
-            ffc.dim_date_id IS NULL
+            ffc.dim_date_id IS NULL AND dd.date_id = #{until}
         ORDER BY date_id DESC, dim_property_id
     </select>
 

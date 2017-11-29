@@ -21,7 +21,7 @@
             Dim_property p
             ON pd.property_id = p.property_id
         WHERE
-            f.date_id IS NULL
+            f.date_id IS NULL AND dd.date_id = #{until}
             ORDER BY date_id DESC, property_id
     </sql>
 
