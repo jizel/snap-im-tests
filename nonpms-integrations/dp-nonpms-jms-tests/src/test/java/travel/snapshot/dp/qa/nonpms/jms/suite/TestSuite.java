@@ -19,7 +19,6 @@ import travel.snapshot.dp.qa.nonpms.jms.test.etl.TwitterEtlTest;
         TwitterEtlTest.class,
         GoogleAnalyticsEtlTest.class,
         TripAdvisorEtlTest.class
-
 })
 public class TestSuite {
 

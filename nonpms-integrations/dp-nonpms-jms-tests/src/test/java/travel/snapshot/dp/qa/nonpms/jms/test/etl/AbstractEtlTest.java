@@ -4,8 +4,10 @@ import static org.apache.commons.collections4.CollectionUtils.intersection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.qa.nonpms.jms.messages.Notification.etlNotification;
 import static travel.snapshot.dp.qa.nonpms.jms.messages.Notification.failureNotification;
+import static travel.snapshot.dp.qa.nonpms.jms.util.Helpers.createSchedulerMessage;
 import static travel.snapshot.dp.qa.nonpms.jms.util.JsonConverter.convertToJson;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,11 +47,13 @@ import javax.jms.Message;
 @DirtiesContext(classMode =  DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class AbstractEtlTest {
 
+    private static final String IGNORED_FIRE_TIME = "2017-01-01T00:00:00Z";
+
     protected abstract Provider getProvider();
     protected abstract String getAffectedDate();
     protected abstract Instant getTimestamp();
     protected abstract String getStartQueue();
-    protected abstract String getStartMessage();
+    protected abstract String getFireTime();
     protected abstract Set<String> getAffectedProperties();
     protected abstract String getEndDate();
 
@@ -66,14 +70,28 @@ public abstract class AbstractEtlTest {
     }
 
     @Test(timeout = 60000)
-    public void testEtl() throws InterruptedException {
-        jms.send(getStartQueue(), getStartMessage());
+    public void testEtl() throws Exception {
+        jms.send(getStartQueue(), convertToJson(createSchedulerMessage(getFireTime())));
+
+        checkNotifications();
+    }
+
+    @Test(timeout = 60000)
+    public void testEtlForSelectedProperties() throws Exception {
+        for (String propertyId : getAffectedProperties()) {
+            jms.send(getStartQueue(), convertToJson(createSchedulerMessage(IGNORED_FIRE_TIME, propertyId, getAffectedDate())));
+        }
+
+        checkNotifications();
+    }
+
+    public void checkNotifications() throws JsonProcessingException, InterruptedException {
 
         do {
             Notification notification = notifications.take();
 
             assertThat(notification.isFailure())
-                    .withFailMessage("Received failure notification for affected property: " + notification.getAffectedProperties())
+                    .withFailMessage("Received failure notification for affected property: " + notification)
                     .isFalse();
 
             processedProperties.addAll(notification.getAffectedProperties());
@@ -82,6 +100,8 @@ public abstract class AbstractEtlTest {
 
         assertThat(processedProperties).containsAll(getAffectedProperties());
     }
+
+
 
     @JmsListener(destination = "${notification.integration_failure.topic}", containerFactory = "notificationListenerFactory")
     public void handleIntegrationFailureNotification(Message message) throws InterruptedException, IOException {
@@ -122,4 +142,5 @@ public abstract class AbstractEtlTest {
             throw new RuntimeException(e);
         }
     }
+
 }

@@ -20,8 +20,8 @@ public class FacebookEtlTest extends AbstractEtlTest {
 	String affectedDate;
 	@Value("${integration.facebook.start.queue}")
 	String startQueue;
-	@Value("${integration.facebook.start.message} ")
-	String startMessage;
+	@Value("${integration.facebook.start.firetime}")
+	String fireTime;
 	@Value("#{'${integration.facebook.affected.properties}'.split(',')}")
 	Set<String> affectedProperties;
 //	@Value("${integration.facebook.end-date}")

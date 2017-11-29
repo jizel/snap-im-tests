@@ -18,8 +18,8 @@ public class GoogleAnalyticsEtlTest extends AbstractEtlTest {
     String affectedDate;
     @Value("${integration.googleanalytics.start.queue}")
     String startQueue;
-    @Value("${integration.googleanalytics.start.message} ")
-    String startMessage;
+    @Value("${integration.googleanalytics.start.firetime}")
+    String fireTime;
     @Value("#{'${integration.googleanalytics.affected.properties}'.split(',')}")
     Set<String> affectedProperties;
     @Value("${integration.googleanalytics.end-date}")
