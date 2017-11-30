@@ -18,4 +18,6 @@ public class SchedulerMessage {
 
     LocalDate integrationDate;
 
+    Boolean overrideData;
+
 }
