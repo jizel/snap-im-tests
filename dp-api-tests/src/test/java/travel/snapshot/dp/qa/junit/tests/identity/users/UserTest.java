@@ -105,7 +105,7 @@ public class UserTest extends CommonTest {
     }
 
     @Test
-    public void updateUser() throws Exception {
+    void updateUser() throws Exception {
         UserDto updateResponseUser = updateEntity(USERS_PATH, createdUserId, getTestUpdate())
                 .then().statusCode(SC_OK)
                 .extract().response().as(UserDto.class);
@@ -114,7 +114,7 @@ public class UserTest extends CommonTest {
     }
 
     @Test
-    public void invalidUpdateUser() throws Exception {
+    void invalidUpdateUser() throws Exception {
         Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
         updateEntity(USERS_PATH, createdUserId, invalidUpdate);
         responseIsUnprocessableEntity();
@@ -145,7 +145,7 @@ public class UserTest extends CommonTest {
 
     @Test
     @Jira("DPIM-185")
-    public void dontAllowAssociationsOfSnapshotUsersWithAnyEntity() {
+    void dontAllowAssociationsOfSnapshotUsersWithAnyEntity() {
         String message = "SNAPSHOT user cannot be used.";
         createEntity(constructUserCustomerRelationshipDto(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true))
                 .then()
@@ -169,7 +169,7 @@ public class UserTest extends CommonTest {
 
     @Test
     @Jira("DPIM-176")
-    public void testCultureUpdate() {
+    void testCultureUpdate() {
         UserUpdateDto updateDto = new UserUpdateDto();
         updateDto.setLanguageCode("En-us-AU");
         updateEntity(USERS_PATH, createdUserId, updateDto)
