@@ -2,7 +2,7 @@ package travel.snapshot.dp.qa.nonpms.jms.test.etl.extra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.qa.nonpms.jms.messages.Provider.SOCIALMEDIA_FACEBOOK;
-import static travel.snapshot.dp.qa.nonpms.jms.util.DateUtils.localDateToDbDateId;
+import static travel.snapshot.dp.qa.nonpms.jms.util.DateUtils.toDateId;
 import static travel.snapshot.dp.qa.nonpms.jms.util.Helpers.createSchedulerMessageJson;
 import static travel.snapshot.dp.qa.nonpms.jms.util.Helpers.extractTimestamp;
 
@@ -13,13 +13,11 @@ import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import travel.snapshot.dp.qa.nonpms.jms.messages.Provider;
 import travel.snapshot.dp.qa.nonpms.jms.test.etl.AbstractEtlTest;
 import travel.snapshot.dp.qa.nonpms.jms.test.etl.extra.dal.FacebookDwhDao;
 
-import java.io.IOException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -70,7 +68,7 @@ public class AdvancedFacebookEtlTest extends AbstractEtlTest {
 		checkNotifications();
 
 		affectedProperties.forEach(propertyId -> {
-			Map<String, Object> data = dwhDao.getData(propertyId, localDateToDbDateId(affectedDate));
+			Map<String, Object> data = dwhDao.getData(propertyId, toDateId(affectedDate));
 			assertThat(extractTimestamp(data, "inserted_time_stamp")).isAfter(start);
 		});
 	}
