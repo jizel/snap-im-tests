@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
+import qa.tools.ikeeper.client.JiraClient;
 import qa.tools.ikeeper.test.IKeeperJUnitConnector;
 import travel.snapshot.dp.api.identity.model.ApplicationCreateDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionCreateDto;
@@ -40,7 +41,6 @@ import travel.snapshot.dp.qa.junit.helpers.RoleHelpers;
 import travel.snapshot.dp.qa.junit.helpers.UserHelpers;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 import travel.snapshot.dp.qa.junit.utils.NonNullMapDecorator;
-import travel.snapshot.dp.qa.junit.utils.issueKeeperJiraCredentials.JiraCredentialsClient;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -148,8 +148,17 @@ public abstract class CommonTest {
 
     @Rule
     public IKeeperJUnitConnector issueKeeper = new IKeeperJUnitConnector(
-            new JiraCredentialsClient("https://conhos.atlassian.net")
+            getClient()
     );
+
+    private JiraClient getClient(){
+        String jiraUsername = propertiesHelper.getProperty("jira.username");
+        String jiraPassword = propertiesHelper.getProperty("jira.password");
+        JiraClient jiraClient  = new JiraClient("https://conhos.atlassian.net");
+        jiraClient.authenticate(jiraUsername,jiraPassword);
+
+        return jiraClient;
+    }
 
     @Before
     @BeforeEach
