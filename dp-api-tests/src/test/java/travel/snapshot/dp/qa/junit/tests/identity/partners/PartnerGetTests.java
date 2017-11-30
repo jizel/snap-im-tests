@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
-import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
@@ -33,9 +32,7 @@ public class PartnerGetTests extends CommonTest{
     @BeforeAll
     public static void createTestPartners() throws Exception {
 //        Create 50+ test partners but only once for all tests!
-        DbStepDefs dbStepDefs = new DbStepDefs();
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        loadDefaultTestEntities();
+        cleanDbAndLoadDefaultEntities();
         range(0, 52).forEachOrdered(n -> {
             testPartner1.setName(String.format("partner_%d", n));
             testPartner1.setNotes(String.format("Notes %d", n));

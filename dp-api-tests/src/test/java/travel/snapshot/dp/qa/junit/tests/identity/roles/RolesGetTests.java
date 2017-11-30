@@ -20,7 +20,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
-import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 /**
@@ -30,14 +29,11 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 public class RolesGetTests extends CommonTest{
 
     private static final String EXAMPLES = "/csv/roles/";
-    private static DbStepDefs dbStepDefs;
 
     @BeforeAll
     public static void createTestRoles() throws Exception {
 //        Create 50+ test roles but only once for all tests!
-        dbStepDefs = new DbStepDefs();
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        loadDefaultTestEntities();
+        cleanDbAndLoadDefaultEntities();
         range(0, 52).forEachOrdered(n -> {
             testRole1.setName(String.format("role_%d", n));
             entityIsCreated(testRole1);

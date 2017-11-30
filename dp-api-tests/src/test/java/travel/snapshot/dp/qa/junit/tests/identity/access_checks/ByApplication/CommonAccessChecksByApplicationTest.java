@@ -70,7 +70,7 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
     }
 
     @Test
-    void filteringEntitiessWithAccessChecks() {
+    void filteringEntitiesWithAccessChecks() {
         assertThat(getEntitiesByPatternByUserForApp(userId, appVersionId, PATH, fieldName, pattern)).hasSize(returnedEntities);
     }
 

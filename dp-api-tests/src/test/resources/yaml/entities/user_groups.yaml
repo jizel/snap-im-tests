@@ -1,8 +1,14 @@
 user_groups:
-  user_group1: !user_group {
+  user_group1: !user_group &BASIC_USER_GROUP {
     id: 0c000000-0000-4444-8888-000000000001,
     isActive: true,
     name: Test UserGroup 1,
     description: Test UserGroup 1 description,
     customerId: 06000000-0000-4444-8888-000000000001
+}
+  user_group2: !user_group {
+    <<: *BASIC_USER_GROUP,
+    id: 0c000000-0000-4444-8888-000000000002,
+    name: Test UserGroup 2,
+    description: Test UserGroup 2 description
 }

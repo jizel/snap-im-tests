@@ -138,6 +138,7 @@ public abstract class CommonTest {
     protected static PartnerCreateDto testPartner2;
     protected static PartnerCreateDto testPartner3;
     protected static UserGroupCreateDto testUserGroup1;
+    protected static UserGroupCreateDto testUserGroup2;
     protected static ApplicationCreateDto testApplication1;
     protected static ApplicationCreateDto testApplication2;
     protected static ApplicationCreateDto testApplication3;
@@ -216,6 +217,7 @@ public abstract class CommonTest {
         testPartner2 = partnerDtos.get("partner2");
         testPartner3 = partnerDtos.get("partner3");
         testUserGroup1 = entitiesLoader.getUserGroupDtos().get("user_group1");
+        testUserGroup2 = entitiesLoader.getUserGroupDtos().get("user_group2");
         testApplication1 = applicationDtos.get("application1");
         testApplication2 = applicationDtos.get("application2");
         testApplication3 = applicationDtos.get("application3");
@@ -288,6 +290,12 @@ public abstract class CommonTest {
 
     public static Map<String, String> filterParam(String filterValue){
         return Collections.singletonMap("filter", filterValue);
+    }
+
+    public static void cleanDbAndLoadDefaultEntities(){
+        DbStepDefs dbStepDefs = new DbStepDefs();
+        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        loadDefaultTestEntities();
     }
 
     /**
