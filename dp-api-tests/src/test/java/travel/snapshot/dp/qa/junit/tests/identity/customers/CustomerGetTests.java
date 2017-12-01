@@ -28,12 +28,11 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 public class CustomerGetTests extends CommonTest{
 
     private static final String FILTERING_CUSTOMERS_EXAMPLES = "/csv/customers/filteringCustomers.csv";
-    private static DbStepDefs dbStepDefs;
 
     @BeforeAll
-    public static void createTestCustomers() throws Exception {
+    static void createTestCustomers() throws Exception {
 //        Create 50+ test customers but only once for all tests!
-        dbStepDefs = new DbStepDefs();
+        DbStepDefs dbStepDefs = new DbStepDefs();
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
         loadDefaultTestEntities();
         range(0, 52).forEachOrdered(n -> {
@@ -62,7 +61,7 @@ public class CustomerGetTests extends CommonTest{
 
     @ParameterizedTest
     @CsvFileSource(resources = FILTERING_CUSTOMERS_EXAMPLES)
-    public void filteringCustomers(String limit, String cursor, Integer returned, Integer total, String filter, String sort, String sortDesc, String linkHeader) {
+    void filteringCustomers(String limit, String cursor, Integer returned, Integer total, String filter, String sort, String sortDesc, String linkHeader) {
         getEntities(CUSTOMERS_PATH, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(CustomerDto.class, returned);

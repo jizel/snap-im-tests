@@ -63,7 +63,7 @@ public class AllEndpointsTests extends CommonTest {
     }
 
     @Test
-    public void sendEmptyPostUpdate(){
+    public void sendEmptyPostUpdate() {
         ENDPOINTS_WITH_IDS_MAP.forEach((e, id) ->
                 prepareEmptyUpdate(e, id)
                         .post("/{id}", id)
