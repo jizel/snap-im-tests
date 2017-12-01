@@ -1,38 +1,38 @@
 package travel.snapshot.dp.qa.nonpms.etl.test.recovery;
 
-import static travel.snapshot.dp.qa.nonpms.etl.messages.Provider.SOCIALMEDIA_FACEBOOK;
-
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import travel.snapshot.dp.qa.nonpms.etl.messages.Provider;
-import travel.snapshot.dp.qa.nonpms.etl.test.dal.FacebookDwhDao;
+import travel.snapshot.dp.qa.nonpms.etl.test.dal.InstagramDwhDao;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Set;
 
+import static travel.snapshot.dp.qa.nonpms.etl.messages.Provider.SOCIALMEDIA_INSTAGRAM;
+
 @Getter
-public class FacebookDataRecoveryEtlTest extends AbstractReloadDataRecoveryEtlTest {
+public class InstagramDataRecoveryEtlTest extends AbstractApproximationDataRecoveryEtlTest {
 
-	Provider provider = SOCIALMEDIA_FACEBOOK;
+	Provider provider = SOCIALMEDIA_INSTAGRAM;
 
-	@Value("${integration.facebook.start.queue}")
+	@Value("${integration.instagram.start.queue}")
 	String startQueue;
-	@Value("${integration.facebook.start.firetime}")
+	@Value("${integration.instagram.start.firetime}")
 	String fireTime;
-	@Value("#{'${integration.facebook.affected.properties}'.split(',')}")
+	@Value("#{'${integration.instagram.affected.properties}'.split(',')}")
 	Set<String> affectedProperties;
-//	@Value("${integration.facebook.end-date}")
+//	@Value("${integration.instagram.end-date}")
 //	String endDate;
-	@Value("${integration.facebook.timezone}")
+	@Value("${integration.instagram.timezone}")
 	String timezone;
 
 	private Instant timestamp = Instant.now();
 
 	@Autowired
-	FacebookDwhDao integrationDwhDao;
+	InstagramDwhDao integrationDwhDao;
 
 	// Workaround for DPNP-127
 	@Override
