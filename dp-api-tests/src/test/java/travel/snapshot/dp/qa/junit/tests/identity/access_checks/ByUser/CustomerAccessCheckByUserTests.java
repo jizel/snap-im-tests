@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.access_checks.ByUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
@@ -12,28 +13,38 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.CHAIN;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_USER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTypeByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipPartialDto;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupUserRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping.endpointDtoMap;
@@ -97,6 +108,7 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
         inaccessibles.forEach((endpoint, id) -> {
             // Filtering
             assertThat(getEntitiesAsTypeByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, endpointDtoMap.get(endpoint), emptyQueryParams())).hasSize(1);
+            headerIs(TOTAL_COUNT_HEADER, "1");
             // getting inaccessible entities
             getEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id)
                     .then().statusCode(SC_NOT_FOUND)
@@ -123,5 +135,88 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
                     .assertThat()
                     .body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
         });
+    }
+
+    @Test
+    void implicitAccessThroughCustomerHierarchy() {
+        CustomerUpdateDto update = new CustomerUpdateDto();
+        update.setParentId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
+        entityIsUpdated(CUSTOMERS_PATH, createdCustomerId, update);
+        entityIsCreated(constructUserPropertyRelationshipDto(userId1, propertyId, true));
+        entityIsCreated(constructUserPropertySetRelationshipDto(userId1, propertySetId2, true));
+        /*
+         We end up with the following topology:
+             C1
+            / \
+           /   \
+          /     \
+         U1--P2-C2
+          \  | \/|
+           \ | /\|
+           PS2---U2
+
+         U1 would be the context user and will request entities and relations belonging to Customer2
+        */
+        // Do not request entities with explicit access
+        inaccessibles.remove(PROPERTIES_PATH);
+        inaccessibles.remove(PROPERTY_SETS_PATH);
+        inaccessibles.forEach((endpoint, id) -> {
+            getEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id)
+                    .then()
+                    .statusCode(SC_OK);
+        });
+    }
+
+    @Test
+    void accessThroughUserGroup() {
+        testUserGroup1.setCustomerId(createdCustomerId);
+        UUID groupId = entityIsCreated(testUserGroup1);
+        UUID relationId = entityIsCreated(constructUserGroupUserRelationship(groupId, userId1, true));
+        entityIsCreated(constructUserPropertyRelationshipDto(userId1, propertyId, true));
+        entityIsCreated(constructUserPropertySetRelationshipDto(userId1, propertySetId2, true));
+        // Do not request entities with explicit access
+        inaccessibles.remove(PROPERTIES_PATH);
+        inaccessibles.remove(PROPERTY_SETS_PATH);
+        /*
+         We end up with the following topology:
+             C1--U1--UG--C2
+            /|  / \      /|\
+           / | /   \    / | \
+          /  |/     \  /  |  \
+         PS1--P1     P2--U2-PS2
+
+         U1 will be the context user and will request entities and relations from the right cluster
+        */
+        inaccessibles.forEach((endpoint, id) -> {
+            getEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id)
+                    .then()
+                    .statusCode(SC_OK);
+        });
+        entityIsUpdated(USER_GROUP_USER_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
+        inaccessibles.forEach((endpoint, id) -> {
+            getEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id)
+                    .then()
+                    .statusCode(SC_NOT_FOUND)
+                    .assertThat()
+                    .body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
+        });
+    }
+
+    @Test
+    void customerUpdateDeleteByUser() {
+        CustomerUpdateDto updateDto = new CustomerUpdateDto();
+        updateDto.setWebsite("https://newsite.com");
+        updateEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, CUSTOMERS_PATH, createdCustomerId, updateDto)
+                .then()
+                .statusCode(SC_NOT_FOUND).body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
+        updateEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID, updateDto)
+                .then()
+                .statusCode(SC_OK);
+        deleteEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, CUSTOMERS_PATH, createdCustomerId)
+                .then()
+                .statusCode(SC_NOT_FOUND).body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
+        deleteEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID)
+                .then()
+                .statusCode(SC_CONFLICT);
     }
 }

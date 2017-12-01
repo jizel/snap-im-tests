@@ -28,6 +28,7 @@ import static travel.snapshot.dp.qa.junit.utils.EntityEndpointMapping.entityCrea
 import static travel.snapshot.dp.qa.junit.utils.RestAssuredConfig.setupRequestDefaults;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.google.common.collect.ImmutableMap;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import travel.snapshot.dp.api.identity.model.AddressDto;
@@ -48,7 +49,8 @@ public class CommonHelpers {
     public static final String RESPONSE_CODE = "code";
     public static final String RESPONSE_MESSAGE = "message";
     public static final String RESPONSE_DETAILS = "details";
-
+    public static final Map<String, Object> INACTIVATE_RELATION = ImmutableMap.of("is_active", false);
+    public static final Map<String, Object> ACTIVATE_RELATION = ImmutableMap.of("is_active", true);
     protected static RequestSpecification spec;
     private BasicSteps basicSteps = new BasicSteps();
 

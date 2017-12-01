@@ -8,6 +8,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
 
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.Tag;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 import travel.snapshot.dp.qa.junit.utils.NonNullMapDecorator;
 
@@ -52,9 +52,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         bodyContainsEntityWith("name", "Creation test company1");
         bodyContainsEntityWith("email", "s1@tenants.biz");
         //update
-        CustomerUpdateDto update = new CustomerUpdateDto();
-        update.setIsActive(false);
-        authorizationHelpers.entityIsUpdated(CUSTOMERS_PATH, customerIds.get(0), update);
+        authorizationHelpers.entityIsUpdated(CUSTOMERS_PATH, customerIds.get(0), INACTIVATE_RELATION);
         //delete
         authorizationHelpers.entityIsDeleted(CUSTOMERS_PATH, customerIds.get(0));
     }
@@ -109,9 +107,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         bodyContainsEntityWith("is_active", "true");
         bodyContainsEntityWith("is_primary", "false");
         // update
-        UserCustomerRelationshipUpdateDto update = new UserCustomerRelationshipUpdateDto();
-        update.setIsActive(false);
-        authorizationHelpers.entityIsUpdated(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId, update);
+        authorizationHelpers.entityIsUpdated(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
         // make sure changes applied
         authorizationHelpers.getEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
         bodyContainsEntityWith("is_active", "false");

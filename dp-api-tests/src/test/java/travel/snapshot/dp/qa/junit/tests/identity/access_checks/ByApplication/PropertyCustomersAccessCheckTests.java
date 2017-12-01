@@ -4,10 +4,10 @@ import com.jayway.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.type.EntityVersion;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
@@ -18,6 +18,7 @@ import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationship
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.commercialSubscriptionIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
@@ -69,10 +70,8 @@ public class PropertyCustomersAccessCheckTests extends CommonTest {
         getEntityByUserForApplication(userId, appVersionId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, inAccessibleRelationId);
         responseIsEntityNotFound();
         // Update
-        CustomerPropertyRelationshipUpdateDto update = new CustomerPropertyRelationshipUpdateDto();
-        update.setIsActive(false);
-        updateRelation(inAccessibleRelationId, update, inAccessibleRelationEtag.toString()).then().statusCode(SC_NOT_FOUND);
-        updateRelation(accessibleRelationId, update, accessibleRelationEtag.toString()).then().statusCode(SC_OK);
+        updateRelation(inAccessibleRelationId, INACTIVATE_RELATION, inAccessibleRelationEtag.toString()).then().statusCode(SC_NOT_FOUND);
+        updateRelation(accessibleRelationId, INACTIVATE_RELATION, accessibleRelationEtag.toString()).then().statusCode(SC_OK);
         // Delete
         deleteRelation(inAccessibleRelationId).then().statusCode(SC_NOT_FOUND);
         deleteRelation(accessibleRelationId).then().statusCode(SC_NO_CONTENT);
@@ -98,7 +97,7 @@ public class PropertyCustomersAccessCheckTests extends CommonTest {
                 validTo));
     }
 
-    private Response updateRelation(UUID relationId, CustomerPropertyRelationshipUpdateDto update, String etag) {
+    private Response updateRelation(UUID relationId, Map<String, Object> update, String etag) {
         return updateEntityWithEtagByUserForApp(userId, appVersionId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId, update, etag);
     }
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import static java.util.Optional.empty;
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 
 public class UserPropertyAccessCheckTests extends CommonAccessChecksByApplicationTest {
 
@@ -17,6 +18,6 @@ public class UserPropertyAccessCheckTests extends CommonAccessChecksByApplicatio
         pattern = empty();
         fieldName = empty();
         expectedCode = SC_FORBIDDEN;
-        update = INACTIVATE_UPDATE;
+        update = INACTIVATE_RELATION;
     }
 }

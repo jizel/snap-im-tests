@@ -7,6 +7,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ACTIVATE_RELATION;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
@@ -23,7 +25,6 @@ import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.UUID;
@@ -98,14 +99,11 @@ public class PropertySetTests extends CommonTest {
         UUID userId = entityIsCreated(testUser1);
         UserPropertySetRelationshipCreateDto relation = constructUserPropertySetRelationshipDto(userId, psId, true);
         UUID relationId = entityIsCreated(relation);
-        UserPropertySetRelationshipUpdateDto update = new UserPropertySetRelationshipUpdateDto();
-        update.setIsActive(false);
-        updateEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);
+        updateEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
         responseCodeIs(SC_OK);
         getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         bodyContainsEntityWith("is_active", "false");
-        update.setIsActive(true);
-        updateEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);
+        updateEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, ACTIVATE_RELATION);
         responseCodeIs(SC_OK);
         getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         bodyContainsEntityWith("is_active", "true");

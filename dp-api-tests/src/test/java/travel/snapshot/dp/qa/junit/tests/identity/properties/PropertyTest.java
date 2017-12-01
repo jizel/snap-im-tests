@@ -21,6 +21,8 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.VALID_FROM_VALUE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.VALID_TO_VALUE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ACTIVATE_RELATION;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
@@ -101,12 +103,9 @@ public class PropertyTest extends CommonTest {
     @Test
     public void propertyActivateDeactivate() {
         createdPropertyId = entityIsCreated(testProperty1);
-        PropertyUpdateDto update = new PropertyUpdateDto();
-        update.setIsActive(false);
-        entityIsUpdated(PROPERTIES_PATH, createdPropertyId, update);
+        entityIsUpdated(PROPERTIES_PATH, createdPropertyId, INACTIVATE_RELATION);
         bodyContainsEntityWith(IS_ACTIVE, "false");
-        update.setIsActive(true);
-        entityIsUpdated(PROPERTIES_PATH, createdPropertyId, update);
+        entityIsUpdated(PROPERTIES_PATH, createdPropertyId, ACTIVATE_RELATION);
         bodyContainsEntityWith(IS_ACTIVE, "true");
     }
 
