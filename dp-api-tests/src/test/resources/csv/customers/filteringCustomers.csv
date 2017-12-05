@@ -15,7 +15,7 @@
 /null,/null,11,11,email==customer-2* and phone==+420123456789,email,/null,/null
 /null,/null,0,0,email==customer-2* and phone==111111111,email,/null,/null
 /null,/null,1,1,email==customer-1@snapshot.travel,/null,/null,/null
-/null,/null,0,0,vat_id==CZ*,/null,/null,/null
+/null,/null,0,0,vat_id==FR*,/null,/null,/null
 /null,/null,0,0,is_demo_customer==false,/null,/null,/null
 /null,/null,11,11,website==http://www.customer3*,/null,/null,/null
 7,/null,7,11,website==http://www.customer3*,/null,/null,</identity/customers?limit=7&cursor=7&filter=website==http://www.customer3*>; rel="next"

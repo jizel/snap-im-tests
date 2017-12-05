@@ -9,7 +9,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ACTIVATE_RELATION;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
@@ -192,7 +192,7 @@ public class ParametersPropertySetTests extends CommonTest {
                 .filter(String.format("property_set_id==%s", String.valueOf(psId)))
                 .build();
         UUID relationId = getEntitiesAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, relationParams).get(0).getId();
-        entityIsUpdated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, ACTIVATE_RELATION);
+        entityIsUpdated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, null, null, null);
         getEntities(USER_PROPERTY_SET_RELATIONSHIPS_PATH, params);
         numberOfEntitiesInResponse(UserPropertySetRelationshipDto.class, Integer.valueOf(returned));
