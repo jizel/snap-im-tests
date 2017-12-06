@@ -41,44 +41,48 @@ public class FacebookDstEtlTest extends AbstractEtlTest {
 
     @Test(timeout = 60000)
     public void testEtlWinterTimeAdjusment() throws Exception {
-        setAffectedDate(AFFECTED_DATE_FOR_SUMMER_TIME_ADJUSMENT);
-        start(() -> SchedulerMessage.builder().fireTime(FIRE_TIME_FOR_SUMMER_TIME_ADJUSMENT));
+        setAffectedDate(AFFECTED_DATE_FOR_WINTER_TIME_ADJUSMENT);
+        startDstEtl(FIRE_TIME_FOR_WINTER_TIME_ADJUSMENT);
         checkNotifications();
     }
 
     @Test(timeout = 60000)
     public void testEtlSummerTimeAdjusment() throws Exception {
         setAffectedDate(AFFECTED_DATE_FOR_SUMMER_TIME_ADJUSMENT);
-        start(() -> SchedulerMessage.builder().fireTime(FIRE_TIME_FOR_SUMMER_TIME_ADJUSMENT));
+        startDstEtl(FIRE_TIME_FOR_SUMMER_TIME_ADJUSMENT);
         checkNotifications();
     }
 
     @Test(timeout = 60000)
     public void testBeforeEtlWinterTimeAdjusment() throws Exception {
         setAffectedDate(AFFECTED_DATE_BEFORE_WINTER_TIME_ADJUSMENT);
-        start(() -> SchedulerMessage.builder().fireTime(FIRE_TIME_BEFORE_WINTER_TIME_ADJUSMENT));
+        startDstEtl(FIRE_TIME_BEFORE_WINTER_TIME_ADJUSMENT);
         checkNotifications();
     }
 
     @Test(timeout = 60000)
     public void testAfterEtlWinterTimeAdjusment() throws Exception {
         setAffectedDate(AFFECTED_DATE_AFTER_WINTER_TIME_ADJUSMENT);
-        start(() -> SchedulerMessage.builder().fireTime(FIRE_TIME_AFTER_WINTER_TIME_ADJUSMENT));
+        startDstEtl(FIRE_TIME_AFTER_WINTER_TIME_ADJUSMENT);
         checkNotifications();
     }
 
     @Test(timeout = 60000)
     public void testBeforeEtlSummerTimeAdjusment() throws Exception {
         setAffectedDate(AFFECTED_DATE_BEFORE_SUMMER_TIME_ADJUSMENT);
-        start(() -> SchedulerMessage.builder().fireTime(FIRE_TIME_BEFORE_SUMMER_TIME_ADJUSMENT));
+        startDstEtl(FIRE_TIME_BEFORE_SUMMER_TIME_ADJUSMENT);
         checkNotifications();
     }
 
     @Test(timeout = 60000)
     public void testAfterEtlSummerTimeAdjusment() throws Exception {
         setAffectedDate(AFFECTED_DATE_AFTER_SUMMER_TIME_ADJUSMENT);
-        start(() -> SchedulerMessage.builder().fireTime(FIRE_TIME_AFTER_SUMMER_TIME_ADJUSMENT));
+        startDstEtl(FIRE_TIME_AFTER_SUMMER_TIME_ADJUSMENT);
         checkNotifications();
+    }
+
+    private void startDstEtl(Instant fireTime){
+        start(() -> SchedulerMessage.builder().fireTime(fireTime).overrideData(true));
     }
 
 }
