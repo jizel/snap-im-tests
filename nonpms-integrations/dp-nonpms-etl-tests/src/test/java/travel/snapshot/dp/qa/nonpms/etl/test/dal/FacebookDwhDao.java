@@ -15,7 +15,6 @@ public interface FacebookDwhDao extends IntegrationDwhDao {
             "( SELECT property_id FROM Dim_property WHERE property_key = #{propertyKey} )")
     Map<String, Object> getData(@Param("propertyKey") String propertyId, @Param("dateId") Integer dateId);
 
-
     @Delete("DELETE FROM Fact_facebook_cumulative WHERE date_id >= #{since} AND date_id <= #{until} AND property_id = " +
             "( SELECT property_id FROM Dim_property WHERE property_key = #{propertyKey} )")
     void deleteData(@Param("propertyKey") String propertyId, @Param("since") Integer since, @Param("until") Integer until);
