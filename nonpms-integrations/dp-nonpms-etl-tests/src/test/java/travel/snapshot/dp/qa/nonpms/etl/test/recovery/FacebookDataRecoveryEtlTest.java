@@ -20,24 +20,12 @@ public class FacebookDataRecoveryEtlTest extends AbstractReloadDataRecoveryEtlTe
 
 	@Value("${integration.facebook.start.queue}")
 	String startQueue;
-	@Value("${integration.facebook.start.firetime}")
-	String fireTime;
 	@Value("#{'${integration.facebook.affected.properties}'.split(',')}")
 	Set<String> affectedProperties;
-//	@Value("${integration.facebook.end-date}")
-//	String endDate;
 	@Value("${integration.facebook.timezone}")
 	String timezone;
 
-	private Instant timestamp = Instant.now();
-
 	@Autowired
 	FacebookDwhDao integrationDwhDao;
-
-	// Workaround for DPNP-127
-	@Override
-	protected String getEndDate() {
-		return LocalDate.now(ZoneId.of(timezone)).toString();
-	}
 
 }

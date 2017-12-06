@@ -20,24 +20,12 @@ public class TwitterDataRecoveryEtlTest extends AbstractApproximationDataRecover
 
 	@Value("${integration.twitter.start.queue}")
 	String startQueue;
-	@Value("${integration.twitter.start.firetime}")
-	String fireTime;
 	@Value("#{'${integration.twitter.affected.properties}'.split(',')}")
 	Set<String> affectedProperties;
-//	@Value("${integration.twitter.end-date}")
-//	String endDate;
 	@Value("${integration.twitter.timezone}")
 	String timezone;
 
-	private Instant timestamp = Instant.now();
-
 	@Autowired
 	TwitterDwhDao integrationDwhDao;
-
-	// Workaround for DPNP-127
-	@Override
-	protected String getEndDate() {
-		return LocalDate.now(ZoneId.of(timezone)).toString();
-	}
 
 }

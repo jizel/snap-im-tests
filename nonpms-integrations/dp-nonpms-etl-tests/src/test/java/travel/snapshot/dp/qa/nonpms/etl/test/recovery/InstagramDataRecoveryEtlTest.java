@@ -20,24 +20,12 @@ public class InstagramDataRecoveryEtlTest extends AbstractApproximationDataRecov
 
 	@Value("${integration.instagram.start.queue}")
 	String startQueue;
-	@Value("${integration.instagram.start.firetime}")
-	String fireTime;
 	@Value("#{'${integration.instagram.affected.properties}'.split(',')}")
 	Set<String> affectedProperties;
-//	@Value("${integration.instagram.end-date}")
-//	String endDate;
 	@Value("${integration.instagram.timezone}")
 	String timezone;
 
-	private Instant timestamp = Instant.now();
-
 	@Autowired
 	InstagramDwhDao integrationDwhDao;
-
-	// Workaround for DPNP-127
-	@Override
-	protected String getEndDate() {
-		return LocalDate.now(ZoneId.of(timezone)).toString();
-	}
 
 }

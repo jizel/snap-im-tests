@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.qa.nonpms.etl.util.DateUtils.toDateId;
 import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.extractLocalDate;
 import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.extractTimestamp;
-import static travel.snapshot.dp.qa.nonpms.etl.util.JsonConverter.convertToJson;
 
 import lombok.Getter;
 import org.junit.Before;
@@ -14,7 +13,6 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import travel.snapshot.dp.qa.nonpms.etl.messages.SchedulerMessage.SchedulerMessageBuilder;
 import travel.snapshot.dp.qa.nonpms.etl.test.AbstractEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.test.dal.IntegrationDwhDao;
 
@@ -26,8 +24,6 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 @ImportAutoConfiguration({
         DataSourceTransactionManagerAutoConfiguration.class,
@@ -46,7 +42,7 @@ public abstract class AbstractDataRecoveryEtlTest extends AbstractEtlTest {
     LocalDate DAY1, DAY2, DAY3, DAY4, DAY5;
 
     @Getter
-    String affectedDate = null;
+    LocalDate affectedDate = null;
 
     @Before
     public void setUp() {
@@ -72,18 +68,8 @@ public abstract class AbstractDataRecoveryEtlTest extends AbstractEtlTest {
         runForAffectedProperties(id -> getIntegrationDwhDao().insertData(id, toDateId(date)));
     }
 
-    void start(Supplier<SchedulerMessageBuilder> schedulerMessageFactory) throws Exception {
-        jms.send(getStartQueue(), convertToJson(schedulerMessageFactory.get().build()));
-    }
-
-    void startForAffectedProperties(Function<String, SchedulerMessageBuilder> schedulerMessageFactory) throws Exception {
-        for (String propertyId : getAffectedProperties()) {
-            jms.send(getStartQueue(), convertToJson(schedulerMessageFactory.apply(propertyId).build()));
-        }
-    }
-
     void checkNotificationForDay(LocalDate day) throws Exception {
-        affectedDate = day.toString();
+        affectedDate = day;
         checkNotifications();
     }
 
@@ -102,16 +88,4 @@ public abstract class AbstractDataRecoveryEtlTest extends AbstractEtlTest {
         });
     }
 
-    private void runForAffectedProperties(Consumer<String> call) {
-        getAffectedProperties().forEach(propertyId -> call.accept(propertyId));
-    }
-
-    static Instant createFireTimeForMidnight(LocalDate date, String timezone) {
-        return date.plusDays(1).atStartOfDay(ZoneId.of(timezone)).toInstant();
-
-    }
-
-    static LocalDateTime getCurrentTimestamp() {
-        return LocalDateTime.now(Clock.systemUTC());
-    }
 }

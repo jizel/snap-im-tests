@@ -1,7 +1,6 @@
 package travel.snapshot.dp.qa.nonpms.etl.util;
 
 import static travel.snapshot.dp.qa.nonpms.etl.util.DateUtils.toLocalDate;
-import static travel.snapshot.dp.qa.nonpms.etl.util.JsonConverter.convertToJson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AccessLevel;
@@ -9,9 +8,11 @@ import lombok.NoArgsConstructor;
 import travel.snapshot.dp.qa.nonpms.etl.messages.SchedulerMessage;
 
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 
 /**
@@ -66,6 +67,14 @@ public final class Helpers {
 
     public static LocalDate extractLocalDate(Map<String, Object> map, String key) {
         return toLocalDate(((Long)map.get(key)).intValue());
+    }
+
+    public static Instant createFireTimeForMidnight(LocalDate date, String timezone) {
+        return date.plusDays(1).atStartOfDay(ZoneId.of(timezone)).toInstant();
+    }
+
+    public static LocalDateTime getCurrentTimestamp() {
+        return LocalDateTime.now(Clock.systemUTC());
     }
 
 }
