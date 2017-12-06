@@ -280,17 +280,6 @@ public class CommonHelpers {
         return response;
     }
 
-//    Second level entities generic methods - CREATE
-
-    /**
-     * Create relationship (second level entity) between two entities.
-     *
-     * @param basePath        - path of the first level entity
-     * @param secondLevelPath - path of the first level entity (to be created)
-     * @param body            - the relationship object, usually Dto
-     * @return response of the request
-     */
-
 //    Second level entities generic methods - GET
 
     /**

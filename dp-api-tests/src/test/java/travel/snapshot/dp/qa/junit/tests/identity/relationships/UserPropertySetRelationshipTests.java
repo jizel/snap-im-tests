@@ -1,11 +1,14 @@
 package travel.snapshot.dp.qa.junit.tests.identity.relationships;
 
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
@@ -80,10 +83,16 @@ public class UserPropertySetRelationshipTests extends CommonTest {
 
     @Test
     public void deleteUserPropertySetRelationship(){
-        UserPropertySetRelationshipCreateDto UserPropertySetRelationship = entityIsCreatedAs(UserPropertySetRelationshipDto.class, testUserPropertySetRelationship);
-        deleteEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationship.getId());
+        UserPropertySetRelationshipDto userPropertySetRelationship = entityIsCreatedAs(UserPropertySetRelationshipDto.class, testUserPropertySetRelationship);
+        entitiesInRelationshipCannotBeDeleted(userPropertySetRelationship);
+        deleteEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, userPropertySetRelationship.getId());
         responseCodeIs(SC_NO_CONTENT);
-        getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationship.getId());
+        getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, userPropertySetRelationship.getId());
         responseCodeIs(SC_NOT_FOUND);
+    }
+
+    private void entitiesInRelationshipCannotBeDeleted(UserPropertySetRelationshipDto userPropertySetRelationship){
+        deleteEntity(PROPERTY_SETS_PATH, userPropertySetRelationship.getPropertySetId()).then().statusCode(SC_CONFLICT);
+        deleteEntity(USERS_PATH, userPropertySetRelationship.getUserId()).then().statusCode(SC_CONFLICT);
     }
 }
