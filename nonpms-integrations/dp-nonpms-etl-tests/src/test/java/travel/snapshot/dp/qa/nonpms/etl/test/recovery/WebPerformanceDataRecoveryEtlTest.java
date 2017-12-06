@@ -20,24 +20,12 @@ public class WebPerformanceDataRecoveryEtlTest extends AbstractApproximationData
 
 	@Value("${integration.googleanalytics.start.queue}")
 	String startQueue;
-	@Value("${integration.googleanalytics.start.firetime}")
-	String fireTime;
 	@Value("#{'${integration.googleanalytics.affected.properties}'.split(',')}")
 	Set<String> affectedProperties;
-//	@Value("${integration.googleanalytics.end-date}")
-//	String endDate;
 	@Value("${integration.googleanalytics.timezone}")
 	String timezone;
 
-	private Instant timestamp = Instant.now();
-
 	@Autowired
 	GoogleAnalyticsDwhDao integrationDwhDao;
-
-	// Workaround for DPNP-127
-	@Override
-	protected String getEndDate() {
-		return LocalDate.now(ZoneId.of(timezone)).toString();
-	}
 
 }

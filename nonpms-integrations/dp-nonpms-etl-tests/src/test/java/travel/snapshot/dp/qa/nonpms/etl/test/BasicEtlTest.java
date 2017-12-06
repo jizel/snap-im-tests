@@ -1,6 +1,6 @@
 package travel.snapshot.dp.qa.nonpms.etl.test;
 
-import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.createSchedulerMessageJson;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.createFireTimeForMidnight;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -12,9 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import travel.snapshot.dp.qa.nonpms.etl.config.TestConfig;
+import travel.snapshot.dp.qa.nonpms.etl.messages.SchedulerMessage;
 import travel.snapshot.dp.qa.nonpms.etl.util.Jms;
-
-import java.io.IOException;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -23,20 +22,22 @@ import java.io.IOException;
 @DirtiesContext(classMode =  DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class BasicEtlTest extends AbstractEtlTest {
 
-    static final String IGNORED_FIRE_TIME = "2017-01-01T00:00:00Z";
-
     @Test(timeout = 60000)
-    public void testEtl() throws InterruptedException, IOException {
-        jms.send(getStartQueue(), createSchedulerMessageJson(getFireTime()));
+    public void testEtl() throws Exception {
+        start(() -> SchedulerMessage.builder()
+                .fireTime(createFireTimeForMidnight(getAffectedDate(), getTimezone()))
+                .isCurrentDay(true));
 
         checkNotifications();
     }
 
     @Test(timeout = 60000)
-    public void testEtlForSelectedProperties() throws InterruptedException, IOException {
-        for (String propertyId : getAffectedProperties()) {
-            jms.send(getStartQueue(), createSchedulerMessageJson(IGNORED_FIRE_TIME, propertyId, getAffectedDate()));
-        }
+    public void testEtlForSelectedProperties() throws Exception {
+
+        startForAffectedProperties(id -> SchedulerMessage.builder()
+                .fireTime(IGNORED_FIRE_TIME)
+                .propertyId(id)
+                .integrationDate(getAffectedDate()));
 
         checkNotifications();
     }

@@ -1,17 +1,19 @@
 package travel.snapshot.dp.qa.nonpms.etl.test.recovery;
 
 
+import static java.util.Arrays.asList;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.createFireTimeForMidnight;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.getCurrentTimestamp;
+
 import org.junit.Test;
 import travel.snapshot.dp.qa.nonpms.etl.messages.SchedulerMessage;
 
 import java.time.LocalDateTime;
 
-import static java.util.Arrays.asList;
-
 public abstract class AbstractReloadDataRecoveryEtlTest extends AbstractDataRecoveryEtlTest {
 
     @Test(timeout = 60000)
-    public void testEtlForDataRecovery() throws Exception {
+    public void testEtlDataRecovery() throws Exception {
         LocalDateTime start = getCurrentTimestamp();
 
         createLastDataGap(DAY1, DAY5);
@@ -22,7 +24,7 @@ public abstract class AbstractReloadDataRecoveryEtlTest extends AbstractDataReco
     }
 
     @Test(timeout = 60000)
-    public void testEtlForDataRecoveryForCustomIntegration() throws Exception {
+    public void testEtlDataRecoveryForCustomIntegration() throws Exception {
         LocalDateTime start = getCurrentTimestamp();
 
         createLastDataGap(DAY1, DAY5);
@@ -56,7 +58,6 @@ public abstract class AbstractReloadDataRecoveryEtlTest extends AbstractDataReco
                 .fireTime(IGNORED_FIRE_TIME)
                 .propertyId(id)
                 .integrationDate(DAY2)
-                .isCurrentDay(false)
                 .overrideData(true));
 
         checkReloadedDays(asList(DAY2), start);
