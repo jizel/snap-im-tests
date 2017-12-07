@@ -2,15 +2,13 @@ package travel.snapshot.dp.qa.nonpms.etl.test.recovery;
 
 
 import static java.util.Arrays.asList;
-import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.createFireTimeForMidnight;
 import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.getCurrentTimestamp;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.getFireTimeForMidnight;
 
 import org.junit.Test;
 import travel.snapshot.dp.qa.nonpms.etl.messages.SchedulerMessage;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public abstract class AbstractApproximationDataRecoveryEtlTest extends AbstractDataRecoveryEtlTest {
 
@@ -20,9 +18,11 @@ public abstract class AbstractApproximationDataRecoveryEtlTest extends AbstractD
 
         createLastDataGap(DAY1, DAY5);
 
-        start(() -> SchedulerMessage.builder().fireTime(createFireTimeForMidnight(DAY5, getTimezone())));
+        setAffectedDate(DAY5);
+        start(() -> SchedulerMessage.builder().fireTime(getFireTimeForMidnight(DAY5, getTimezone())));
+        checkNotifications();
 
-        checkApproximatedDays(asList(DAY2, DAY3, DAY4, DAY5), start);
+        checkReloadedData(asList(DAY2, DAY3, DAY4, DAY5), start);
     }
 
     @Test(timeout = 60000)
@@ -31,20 +31,14 @@ public abstract class AbstractApproximationDataRecoveryEtlTest extends AbstractD
 
         createLastDataGap(DAY1, DAY5);
 
+        setAffectedDate(DAY5);
         startForAffectedProperties(id -> SchedulerMessage.builder()
                 .fireTime(IGNORED_FIRE_TIME)
                 .propertyId(id)
                 .integrationDate(DAY5));
+        checkNotifications();
 
-        checkApproximatedDays(asList(DAY2, DAY3, DAY4, DAY5), start);
+        checkReloadedData(asList(DAY2, DAY3, DAY4, DAY5), start);
     }
 
-    private void checkApproximatedDays(List<LocalDate> days, LocalDateTime timestamp) throws Exception {
-        checkNotificationForDay(DAY5);
-
-        for (LocalDate day : days) {
-            affectedDate = day;
-            checkReloadedData(day, timestamp);
-        }
-    }
 }

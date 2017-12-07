@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.nonpms.etl.test;
 
-import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.createFireTimeForMidnight;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.getCurrentDate;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.getCurrentFireTimeForMidnight;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -24,10 +25,10 @@ public abstract class BasicEtlTest extends AbstractEtlTest {
 
     @Test(timeout = 60000)
     public void testEtl() throws Exception {
-        start(() -> SchedulerMessage.builder()
-                .fireTime(createFireTimeForMidnight(getAffectedDate(), getTimezone()))
-                .isCurrentDay(true));
 
+        start(() -> SchedulerMessage.builder()
+                .fireTime(getCurrentFireTimeForMidnight(getTimezone()))
+                .isCurrentDay(true));
         checkNotifications();
     }
 
@@ -37,8 +38,7 @@ public abstract class BasicEtlTest extends AbstractEtlTest {
         startForAffectedProperties(id -> SchedulerMessage.builder()
                 .fireTime(IGNORED_FIRE_TIME)
                 .propertyId(id)
-                .integrationDate(getAffectedDate()));
-
+                .integrationDate(getCurrentDate(getTimezone())));
         checkNotifications();
     }
 

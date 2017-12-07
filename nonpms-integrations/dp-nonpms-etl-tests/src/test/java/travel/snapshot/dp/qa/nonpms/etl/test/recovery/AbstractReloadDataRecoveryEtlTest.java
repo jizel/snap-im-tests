@@ -2,8 +2,9 @@ package travel.snapshot.dp.qa.nonpms.etl.test.recovery;
 
 
 import static java.util.Arrays.asList;
-import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.createFireTimeForMidnight;
+import static java.util.Collections.singletonList;
 import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.getCurrentTimestamp;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.getFireTimeForMidnight;
 
 import org.junit.Test;
 import travel.snapshot.dp.qa.nonpms.etl.messages.SchedulerMessage;
@@ -18,9 +19,11 @@ public abstract class AbstractReloadDataRecoveryEtlTest extends AbstractDataReco
 
         createLastDataGap(DAY1, DAY5);
 
-        start(() -> SchedulerMessage.builder().fireTime(createFireTimeForMidnight(DAY5, getTimezone())));
+        setAffectedDates(asList(DAY2, DAY3, DAY4, DAY5));
+        start(() -> SchedulerMessage.builder().fireTime(getFireTimeForMidnight(DAY5, getTimezone())));
+        checkNotifications();
 
-        checkReloadedDays(asList(DAY2, DAY3, DAY4, DAY5), start);
+        checkReloadedData(asList(DAY2, DAY3, DAY4, DAY5), start);
     }
 
     @Test(timeout = 60000)
@@ -28,12 +31,15 @@ public abstract class AbstractReloadDataRecoveryEtlTest extends AbstractDataReco
         LocalDateTime start = getCurrentTimestamp();
 
         createLastDataGap(DAY1, DAY5);
+
+        setAffectedDates(asList(DAY2, DAY3, DAY4, DAY5));
         startForAffectedProperties(id -> SchedulerMessage.builder()
                 .fireTime(IGNORED_FIRE_TIME)
                 .propertyId(id)
                 .integrationDate(DAY5));
+        checkNotifications();
 
-        checkReloadedDays(asList(DAY2, DAY3, DAY4, DAY5), start);
+        checkReloadedData(asList(DAY2, DAY3, DAY4, DAY5), start);
     }
 
     @Test(timeout = 60000)
@@ -42,9 +48,11 @@ public abstract class AbstractReloadDataRecoveryEtlTest extends AbstractDataReco
 
         createLastDataGap(DAY1, DAY5);
 
+        setAffectedDate(DAY2);
         startForAffectedProperties(id -> SchedulerMessage.builder().fireTime(IGNORED_FIRE_TIME).propertyId(id).integrationDate(DAY2).isCurrentDay(false));
+        checkNotifications();
 
-        checkReloadedDays(asList(DAY2), start);
+        checkReloadedData(singletonList(DAY2), start);
     }
 
     @Test(timeout = 60000)
@@ -54,13 +62,15 @@ public abstract class AbstractReloadDataRecoveryEtlTest extends AbstractDataReco
         createLastDataGap(DAY1, DAY5);
         insertData(DAY2);
 
+        setAffectedDate(DAY2);
         startForAffectedProperties(id -> SchedulerMessage.builder()
                 .fireTime(IGNORED_FIRE_TIME)
                 .propertyId(id)
                 .integrationDate(DAY2)
                 .overrideData(true));
+        checkNotifications();
 
-        checkReloadedDays(asList(DAY2), start);
+        checkReloadedData(singletonList(DAY2), start);
     }
 
 }
