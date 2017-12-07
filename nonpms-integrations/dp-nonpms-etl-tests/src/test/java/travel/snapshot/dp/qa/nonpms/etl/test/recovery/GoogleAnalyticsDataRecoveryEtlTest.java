@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Getter
-public class GoogleAnalyticsDataRecoveryEtlTest extends AbstractApproximationDataRecoveryEtlTest {
+public class GoogleAnalyticsDataRecoveryEtlTest extends AbstractReloadDataRecoveryEtlTest {
 
 	Provider provider = WEBPERFORMANCE_GOOGLEANALYTICS;
 
