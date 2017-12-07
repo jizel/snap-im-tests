@@ -5,6 +5,7 @@ import static org.apache.commons.collections4.CollectionUtils.intersection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.qa.nonpms.etl.messages.Notification.etlNotification;
 import static travel.snapshot.dp.qa.nonpms.etl.messages.Notification.failureNotification;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.wrapException;
 import static travel.snapshot.dp.qa.nonpms.etl.util.JsonConverter.convertToJson;
 
 import lombok.Setter;
@@ -145,14 +146,18 @@ public abstract class AbstractEtlTest {
         affectedDates = singletonList(date);
     }
 
-    protected void start(Supplier<SchedulerMessage.SchedulerMessageBuilder> schedulerMessageFactory) throws Exception {
-        jms.send(getStartQueue(), convertToJson(schedulerMessageFactory.get().build()));
+    protected void start(Supplier<SchedulerMessage.SchedulerMessageBuilder> schedulerMessageFactory) {
+        start(getStartQueue(), schedulerMessageFactory.get().build());
     }
 
-    protected void startForAffectedProperties(Function<String, SchedulerMessage.SchedulerMessageBuilder> schedulerMessageFactory) throws Exception {
+    protected void startForAffectedProperties(Function<String, SchedulerMessage.SchedulerMessageBuilder> schedulerMessageFactory) {
         for (String propertyId : getAffectedProperties()) {
-            jms.send(getStartQueue(), convertToJson(schedulerMessageFactory.apply(propertyId).build()));
+            start(getStartQueue(), schedulerMessageFactory.apply(propertyId).build());
         }
+    }
+
+    protected void start(String startQueue, SchedulerMessage schedulerMessage) {
+        wrapException(() -> jms.send(startQueue, convertToJson(schedulerMessage)));
     }
 
     protected void runForAffectedProperties(Consumer<String> call) {

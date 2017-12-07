@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.nonpms.etl.test.extra;
+package travel.snapshot.dp.qa.nonpms.etl.test.manual;
 
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
