@@ -63,8 +63,8 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=secret
             - IDENTITY_API_URI=http://identity:18080/api
-            - IDENTITY_APPLICATION_VERSION_ID=04000000-0000-4444-8888-000000000000
-            - IDENTITY_USER_ID=0b000000-0000-4444-8888-000000000000
+            - IDENTITY_APPLICATION_VERSION_ID=04000000-1111-4444-8888-000000000001
+            - IDENTITY_USER_ID=0b000000-1111-4444-8888-000000000001
         depends_on:
             - postgresql
         networks:

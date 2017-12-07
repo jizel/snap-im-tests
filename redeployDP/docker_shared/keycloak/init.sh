@@ -2,7 +2,7 @@
 # Keycloak configuration
 # TODO: Use Admin CLI (kcadm.sh) after input files are supported.
 
-DIR=${BASH_SOURCE%/*}
+DIR=${BASH_SOURCE%/*}/json
 API="http://localhost:8081/auth"
 REALM="Snapshot"
 
@@ -61,6 +61,8 @@ IDENTITY_DIRECT_GRANT=$(urlEncode "identity direct grant")
 
 cd $DIR
 
+# Create client
+cat client.json | post "admin/realms/$REALM/clients"
 # Configure Federation provider
 cat component-UserStorageProvider.json | post "admin/realms/$REALM/components"
 # Setup java keystore
@@ -78,5 +80,3 @@ activateIdentityAuthenticator "$IDENTITY_DIRECT_GRANT"
 activateIdentityAuthenticator "$IDENTITY_BROWSER"
 # Use new flows in realm
 cat realm.json | put "admin/realms/$REALM"
-cat json/client.json | post "admin/realms/$REALM/clients"
-cat json/client2.json | post "admin/realms/$REALM/clients"

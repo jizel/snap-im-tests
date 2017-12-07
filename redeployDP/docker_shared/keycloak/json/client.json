@@ -1,5 +1,5 @@
 {
-  "clientId": "04000000-0000-4444-8888-000000000001",
+  "clientId": "04000000-1111-4444-8888-000000000001",
   "surrogateAuthRequired": false,
   "enabled": true,
   "clientAuthenticatorType": "client-secret",
@@ -15,7 +15,7 @@
   "implicitFlowEnabled": false,
   "directAccessGrantsEnabled": true,
   "serviceAccountsEnabled": false,
-  "publicClient": true,
+  "publicClient": false,
   "frontchannelLogout": false,
   "protocol": "openid-connect",
   "attributes": {},
