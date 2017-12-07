@@ -19,6 +19,7 @@ import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerRoleCreateDto;
 import travel.snapshot.dp.api.identity.model.PartnerCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
+import travel.snapshot.dp.api.identity.model.PropertyRoleCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.RoleCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
@@ -132,6 +133,7 @@ public abstract class CommonTest {
     protected static RoleCreateDto testRole2;
     protected static RoleCreateDto testRole3;
     protected static CustomerRoleCreateDto testCustomerRole1;
+    protected static PropertyRoleCreateDto testPropertyRole1;
     protected static PartnerCreateDto testPartner1;
     protected static PartnerCreateDto testPartner2;
     protected static PartnerCreateDto testPartner3;
@@ -209,6 +211,7 @@ public abstract class CommonTest {
         testRole2 = roleDtos.get("role2");
         testRole3 = roleDtos.get("role3");
         testCustomerRole1 = entitiesLoader.getCustomerRoleDtos().get("customerRole1");
+        testPropertyRole1 = entitiesLoader.getPropertyRoleDtos().get("propertyRole1");
         testPartner1 = partnerDtos.get("partner1");
         testPartner2 = partnerDtos.get("partner2");
         testPartner3 = partnerDtos.get("partner3");
