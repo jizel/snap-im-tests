@@ -1,10 +1,11 @@
-package travel.snapshot.dp.qa.nonpms.etl.test;
+package travel.snapshot.dp.qa.nonpms.etl.test.basic;
 
 import static travel.snapshot.dp.qa.nonpms.etl.messages.Provider.REVIEW_TRIPADVISOR;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import travel.snapshot.dp.qa.nonpms.etl.messages.Provider;
+import travel.snapshot.dp.qa.nonpms.etl.test.basic.BasicEtlTest;
 
 import java.util.Set;
 

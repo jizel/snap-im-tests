@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.nonpms.etl.test;
+package travel.snapshot.dp.qa.nonpms.etl.test.basic;
 
 import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.getCurrentDate;
 import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.getCurrentFireTimeForMidnight;
@@ -14,6 +14,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import travel.snapshot.dp.qa.nonpms.etl.config.TestConfig;
 import travel.snapshot.dp.qa.nonpms.etl.messages.SchedulerMessage;
+import travel.snapshot.dp.qa.nonpms.etl.test.AbstractEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.util.Jms;
 
 @Slf4j

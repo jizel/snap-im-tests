@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.nonpms.etl.test;
+package travel.snapshot.dp.qa.nonpms.etl.test.basic;
 
 import static travel.snapshot.dp.qa.nonpms.etl.messages.Provider.SOCIALMEDIA_INSTAGRAM;
 
