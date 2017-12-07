@@ -1,13 +1,13 @@
 package travel.snapshot.dp.qa.nonpms.etl.test;
 
+import static java.util.Collections.singletonList;
 import static org.apache.commons.collections4.CollectionUtils.intersection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.qa.nonpms.etl.messages.Notification.etlNotification;
 import static travel.snapshot.dp.qa.nonpms.etl.messages.Notification.failureNotification;
 import static travel.snapshot.dp.qa.nonpms.etl.util.JsonConverter.convertToJson;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -18,7 +18,6 @@ import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfigura
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import travel.snapshot.dp.qa.nonpms.etl.config.TestConfig;
 import travel.snapshot.dp.qa.nonpms.etl.messages.DateRange;
@@ -34,6 +33,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -50,40 +50,36 @@ import javax.jms.Message;
 @SpringBootTest(classes = { Jms.class, TestConfig.class })
 @ImportAutoConfiguration({ JmsAutoConfiguration.class, ActiveMQAutoConfiguration.class })
 @DirtiesContext(classMode =  DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("test")
 public abstract class AbstractEtlTest {
 
-    protected static final Instant IGNORED_FIRE_TIME = Instant.parse("2017-01-01T00:00:00Z");
+    static final Instant IGNORED_FIRE_TIME = Instant.parse("2017-01-01T00:00:00Z");
 
     protected abstract Provider getProvider();
     protected abstract String getStartQueue();
     protected abstract Set<String> getAffectedProperties();
     protected abstract String getTimezone();
 
-    @Getter
-    protected LocalDate affectedDate = null;
-    @Getter
-    protected LocalDate endDate = null;
-    @Getter
-    protected Instant timestamp = null;
+    @Setter
+    private List<LocalDate> affectedDates;
+    @Setter
+    private Instant timestamp;
 
     @Autowired
     protected Jms jms;
 
     private BlockingQueue<Notification> notifications;
-    private Set<String> processedProperties;
+    private Set<LocalDate> processedAffectedDates;
 
     @Before
     public void setUp() {
-        notifications = new ArrayBlockingQueue<Notification>(10);
-        processedProperties = new HashSet<>();
+        notifications = new ArrayBlockingQueue<>(10);
+        processedAffectedDates = new HashSet<>();
 
-        affectedDate = LocalDate.now(ZoneId.of(getTimezone()));
-        endDate = affectedDate;
+        affectedDates = singletonList(LocalDate.now(ZoneId.of(getTimezone())));
         timestamp = Instant.now();
     }
 
-    protected void checkNotifications() throws JsonProcessingException, InterruptedException {
+    protected void checkNotifications() throws Exception {
 
         do {
             Notification notification = notifications.take();
@@ -92,11 +88,15 @@ public abstract class AbstractEtlTest {
                     .withFailMessage("Received failure notification for affected property: " + notification)
                     .isFalse();
 
-            processedProperties.addAll(notification.getAffectedProperties());
+            EtlNotification etlNotification = (EtlNotification) notification;
 
-        } while (!processedProperties.containsAll(getAffectedProperties()));
+            processedAffectedDates.add(etlNotification.getAffectedDateRanges().stream()
+                    .map(DateRange::getEndDate).filter(e -> affectedDates.contains(e)).findAny()
+                    .orElseThrow(IllegalStateException::new));
 
-        assertThat(processedProperties).containsAll(getAffectedProperties());
+        } while (!processedAffectedDates.containsAll(affectedDates));
+
+        assertThat(processedAffectedDates).containsAll(affectedDates);
     }
 
 
@@ -126,12 +126,12 @@ public abstract class AbstractEtlTest {
                 .ifPresent(this::putNotification);
     }
 
-    Predicate<Notification> checkProvider = e -> getProvider().equals(e.getProvider());
-    Predicate<Notification> checkAffectedProperties = e -> !intersection(e.getAffectedProperties(), getAffectedProperties()).isEmpty();
-    Predicate<FailureNotification> checkAffectedDate = e -> e.getAffectedDate().isEqual(getAffectedDate());
-    Predicate<EtlNotification> checkTimestamp = e -> e.getTimestamp().toInstant().isAfter(getTimestamp());
-    Predicate<EtlNotification> checkEndDate = e -> e.getAffectedDateRanges().stream().map(DateRange::getEndDate)
-            .filter(d -> d.isEqual(getEndDate())).findAny().isPresent();
+    private Predicate<Notification> checkProvider = e -> getProvider().equals(e.getProvider());
+    private Predicate<Notification> checkAffectedProperties = e -> !intersection(e.getAffectedProperties(), getAffectedProperties()).isEmpty();
+    private Predicate<FailureNotification> checkAffectedDate = e -> affectedDates.contains(e.getAffectedDate());
+    private Predicate<EtlNotification> checkTimestamp = e -> e.getTimestamp().toInstant().isAfter(timestamp);
+    private Predicate<EtlNotification> checkEndDate = e -> e.getAffectedDateRanges().stream().map(DateRange::getEndDate)
+            .anyMatch(d -> affectedDates.contains(d));
 
     private void putNotification(Notification notification) {
         try {
@@ -139,6 +139,10 @@ public abstract class AbstractEtlTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected void setAffectedDate(LocalDate date) {
+        affectedDates = singletonList(date);
     }
 
     protected void start(Supplier<SchedulerMessage.SchedulerMessageBuilder> schedulerMessageFactory) throws Exception {
@@ -152,7 +156,7 @@ public abstract class AbstractEtlTest {
     }
 
     protected void runForAffectedProperties(Consumer<String> call) {
-        getAffectedProperties().forEach(propertyId -> call.accept(propertyId));
+        getAffectedProperties().forEach(call);
     }
 
 }

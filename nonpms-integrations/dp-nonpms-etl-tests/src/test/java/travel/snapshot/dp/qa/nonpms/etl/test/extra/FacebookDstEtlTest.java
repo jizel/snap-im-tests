@@ -33,19 +33,15 @@ public class FacebookDstEtlTest extends AbstractEtlTest {
 
     @Test(timeout = 60000)
     public void testEtlWinterTimeAdjusment() throws Exception {
-        affectedDate = AFFECTED_DATE_FOR_WINTER_TIME_ADJUSMENT;
-
+        setAffectedDate(AFFECTED_DATE_FOR_SUMMER_TIME_ADJUSMENT);
         start(() -> SchedulerMessage.builder().fireTime(FIRE_TIME_FOR_SUMMER_TIME_ADJUSMENT));
-
         checkNotifications();
     }
 
     @Test(timeout = 60000)
     public void testEtlSummerTimeAdjusment() throws Exception {
-        affectedDate = AFFECTED_DATE_FOR_SUMMER_TIME_ADJUSMENT;
-
+        setAffectedDate(AFFECTED_DATE_FOR_SUMMER_TIME_ADJUSMENT);
         start(() -> SchedulerMessage.builder().fireTime(FIRE_TIME_FOR_SUMMER_TIME_ADJUSMENT));
-
         checkNotifications();
     }
 

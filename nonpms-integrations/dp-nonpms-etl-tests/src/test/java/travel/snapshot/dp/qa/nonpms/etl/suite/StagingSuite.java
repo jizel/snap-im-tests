@@ -11,10 +11,10 @@ import travel.snapshot.dp.qa.nonpms.etl.test.InstagramEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.test.TripAdvisorEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.test.TwitterEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.test.recovery.FacebookDataRecoveryEtlTest;
+import travel.snapshot.dp.qa.nonpms.etl.test.recovery.GoogleAnalyticsDataRecoveryEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.test.recovery.InstagramDataRecoveryEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.test.recovery.TripAdvisorDataRecoveryEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.test.recovery.TwitterDataRecoveryEtlTest;
-import travel.snapshot.dp.qa.nonpms.etl.test.recovery.WebPerformanceDataRecoveryEtlTest;
 
 @Ignore("Test suite is used for manual run in IDE")
 @RunWith(Suite.class)
@@ -28,7 +28,7 @@ import travel.snapshot.dp.qa.nonpms.etl.test.recovery.WebPerformanceDataRecovery
         FacebookDataRecoveryEtlTest.class,
         TwitterDataRecoveryEtlTest.class,
         TripAdvisorDataRecoveryEtlTest.class,
-        WebPerformanceDataRecoveryEtlTest.class
+        GoogleAnalyticsDataRecoveryEtlTest.class
 })
 
 public class StagingSuite {

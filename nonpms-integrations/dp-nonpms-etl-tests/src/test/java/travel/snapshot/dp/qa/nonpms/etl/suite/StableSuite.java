@@ -10,6 +10,11 @@ import travel.snapshot.dp.qa.nonpms.etl.test.GoogleAnalyticsEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.test.InstagramEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.test.TripAdvisorEtlTest;
 import travel.snapshot.dp.qa.nonpms.etl.test.TwitterEtlTest;
+import travel.snapshot.dp.qa.nonpms.etl.test.recovery.FacebookDataRecoveryEtlTest;
+import travel.snapshot.dp.qa.nonpms.etl.test.recovery.GoogleAnalyticsDataRecoveryEtlTest;
+import travel.snapshot.dp.qa.nonpms.etl.test.recovery.InstagramDataRecoveryEtlTest;
+import travel.snapshot.dp.qa.nonpms.etl.test.recovery.TripAdvisorDataRecoveryEtlTest;
+import travel.snapshot.dp.qa.nonpms.etl.test.recovery.TwitterDataRecoveryEtlTest;
 
 @Ignore("Test suite is used for manual run in IDE")
 @RunWith(Suite.class)
@@ -18,7 +23,12 @@ import travel.snapshot.dp.qa.nonpms.etl.test.TwitterEtlTest;
         InstagramEtlTest.class,
         TwitterEtlTest.class,
         GoogleAnalyticsEtlTest.class,
-        TripAdvisorEtlTest.class
+        TripAdvisorEtlTest.class,
+        InstagramDataRecoveryEtlTest.class,
+        FacebookDataRecoveryEtlTest.class,
+        TwitterDataRecoveryEtlTest.class,
+        TripAdvisorDataRecoveryEtlTest.class,
+        GoogleAnalyticsDataRecoveryEtlTest.class
 })
 public class StableSuite {
 
