@@ -52,7 +52,7 @@ import javax.jms.Message;
 @DirtiesContext(classMode =  DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class AbstractEtlTest {
 
-    static final Instant IGNORED_FIRE_TIME = Instant.parse("2017-01-01T00:00:00Z");
+    protected static final Instant IGNORED_FIRE_TIME = Instant.parse("2017-01-01T00:00:00Z");
 
     protected abstract Provider getProvider();
     protected abstract String getStartQueue();
