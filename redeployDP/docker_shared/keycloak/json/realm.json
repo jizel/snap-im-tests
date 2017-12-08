@@ -1,0 +1,4 @@
+{
+  "browserFlow": "identity browser",
+  "directGrantFlow": "identity direct grant"
+}
