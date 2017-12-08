@@ -1,7 +1,9 @@
 package travel.snapshot.dp.qa.nonpms.etl.test.manual;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.qa.nonpms.etl.messages.Provider.SOCIALMEDIA_FACEBOOK;
 import static travel.snapshot.dp.qa.nonpms.etl.messages.Provider.WEBPERFORMANCE_GOOGLEANALYTICS;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.isValidLocalDate;
 
 import lombok.Getter;
 import org.junit.Test;
@@ -43,6 +45,9 @@ public class ManualDataRecoveryEtlTest extends AbstractEtlTest {
     }
 
     private void customIntegration(Provider provider, String startQueue) throws Exception {
+        assertThat(getAffectedProperties()).withFailMessage("Missing property ID!").isNotEmpty();
+        assertThat(isValidLocalDate(this.integrationDate)).withFailMessage("Invalid integration date!").isTrue();
+
         this.provider = provider;
         LocalDate integrationDate = LocalDate.parse(this.integrationDate);
 

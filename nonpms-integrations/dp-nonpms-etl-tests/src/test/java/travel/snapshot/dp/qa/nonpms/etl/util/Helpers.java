@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 
 /**
@@ -85,6 +86,15 @@ public final class Helpers {
 
     public static LocalDateTime getCurrentTimestamp() {
         return LocalDateTime.now(Clock.systemUTC());
+    }
+
+    public static boolean isValidLocalDate(String dateString) {
+        try {
+            LocalDate.parse(dateString);
+            return true;
+        } catch(DateTimeParseException e) {
+            return false;
+        }
     }
 
 }
