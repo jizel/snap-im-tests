@@ -406,4 +406,10 @@ public class CommonHelpers {
 
         return requestSpecification;
     }
+
+    public static Response sendGetRequestToURI(String uri, Map<String, String> headers) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        Optional.ofNullable(headers).ifPresent(h -> requestSpecification.headers(h));
+        return requestSpecification.basePath(uri).when().get();
+   }
 }
