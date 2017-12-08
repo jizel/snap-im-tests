@@ -18,7 +18,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 /**
@@ -32,9 +31,7 @@ public class CustomerGetTests extends CommonTest{
     @BeforeAll
     static void createTestCustomers() throws Exception {
 //        Create 50+ test customers but only once for all tests!
-        DbStepDefs dbStepDefs = new DbStepDefs();
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        loadDefaultTestEntities();
+        cleanDbAndLoadDefaultEntities();
         range(0, 52).forEachOrdered(n -> {
             testCustomer1.setName(String.format("customer_%d", n));
             testCustomer1.setEmail(String.format("customer-%d@snapshot.travel", n));

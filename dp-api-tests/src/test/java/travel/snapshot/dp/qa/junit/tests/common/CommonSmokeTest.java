@@ -57,7 +57,7 @@ public class CommonSmokeTest extends CommonTest {
         // To clean after normal tests we first remove all test entities
         dbStepDefs.defaultEntitiesAreDeleted();
         dbStepDefs.defaultEntitiesAreCreated();
-        loader = entitiesLoader.getInstance();
+        loader = EntitiesLoader.getInstance();
         loadDefaultTestEntities();
         Map<String, Object> testClient1 = loader.getClients().get("client1");
         try {

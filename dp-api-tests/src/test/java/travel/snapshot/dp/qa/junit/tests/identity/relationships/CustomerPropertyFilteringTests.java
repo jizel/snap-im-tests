@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
-import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Map;
@@ -27,14 +26,11 @@ import java.util.UUID;
 public class CustomerPropertyFilteringTests extends CommonTest {
 
     private static final String EXAMPLES = "/csv/relationships/";
-    private static DbStepDefs dbStepDefs;
 
     @BeforeAll
     public static void createTestResources() throws Exception {
         // Create 30 test properties and customer-property relations but only once for all tests!
-        dbStepDefs = new DbStepDefs();
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        loadDefaultTestEntities();
+        cleanDbAndLoadDefaultEntities();
         UUID createdCustomerId = entityIsCreated(testCustomer1);
         range(0, 30).forEachOrdered(n -> {
             testProperty1.setName(String.format("property_%d", n));

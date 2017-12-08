@@ -6,7 +6,6 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
@@ -71,12 +70,12 @@ public class CommonHelpers {
     }
 
     public static Response getEntitiesByUserForApp(UUID userId, UUID appId, String basePath, Map<String, String> queryParams) {
-        assertThat("User ID to be send in request header is null.", userId, is(notNullValue()));
         spec.basePath(basePath);
         RequestSpecification requestSpecification = givenContext(userId, appId).spec(spec);
-        if (queryParams != null) requestSpecification.parameters(queryParams);
+        Optional.ofNullable(queryParams).ifPresent(requestSpecification::parameters);
         Response response = requestSpecification.when().get();
         setSessionResponse(response);
+
         return response;
     }
 
@@ -149,7 +148,7 @@ public class CommonHelpers {
     }
 
     public static <CDTO> Response createEntity(CDTO entity) {
-        return createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entity);
+        return createEntityByUserForApplication(null, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entity);
     }
 
     /**
@@ -217,9 +216,6 @@ public class CommonHelpers {
     }
 
     public static Response updateEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId, Object data) {
-        if (userId == null) {
-            fail("User ID to be send in request header is null.");
-        }
 //        If entity does not exist, default etag is used so update method can be used for negative tests as well.
 //        Raw etag is got first, stored into var and then valuated to save api calls.
         String rawEtag = getEntityEtag(basePath, entityId);
@@ -239,9 +235,8 @@ public class CommonHelpers {
         RequestSpecification requestSpecification = givenContext(userId, appId)
                 .spec(spec)
                 .basePath(basePath);
-        if (etag != null) {
-            requestSpecification.header(HEADER_IF_MATCH, etag);
-        }
+        setHeaderIfPresent(requestSpecification, HEADER_IF_MATCH, etag);
+
         return requestSpecification
                 .body(data)
                 .when()
@@ -270,7 +265,6 @@ public class CommonHelpers {
     }
 
     public static Response deleteEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId) {
-        assertNotNull("User ID to be send in request header is blank.", userId);
         Response response = givenContext(userId, applicationVersionId)
                 .spec(spec)
                 .basePath(basePath)
@@ -349,7 +343,10 @@ public class CommonHelpers {
     }
 
     private static RequestSpecification givenContext(UUID userId, UUID applicationId) {
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
+        RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
+        setHeaderIfPresent(requestSpecification, HEADER_XAUTH_USER_ID, userId);
+
+        return requestSpecification;
     }
 
     //    Forwarders for necessary BasicSteps that cannot be made static used in tests. Should be refactored in the future.
@@ -402,5 +399,11 @@ public class CommonHelpers {
         }
 
         return getEntitiesAsTypeByUserForApp(userId, appId, basePath, endpointDtoMap.get(basePath), params);
+    }
+
+    private static RequestSpecification setHeaderIfPresent(RequestSpecification requestSpecification, String headerName, Object header){
+        Optional.ofNullable(header).ifPresent(h -> requestSpecification.header(headerName, h));
+
+        return requestSpecification;
     }
 }
