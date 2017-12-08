@@ -20,6 +20,7 @@ import static travel.snapshot.dp.qa.junit.helpers.AnalyticsHelpers.propertyId;
 import com.jayway.restassured.response.Response;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import travel.snapshot.dp.qa.junit.tests.common.CommonProductionTest;
 
@@ -60,6 +61,7 @@ public class AnalyticsApiGetOnlyTests extends CommonProductionTest {
     }
 
     @Test
+    @Ignore("DPNP-90")
     public void TestRateShopperEndpoints() {
         assertResponseIsOk(
                 authorizationHelpers.sendGetRequest(RATE_SHOPPER_ENDPOINTS.get(RS_MARKET), RATE_SHOPPER_PARAMETERS, null)
