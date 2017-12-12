@@ -2,6 +2,9 @@ package travel.snapshot.dp.qa.junit.tests.identity.all_endpoints;
 
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Collections.emptyMap;
+import static org.apache.http.HttpStatus.SC_FORBIDDEN;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
@@ -11,11 +14,13 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_IF_MATCH
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_XAUTH_USER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getBaseUriForModule;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_DETAILS;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityEtag;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.sendGetRequestToURI;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 import static travel.snapshot.dp.qa.junit.utils.DpEndpoints.ENDPOINTS_WITH_IDS_MAP;
 import static travel.snapshot.dp.qa.junit.utils.DpEndpoints.READ_WRITE_ENDPOINTS;
@@ -23,10 +28,12 @@ import static travel.snapshot.dp.qa.junit.utils.RestAssuredConfig.setupRequestDe
 
 import com.jayway.restassured.specification.RequestSpecification;
 import lombok.extern.java.Log;
+import org.apache.commons.collections.map.SingletonMap;
 import org.junit.Test;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -90,6 +97,21 @@ public class AllEndpointsTests extends CommonTest {
         ENDPOINTS_WITH_IDS_MAP.forEach((k, v) ->
                 updateEntity(k, v, emptyUpdate)
                         .then().statusCode(SC_UNPROCESSABLE_ENTITY));
+    }
+
+    @Test
+    public void sendGetRequestWithoutApplicationHeader() {
+        Map<String, String> headersWithoutApp = new SingletonMap(HEADER_XAUTH_USER_ID, String.valueOf(DEFAULT_SNAPSHOT_USER_ID));
+        Map<String, String> headersWithoutUser = new SingletonMap(HEADER_XAUTH_APPLICATION_ID, String.valueOf(DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID));
+        READ_WRITE_ENDPOINTS.forEach(endpoint-> {
+            sendGetRequestToURI(endpoint, headersWithoutApp)
+                    .then()
+                    .statusCode(SC_FORBIDDEN)
+                    .assertThat()
+                    .body(RESPONSE_CODE, is(CC_INSUFFICIENT_PERMISSIONS))
+                    .body("details", hasItem("Illegal context configuration"));
+            sendGetRequestToURI(endpoint, headersWithoutUser).then().statusCode(SC_OK);
+        });
     }
 
     private RequestSpecification prepareEmptyUpdate(String basePath, UUID entityId) {

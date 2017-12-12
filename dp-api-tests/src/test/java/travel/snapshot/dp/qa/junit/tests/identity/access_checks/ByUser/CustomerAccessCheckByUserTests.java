@@ -6,6 +6,8 @@ import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
@@ -14,8 +16,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.CHAIN;
@@ -34,6 +39,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
@@ -41,6 +47,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTypeByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipPartialDto;
@@ -218,5 +225,45 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
         deleteEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID)
                 .then()
                 .statusCode(SC_CONFLICT);
+    }
+
+    @Test
+    void userPropertyCRUDWithAccessChecks() {
+        UUID createdUserId = entityIsCreated(testUser3);
+        createEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertyRelationshipDto(createdUserId, DEFAULT_PROPERTY_ID, true))
+                .then().statusCode(SC_CREATED);
+        Map<String, String> params = QueryParams.builder().filter(String.format("user_id==%s", String.valueOf(createdUserId))).build();
+        UUID relationId = getEntitiesAsType(USER_PROPERTY_RELATIONSHIPS_PATH, UserPropertyRelationshipDto.class, params)
+                .get(0).getId();
+        createEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertyRelationshipDto(userId2, DEFAULT_PROPERTY_ID, true))
+                .then().statusCode(SC_UNPROCESSABLE_ENTITY)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_NON_EXISTING_REFERENCE));
+        updateEntityByUserForApp(userId2, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION)
+                .then().statusCode(SC_NOT_FOUND).assertThat().body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
+        updateEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION).then().statusCode(SC_OK);
+        deleteEntityByUserForApp(userId2, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_RELATIONSHIPS_PATH, relationId)
+                .then().statusCode(SC_NOT_FOUND).assertThat().body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
+        deleteEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_RELATIONSHIPS_PATH, relationId).then().statusCode(SC_NO_CONTENT);
+    }
+
+    @Test
+    void userPropertySetCRUDWithAccessChecks() {
+        UUID createdUserId = entityIsCreated(testUser3);
+        createEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertySetRelationshipDto(createdUserId, propertySetId1, true))
+                .then().statusCode(SC_CREATED);
+        Map<String, String> params = QueryParams.builder().filter(String.format("user_id==%s", String.valueOf(createdUserId))).build();
+        UUID relationId = getEntitiesAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, params)
+                .get(0).getId();
+        createEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertySetRelationshipDto(userId2, propertySetId1, true))
+                .then().statusCode(SC_UNPROCESSABLE_ENTITY)
+                .assertThat()
+                .body(RESPONSE_CODE, is(CC_NON_EXISTING_REFERENCE));
+        updateEntityByUserForApp(userId2, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION)
+                .then().statusCode(SC_NOT_FOUND).assertThat().body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
+        updateEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION).then().statusCode(SC_OK);
+        deleteEntityByUserForApp(userId2, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId)
+                .then().statusCode(SC_NOT_FOUND).assertThat().body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
+        deleteEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId).then().statusCode(SC_NO_CONTENT);
     }
 }
