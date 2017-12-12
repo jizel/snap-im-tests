@@ -85,11 +85,6 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
                 .then()
                 .statusCode(SC_BAD_REQUEST);
         customCodeIs(CC_BAD_PARAMS);
-
-        getAllEffectivePermissionsWithParams(singletonMap(APP_VERSION_ID, createdAppVersion.getId().toString()))
-                .then()
-                .statusCode(SC_BAD_REQUEST);
-        customCodeIs(CC_BAD_PARAMS);
     }
 
     @Test
