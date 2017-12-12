@@ -54,5 +54,6 @@ partnerUsers:
     firstName: Bart,
     lastName: Simpson,
     type: PARTNER,
-    email: partneruser_dpcoreqa@dpcoreqa-snapshot.com
+    email: partneruser_dpcoreqa@dpcoreqa-snapshot.com,
+    userCustomerRelationship: null
   }
