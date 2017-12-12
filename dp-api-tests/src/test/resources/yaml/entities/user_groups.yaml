@@ -12,3 +12,9 @@ user_groups:
     name: Test UserGroup 2,
     description: Test UserGroup 2 description
 }
+  user_group3: !user_group {
+    <<: *BASIC_USER_GROUP,
+    id: 0c000000-0000-4444-8888-000000000003,
+    name: Test UserGroup 3,
+    description: Test UserGroup 3 description
+}

@@ -47,7 +47,7 @@ public class ServiceTokenTests extends CommonTest {
     private static CustomerDto createdCustomer2;
     private static PropertySetDto createdPropertySet3;
     private static UserDto createdUser2;
-    private static UserGroupDto createdUserGroup2;
+    private static UserGroupDto createdUserGroup;
 
 
     @BeforeAll
@@ -97,7 +97,7 @@ public class ServiceTokenTests extends CommonTest {
                 () -> assertThat(getPropertySetsByApp(createdAppVersionId)).containsOnly(createdPropertySet3),
                 () -> assertThat(getCustomersByApp(createdAppVersionId)).containsOnly(createdCustomer2),
                 () -> assertThat(getUsersByApp(createdAppVersionId)).containsOnly(createdUser2),
-                () -> assertThat(getUserGroupsByApp(createdAppVersionId)).containsOnly(createdUserGroup2)
+                () -> assertThat(getUserGroupsByApp(createdAppVersionId)).containsOnly(createdUserGroup)
         );
     }
 
@@ -182,8 +182,8 @@ public class ServiceTokenTests extends CommonTest {
         createdUser2 = entityIsCreatedAs(UserDto.class, testUser2);
         entityIsCreated(constructUserCustomerRelationshipDto(createdUser2.getId(), createdCustomer2.getId(), true, true));
         entityIsCreated(constructUserPropertyRelationshipDto(createdUser2.getId(), createdProperty2.getId(), true));
-        testUserGroup2.setCustomerId(createdCustomer2.getId());
-        createdUserGroup2 = entityIsCreatedAs(UserGroupDto.class, testUserGroup2);
+        testUserGroup3.setCustomerId(createdCustomer2.getId());
+        createdUserGroup = entityIsCreatedAs(UserGroupDto.class, testUserGroup3);
     }
 
     // External App does not see internal attributes. Hence setting the internal attributes to null so they can be
