@@ -22,7 +22,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesByUserForApp;
 
 
-public class ParametersCustomerAccessCheckTests extends CommonTest {
+public class ParametersCustomerAccessCheckTests extends CommonAccessCheckByUserTest {
 
     private UUID createdUserId;
     private List<String> endpoints;

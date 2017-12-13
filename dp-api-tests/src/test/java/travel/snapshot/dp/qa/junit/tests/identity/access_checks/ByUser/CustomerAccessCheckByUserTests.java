@@ -8,7 +8,6 @@ import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
-import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
 import java.util.HashMap;
@@ -18,8 +17,6 @@ import java.util.UUID;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -40,15 +37,11 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUserForApplication;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTypeByUserForApp;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipPartialDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupUserRelationship;
@@ -56,11 +49,10 @@ import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.construct
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMapping.endpointDtoMap;
 
-public class CustomerAccessCheckByUserTests extends CommonTest {
+public class CustomerAccessCheckByUserTests extends CommonAccessCheckByUserTest {
 
     UUID createdCustomerId;
-    UUID userId1;
-    UUID userId2;
+    UUID userId;
     UUID propertyId;
     UUID propertySetId1;
     UUID propertySetId2;
@@ -77,24 +69,24 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
         createdCustomerId = entityIsCreated(testCustomer1);
         testUser1.setUserCustomerRelationship(constructUserCustomerRelationshipPartialDto(DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true));
         testUser2.setUserCustomerRelationship(constructUserCustomerRelationshipPartialDto(createdCustomerId, true, true));
-        userId1 = entityIsCreated(testUser1);
-        userId2 = entityIsCreated(testUser2);
+        requestorId = entityIsCreated(testUser1);
+        userId = entityIsCreated(testUser2);
         propertyId = entityIsCreated(testProperty1);
         propertySetId1 = entityIsCreated(testPropertySet1);
         testPropertySet2.setCustomerId(createdCustomerId);
         propertySetId2 = entityIsCreated(testPropertySet2);
         customerPropertyRelationId = entityIsCreated(constructCustomerPropertyRelationshipDto(createdCustomerId, propertyId, true, CHAIN, validFrom, validTo));
         entityIsCreated(constructCustomerPropertyRelationshipDto(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID, true, CHAIN, validFrom, validTo));
-        userPropertyRelationId = entityIsCreated(constructUserPropertyRelationshipDto(userId2, propertyId, true));
-        entityIsCreated(constructUserPropertyRelationshipDto(userId1, DEFAULT_PROPERTY_ID, true));
-        userPropertySetRelationId = entityIsCreated(constructUserPropertySetRelationshipDto(userId2, propertySetId2, true));
-        entityIsCreated(constructUserPropertySetRelationshipDto(userId1, propertySetId1, true));
-        Map<String, String> params = QueryParams.builder().filter(String.format("user_id==%s", userId2.toString())).build();
+        userPropertyRelationId = entityIsCreated(constructUserPropertyRelationshipDto(userId, propertyId, true));
+        entityIsCreated(constructUserPropertyRelationshipDto(requestorId, DEFAULT_PROPERTY_ID, true));
+        userPropertySetRelationId = entityIsCreated(constructUserPropertySetRelationshipDto(userId, propertySetId2, true));
+        entityIsCreated(constructUserPropertySetRelationshipDto(requestorId, propertySetId1, true));
+        Map<String, String> params = QueryParams.builder().filter(String.format("user_id==%s", userId.toString())).build();
         userCustomerRelationId = getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, params).get(0).getId();
         inaccessibles.put(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationId);
         inaccessibles.put(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, customerPropertyRelationId);
         inaccessibles.put(USER_PROPERTY_RELATIONSHIPS_PATH, userPropertyRelationId);
-        inaccessibles.put(USERS_PATH, userId2);
+        inaccessibles.put(USERS_PATH, userId);
         inaccessibles.put(PROPERTIES_PATH, propertyId);
         inaccessibles.put(USER_PROPERTY_SET_RELATIONSHIPS_PATH, userPropertySetRelationId);
 
@@ -114,13 +106,10 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
     void getAccessibleAndInacessibleEntities() {
         inaccessibles.forEach((endpoint, id) -> {
             // Filtering
-            assertThat(getEntitiesAsTypeByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, endpointDtoMap.get(endpoint), emptyQueryParams())).hasSize(1);
+            assertThat(getEntitiesAsTypeByUserForApp(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, endpointDtoMap.get(endpoint), emptyQueryParams())).hasSize(1);
             headerIs(TOTAL_COUNT_HEADER, "1");
             // getting inaccessible entities
-            getEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id)
-                    .then().statusCode(SC_NOT_FOUND)
-                    .assertThat()
-                    .body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
+            getEntityFails(requestorId, endpoint, id);
         });
     }
 
@@ -130,17 +119,14 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
      */
     @Test
     void testExtraAccessibleProperty() {
-        entityIsCreated(constructUserPropertyRelationshipDto(userId1, propertyId, true));
-        entityIsCreated(constructUserPropertySetRelationshipDto(userId1, propertySetId2, true));
-        assertThat(getEntitiesAsTypeByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, PROPERTIES_PATH, PropertyDto.class, emptyQueryParams())).hasSize(2);
-        assertThat(getEntitiesAsTypeByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, PROPERTY_SETS_PATH, PropertySetDto.class, emptyQueryParams())).hasSize(2);
+        entityIsCreated(constructUserPropertyRelationshipDto(requestorId, propertyId, true));
+        entityIsCreated(constructUserPropertySetRelationshipDto(requestorId, propertySetId2, true));
+        assertThat(getEntitiesAsTypeByUserForApp(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, PROPERTIES_PATH, PropertyDto.class, emptyQueryParams())).hasSize(2);
+        assertThat(getEntitiesAsTypeByUserForApp(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, PROPERTY_SETS_PATH, PropertySetDto.class, emptyQueryParams())).hasSize(2);
         inaccessibles.remove(PROPERTIES_PATH);
         inaccessibles.remove(PROPERTY_SETS_PATH);
         inaccessibles.forEach((endpoint, id) -> {
-            getEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id)
-                    .then().statusCode(SC_NOT_FOUND)
-                    .assertThat()
-                    .body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
+            getEntityFails(requestorId, endpoint, id);
         });
     }
 
@@ -149,8 +135,8 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
         CustomerUpdateDto update = new CustomerUpdateDto();
         update.setParentId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
         entityIsUpdated(CUSTOMERS_PATH, createdCustomerId, update);
-        entityIsCreated(constructUserPropertyRelationshipDto(userId1, propertyId, true));
-        entityIsCreated(constructUserPropertySetRelationshipDto(userId1, propertySetId2, true));
+        entityIsCreated(constructUserPropertyRelationshipDto(requestorId, propertyId, true));
+        entityIsCreated(constructUserPropertySetRelationshipDto(requestorId, propertySetId2, true));
         /*
          We end up with the following topology:
              C1
@@ -168,9 +154,7 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
         inaccessibles.remove(PROPERTIES_PATH);
         inaccessibles.remove(PROPERTY_SETS_PATH);
         inaccessibles.forEach((endpoint, id) -> {
-            getEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id)
-                    .then()
-                    .statusCode(SC_OK);
+            getEntitySucceeds(requestorId, endpoint, id);
         });
     }
 
@@ -178,9 +162,9 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
     void accessThroughUserGroup() {
         testUserGroup1.setCustomerId(createdCustomerId);
         UUID groupId = entityIsCreated(testUserGroup1);
-        UUID relationId = entityIsCreated(constructUserGroupUserRelationship(groupId, userId1, true));
-        entityIsCreated(constructUserPropertyRelationshipDto(userId1, propertyId, true));
-        entityIsCreated(constructUserPropertySetRelationshipDto(userId1, propertySetId2, true));
+        UUID relationId = entityIsCreated(constructUserGroupUserRelationship(groupId, requestorId, true));
+        entityIsCreated(constructUserPropertyRelationshipDto(requestorId, propertyId, true));
+        entityIsCreated(constructUserPropertySetRelationshipDto(requestorId, propertySetId2, true));
         // Do not request entities with explicit access
         inaccessibles.remove(PROPERTIES_PATH);
         inaccessibles.remove(PROPERTY_SETS_PATH);
@@ -195,17 +179,11 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
          U1 will be the context user and will request entities and relations from the right cluster
         */
         inaccessibles.forEach((endpoint, id) -> {
-            getEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id)
-                    .then()
-                    .statusCode(SC_OK);
+            getEntitySucceeds(requestorId, endpoint, id);
         });
         entityIsUpdated(USER_GROUP_USER_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
         inaccessibles.forEach((endpoint, id) -> {
-            getEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id)
-                    .then()
-                    .statusCode(SC_NOT_FOUND)
-                    .assertThat()
-                    .body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
+            getEntityFails(requestorId, endpoint, id);
         });
     }
 
@@ -213,57 +191,42 @@ public class CustomerAccessCheckByUserTests extends CommonTest {
     void customerUpdateDeleteByUser() {
         CustomerUpdateDto updateDto = new CustomerUpdateDto();
         updateDto.setWebsite("https://newsite.com");
-        updateEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, CUSTOMERS_PATH, createdCustomerId, updateDto)
-                .then()
-                .statusCode(SC_NOT_FOUND).body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
-        updateEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID, updateDto)
-                .then()
-                .statusCode(SC_OK);
-        deleteEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, CUSTOMERS_PATH, createdCustomerId)
-                .then()
-                .statusCode(SC_NOT_FOUND).body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
-        deleteEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID)
-                .then()
-                .statusCode(SC_CONFLICT);
+        updateEntityFails(requestorId, CUSTOMERS_PATH, createdCustomerId, updateDto);
+        updateEntitySucceeds(requestorId, CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID, updateDto);
+        deleteEntityFails(requestorId, CUSTOMERS_PATH, createdCustomerId, SC_NOT_FOUND);
+        deleteEntityFails(requestorId, CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID, SC_CONFLICT);
     }
 
     @Test
     void userPropertyCRUDWithAccessChecks() {
         UUID createdUserId = entityIsCreated(testUser3);
-        createEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertyRelationshipDto(createdUserId, DEFAULT_PROPERTY_ID, true))
+        createEntityByUserForApplication(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertyRelationshipDto(createdUserId, DEFAULT_PROPERTY_ID, true))
                 .then().statusCode(SC_CREATED);
         Map<String, String> params = QueryParams.builder().filter(String.format("user_id==%s", String.valueOf(createdUserId))).build();
         UUID relationId = getEntitiesAsType(USER_PROPERTY_RELATIONSHIPS_PATH, UserPropertyRelationshipDto.class, params)
                 .get(0).getId();
-        createEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertyRelationshipDto(userId2, DEFAULT_PROPERTY_ID, true))
+        createEntityByUserForApplication(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true))
                 .then().statusCode(SC_UNPROCESSABLE_ENTITY)
                 .assertThat()
                 .body(RESPONSE_CODE, is(CC_NON_EXISTING_REFERENCE));
-        updateEntityByUserForApp(userId2, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION)
-                .then().statusCode(SC_NOT_FOUND).assertThat().body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
-        updateEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION).then().statusCode(SC_OK);
-        deleteEntityByUserForApp(userId2, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_RELATIONSHIPS_PATH, relationId)
-                .then().statusCode(SC_NOT_FOUND).assertThat().body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
-        deleteEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_RELATIONSHIPS_PATH, relationId).then().statusCode(SC_NO_CONTENT);
+        updateEntityFails(userId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
+        updateEntitySucceeds(requestorId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
+        deleteEntityFails(userId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId, SC_NOT_FOUND);
+        deleteEntitySucceeds(requestorId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId);
     }
 
     @Test
     void userPropertySetCRUDWithAccessChecks() {
         UUID createdUserId = entityIsCreated(testUser3);
-        createEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertySetRelationshipDto(createdUserId, propertySetId1, true))
+        createEntityByUserForApplication(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertySetRelationshipDto(createdUserId, propertySetId1, true))
                 .then().statusCode(SC_CREATED);
         Map<String, String> params = QueryParams.builder().filter(String.format("user_id==%s", String.valueOf(createdUserId))).build();
         UUID relationId = getEntitiesAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, params)
                 .get(0).getId();
-        createEntityByUserForApplication(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertySetRelationshipDto(userId2, propertySetId1, true))
-                .then().statusCode(SC_UNPROCESSABLE_ENTITY)
-                .assertThat()
-                .body(RESPONSE_CODE, is(CC_NON_EXISTING_REFERENCE));
-        updateEntityByUserForApp(userId2, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION)
-                .then().statusCode(SC_NOT_FOUND).assertThat().body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
-        updateEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION).then().statusCode(SC_OK);
-        deleteEntityByUserForApp(userId2, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId)
-                .then().statusCode(SC_NOT_FOUND).assertThat().body(RESPONSE_CODE, is(CC_ENTITY_NOT_FOUND));
-        deleteEntityByUserForApp(userId1, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId).then().statusCode(SC_NO_CONTENT);
+        createEntityFails(requestorId, constructUserPropertySetRelationshipDto(userId, propertySetId1, true));
+        updateEntityFails(userId, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
+        updateEntitySucceeds(requestorId, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
+        deleteEntityFails(userId, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, SC_NOT_FOUND);
+        deleteEntitySucceeds(requestorId, USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
     }
 }
