@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.CHAIN;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
@@ -36,6 +37,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesByUse
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructPropertySetPropertyRelationship;
+import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipPartialDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupPropertyRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupPropertySetRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupUserRelationship;
@@ -43,6 +45,7 @@ import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.construct
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
 public class PropertiesAccessChecksByUserTests extends CommonAccessCheckByUserTest {
+    UUID userId1;
     UUID userId2;
     UUID propertyId;
     UUID propertySetId;
@@ -154,5 +157,104 @@ public class PropertiesAccessChecksByUserTests extends CommonAccessCheckByUserTe
         Map<String, String> params = QueryParams.builder().filter("name=='Default Property*'").build();
         getEntitiesByUserForApp(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, PROPERTIES_PATH, params);
         assertThat(parseResponseAsListOfObjects(PropertyDto.class)).hasSize(1);
+    }
+
+    @Test
+    void propertyCustomerAccessCheckByUser() {
+        /*
+         C1--P1  P2----C2
+          \  |  /
+           \ | /
+            \|/
+             R
+         Where:
+         R - requestor
+         P2-C2 - target relation
+         */
+        // Setup
+        UUID relationId1 = entityIsCreated(constructCustomerPropertyRelationshipDto(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID, true, CHAIN, validFrom, validTo));
+        UUID customerId = entityIsCreated(testCustomer1);
+        propertyId = entityIsCreated(testProperty1);
+        entityIsCreated(constructUserPropertyRelationshipDto(requestorId, DEFAULT_PROPERTY_ID, true));
+        entityIsCreated(constructUserPropertyRelationshipDto(requestorId, propertyId, true));
+
+        // Test
+        createEntityFails(requestorId, constructCustomerPropertyRelationshipDto(customerId, propertyId, true, CHAIN, validFrom, validTo));
+        UUID relationId2 = entityIsCreated(constructCustomerPropertyRelationshipDto(customerId, propertyId, true, CHAIN, validFrom, validTo));
+        updateEntityFails(requestorId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId2, INACTIVATE_RELATION);
+        deleteEntityFails(requestorId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId2, SC_NOT_FOUND);
+        updateEntitySucceeds(requestorId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId1, INACTIVATE_RELATION);
+        deleteEntitySucceeds(requestorId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId1);
+    }
+
+    @Test
+    void propertyPropertySetAccessCheckByUser() {
+        /*
+        PS1--P1  P2----PS2
+          \  |  /
+           \ | /
+            \|/
+             R
+         Where:
+         R - requestor
+         P2-PS2 - target relation
+         */
+        // Setup
+        propertyId = entityIsCreated(testProperty1);
+        UUID psId1 = entityIsCreated(testPropertySet1);
+        UUID psId2 = entityIsCreated(testPropertySet2);
+        UUID relationId1 = entityIsCreated(constructPropertySetPropertyRelationship(psId1, DEFAULT_PROPERTY_ID, true));
+        entityIsCreated(constructUserPropertyRelationshipDto(requestorId, DEFAULT_PROPERTY_ID, true));
+        entityIsCreated(constructUserPropertyRelationshipDto(requestorId, propertyId, true));
+        entityIsCreated(constructUserPropertySetRelationshipDto(requestorId, psId1, true));
+
+        // Test
+        createEntityFails(requestorId, constructPropertySetPropertyRelationship(psId2, propertyId, true));
+        UUID relationId2 = entityIsCreated(constructPropertySetPropertyRelationship(psId2, propertyId, true));
+        // Implicit access  to PS through the single property
+        getEntitySucceeds(requestorId, PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId2);
+        // Now destroy implicit access by adding extra property to ps
+        UUID newPropertyId = entityIsCreated(testProperty2);
+        entityIsCreated(constructPropertySetPropertyRelationship(psId2, newPropertyId, true));
+        getEntityFails(requestorId, PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId2);
+
+        updateEntityFails(requestorId, PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId2, INACTIVATE_RELATION);
+        deleteEntityFails(requestorId, PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId2, SC_NOT_FOUND);
+        updateEntitySucceeds(requestorId, PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId1, INACTIVATE_RELATION);
+        deleteEntitySucceeds(requestorId, PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId1);
+    }
+
+    @Test
+    void propertyUserAccessCheckByUser() {
+        /*
+           C1     C2
+           /\    / \
+         U1-P1  P2-U2
+          \ |  /
+           \| /
+            R
+         Where:
+         R - requestor
+         P2-U3 - target relation
+         */
+        // Setup
+
+        UUID customerId = entityIsCreated(testCustomer1);
+        propertyId = entityIsCreated(testProperty1);
+        entityIsCreated(constructUserPropertyRelationshipDto(requestorId, DEFAULT_PROPERTY_ID, true));
+        entityIsCreated(constructUserPropertyRelationshipDto(requestorId, propertyId, true));
+        userId1 = entityIsCreated(testUser2);
+        testUser3.setUserCustomerRelationship(constructUserCustomerRelationshipPartialDto(customerId, true, true));
+        userId2 = entityIsCreated(testUser3);
+
+        // Test
+        createEntityFails(requestorId, constructUserPropertyRelationshipDto(userId2, propertyId, true));
+        createEntitySucceeds(requestorId, constructUserPropertyRelationshipDto(userId1, DEFAULT_PROPERTY_ID, true));
+        UUID relationId1 = getSessionResponse().as(UserPropertyRelationshipDto.class).getId();
+        UUID relationId2 = entityIsCreated(constructUserPropertyRelationshipDto(userId2, propertyId, true));
+        updateEntityFails(requestorId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId2, INACTIVATE_RELATION);
+        deleteEntityFails(requestorId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId2, SC_NOT_FOUND);
+        updateEntitySucceeds(requestorId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId1, INACTIVATE_RELATION);
+        deleteEntitySucceeds(requestorId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId1);
     }
 }
