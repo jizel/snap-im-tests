@@ -7,6 +7,7 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.UUID;
 
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -40,10 +41,10 @@ public class CommonAccessCheckByUserTest extends CommonTest {
 
     <CDTO> void createEntitySucceeds(UUID requestorId, CDTO entity) {
         createEntity(requestorId, entity)
-                .then().statusCode(SC_OK);
+                .then().statusCode(SC_CREATED);
     }
 
-    <CDTO> Response createEntity(UUID requestorId, CDTO entity) {
+    private <CDTO> Response createEntity(UUID requestorId, CDTO entity) {
         return createEntityByUserForApplication(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entity);
     }
 
@@ -61,7 +62,7 @@ public class CommonAccessCheckByUserTest extends CommonTest {
                 .then().statusCode(SC_OK);
     }
 
-    Response getEntity(UUID requestorId, String endpoint, UUID id) {
+    private Response getEntity(UUID requestorId, String endpoint, UUID id) {
         return getEntityByUserForApplication(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id);
     }
 
@@ -88,7 +89,7 @@ public class CommonAccessCheckByUserTest extends CommonTest {
         deleteEntity(requestorId, endpoint, id).then().statusCode(SC_NO_CONTENT);
     }
 
-    Response deleteEntity(UUID requestorId, String endpoint, UUID id) {
+    private Response deleteEntity(UUID requestorId, String endpoint, UUID id) {
         return deleteEntityByUserForApp(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, endpoint, id);
     }
 
