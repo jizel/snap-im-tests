@@ -1,0 +1,17 @@
+,,/null,is_active,/null,50,52
+10,,/null,description,/null,10,52
+,20,/null,name,/null,32,52
+20,,/null,/null,is_active,20,52
+10,10,/null,/null,description,10,52
+,,/null,/null,name,50,52
+,5,is_active==false,/null,/null,0,0
+20,,is_active==true,/null,/null,20,52
+,,description=='generatedUserGroup Description 10',/null,/null,1,1
+,,description=='generatedUserGroup Description*',/null,/null,50,52
+,,description=='NotExistentShit',/null,/null,0,0
+40,,name=='generatedUserGroup*',/null,/null,40,52
+,,name=='NotExistentShit',/null,/null,0,0
+,,is_active==false and name=='generatedUserGroup*',/null,/null,0,0
+,,is_active==false or name=='generatedUserGroup*',/null,/null,50,52
+,5,is_active==true and name=='generatedUserGroup*',/null,/null,47,52
+,,is_active==true or name=='generatedUserGroup*',/null,/null,50,52

@@ -216,14 +216,10 @@ public class CommonHelpers {
     }
 
     public static Response updateEntityByUserForApp(UUID userId, UUID applicationVersionId, String basePath, UUID entityId, Object data) {
-//        If entity does not exist, default etag is used so update method can be used for negative tests as well.
-//        Raw etag is got first, stored into var and then valuated to save api calls.
-        String rawEtag = getEntityEtag(basePath, entityId);
-        String usedEtag = (rawEtag == null) ? DEFAULT_SNAPSHOT_ETAG : rawEtag;
         Response response = givenContext(userId, applicationVersionId)
                 .spec(spec)
                 .basePath(basePath)
-                .header(HEADER_IF_MATCH, usedEtag)
+                .header(HEADER_IF_MATCH, Optional.ofNullable(getEntityEtag(basePath, entityId)).orElse(DEFAULT_SNAPSHOT_ETAG))
                 .body(data)
                 .when()
                 .patch("/{id}", entityId);
