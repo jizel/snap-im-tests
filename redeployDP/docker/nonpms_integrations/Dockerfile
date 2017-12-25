@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM snapshothub/app-java:2.0
 VOLUME /tmp
 VOLUME /data
 VOLUME /opt/integrations/config
