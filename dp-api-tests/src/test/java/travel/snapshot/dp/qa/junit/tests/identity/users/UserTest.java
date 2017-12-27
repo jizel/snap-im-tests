@@ -25,14 +25,17 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_MESSAGE
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserGroupUserRelationship;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
+import jdk.nashorn.internal.runtime.JSONFunctions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -43,6 +46,7 @@ import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
 import java.util.List;
 import java.util.Map;
@@ -181,6 +185,41 @@ public class UserTest extends CommonTest {
         updateDto.setLanguageCode("en-AU");
         updateEntity(USERS_PATH, createdUserId, updateDto).then().statusCode(SC_OK);
     }
+
+    @Test
+    @Jira("DPIM-69")
+    void testCombinedSorting() {
+        // Setup users
+        // 1
+        testUser1.setId(null);
+        testUser1.setEmail("adamh@snapshot.travel");
+        testUser1.setUsername("adamt");
+        testUser1.setFirstName("Adam");
+        testUser1.setLastName("Team");
+        entityIsCreated(testUser1);
+        // 2
+        testUser1.setId(null);
+        testUser1.setEmail("adamw@snapshot.travel");
+        testUser1.setUsername("adamw");
+        testUser1.setFirstName("Adam");
+        testUser1.setLastName("Walczynski");
+        entityIsCreated(testUser1);
+        // Test
+        Map<String, String> params1 = QueryParams.builder().sort("first_name,last_name").build();
+        getEntities(USERS_PATH, params1);
+        assertThat(parseResponseAsListOfObjects(UserDto.class).get(0).getUsername(), is("adamt"));
+
+        Map<String, String> params2 = QueryParams.builder().sort("first_name,-last_name").build();
+        getEntities(USERS_PATH, params2);
+        assertThat(parseResponseAsListOfObjects(UserDto.class).get(0).getUsername(), is("adamw"));
+
+        Map<String, String> params = QueryParams.builder().sort("last_name,first_name").build();
+        getEntities(USERS_PATH, params);
+        assertThat(parseResponseAsListOfObjects(UserDto.class).get(0).getUsername(), is("johnSmith"));
+
+    }
+
+    // Help methods
 
     private UserUpdateDto getTestUpdate() {
         UserUpdateDto userUpdate = new UserUpdateDto();

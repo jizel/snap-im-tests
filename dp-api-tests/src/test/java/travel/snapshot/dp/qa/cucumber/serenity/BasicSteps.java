@@ -77,7 +77,6 @@ public class BasicSteps {
     public static final UUID DEFAULT_PROPERTY_ID = UUID.fromString("08000000-0000-4444-8888-000000000001");
     public static final UUID DEFAULT_ADDRESS_ID = UUID.fromString("11111111-0000-4000-a000-777777777777");
     public static final UUID DEFAULT_COMMERCIAL_SUBSCRIPTION_ID = UUID.fromString("11111111-0000-4000-a000-888888888888");
-    public static final UUID DEFAULT_API_SUBSCRIPTION_ID = UUID.fromString("11111111-0000-4000-a000-999999999999");
     public static final String DEFAULT_SNAPSHOT_TIMEZONE = "Europe/Prague";
     public static final String DEFAULT_SNAPSHOT_SALESFORCE_ID = "DEFAULTSFID0001";
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
@@ -106,7 +105,6 @@ public class BasicSteps {
     public static final String LIMIT_TO_ONE = "1";
     public static final String CURSOR_FROM_FIRST = "0";
     public static final String SECOND_LEVEL_OBJECT_API_SUBSCRIPTION = "api_subscriptions";
-    public static final String SECOND_LEVEL_OBJECT_TTI = "tti";
     public static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     public static final String HEADER_ETAG = "ETag";
     public static final String CURLY_BRACES_EMPTY = "{}";
@@ -130,13 +128,7 @@ public class BasicSteps {
     public static final String DEFAULT_ENCRYPTED_PASSWORD = "$2a$10$vNTgpUAsWvhJQmJR2DkuYOTN5EgJQhMOqQ5xd0DmJOHdck4Sa2orq";
     public static final String WRONG_ENCRYPTED_PASSWORD = "$2a$10$iIuyGtO./6izEUk0iOZdy.5moBMuhTj0dU6sQMoiVYswO2QSd1jnO";
     public static final String DEFAULT_CLIENT_SECRET = "a4000000-0000-4444-8888-000000000000";
-    public static final String CUSTOMER_PROPERTIES = "customer_properties";
-    public static final String CUSTOMER_USERS = "customer_users";
-    public static final String USER_PROPERTIES = "user_properties";
-    public static final String USERS = "users";
-    public static final String PROPERTYSET_PROPERTIES = "propertyset_properties";
     public static final String PARTNERS_RESOURCE = "partners";
-    public static final String USER_PROPERTYSETS = "user_propertysets";
     public static final String ADDRESS_LINE1_PATTERN = "CoreQA";
     public static final String EXAMPLE_NULL = "/null";
     protected RequestSpecification spec = null;
