@@ -46,7 +46,7 @@ services:
         networks:
             - main
     keycloak:
-        image: snapshothub/dp-keycloak
+        image: snapshothub/dp-keycloak:master-78
         ports:
             - 8081:8080
             - 9991:9990
@@ -65,6 +65,8 @@ services:
             - IDENTITY_API_URI=http://identity:18080/api
             - IDENTITY_APPLICATION_VERSION_ID=04000000-1111-4444-8888-000000000001
             - IDENTITY_USER_ID=0b000000-1111-4444-8888-000000000001
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
         depends_on:
             - postgresql
         networks:
@@ -78,7 +80,7 @@ services:
         networks:
           - main
     nginx:
-        image: snapshothub/dp-nginx:master-69
+        image: snapshothub/dp-nginx:master-84
         ports:
             - 81:80
         volumes:
