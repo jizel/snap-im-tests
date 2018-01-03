@@ -1,5 +1,5 @@
 def serenityVersion = "1.1.26"
-def apiVersion = "1.39.43"
+def apiVersion = "1.40.9"
 
 def junit4Version        = '4.12'
 def junitVintageVersion  = '4.12.1'

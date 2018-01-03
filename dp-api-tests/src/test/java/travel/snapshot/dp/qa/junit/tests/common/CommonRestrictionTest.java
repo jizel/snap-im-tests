@@ -72,7 +72,6 @@ public abstract class CommonRestrictionTest extends CommonTest {
         testAppVersion.setIsNonCommercial(true);
         testAppVersion.setName("testAppVersion");
         testAppVersion.setStatus(CERTIFIED);
-        testAppVersion.setApiManagerId("123");
         return entityIsCreatedAs(ApplicationVersionDto.class, testAppVersion);
     }
 

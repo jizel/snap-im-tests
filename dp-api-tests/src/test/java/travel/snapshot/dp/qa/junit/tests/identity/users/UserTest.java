@@ -13,7 +13,7 @@ import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.GUEST;
+import static travel.snapshot.dp.api.identity.model.UserType.GUEST;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
@@ -35,7 +35,6 @@ import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.construct
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertySetRelationshipDto;
 
-import jdk.nashorn.internal.runtime.JSONFunctions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,6 +43,7 @@ import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserType;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
@@ -70,8 +70,8 @@ public class UserTest extends CommonTest {
     }
 
     @ParameterizedTest
-    @EnumSource(UserUpdateDto.UserType.class)
-    void CRUDAllUserTypes(UserUpdateDto.UserType type) {
+    @EnumSource(UserType.class)
+    void CRUDAllUserTypes(UserType type) {
         testUser2.setType(type);
         UUID userId = entityIsCreated(testUser2);
 
@@ -101,8 +101,8 @@ public class UserTest extends CommonTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = UserUpdateDto.UserType.class)
-    void usersDontNeedCustomerRelationship(UserUpdateDto.UserType type) {
+    @EnumSource(value = UserType.class)
+    void usersDontNeedCustomerRelationship(UserType type) {
         testUser1.setUserCustomerRelationship(null);
         testUser1.setType(type);
         createEntity(testSnapshotUser1).then().statusCode(SC_CREATED);
