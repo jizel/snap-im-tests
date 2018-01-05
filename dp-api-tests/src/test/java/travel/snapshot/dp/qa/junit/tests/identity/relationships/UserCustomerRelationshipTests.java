@@ -16,14 +16,12 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedA
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityAsType;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipUpdate;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
-import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
@@ -80,7 +78,6 @@ public class UserCustomerRelationshipTests extends CommonTest{
     }
 
     @Test
-    @Jira("DPIM-52")
     public void updateUserCustomerRelationship() throws Exception {
         UserCustomerRelationshipCreateDto userCustomerRelationship = entityIsCreatedAs(UserCustomerRelationshipDto.class, testUserCustomerRelationship);
         UserCustomerRelationshipUpdateDto update = constructUserCustomerRelationshipUpdate( false, false);
@@ -89,12 +86,6 @@ public class UserCustomerRelationshipTests extends CommonTest{
                 UserCustomerRelationshipDto.class, userCustomerRelationship.getId());
         assertThat(returnedRelationship.getIsActive(), is(false));
         assertThat(returnedRelationship.getIsPrimary(), is(false));
-
-        //        Errors
-        update = constructUserCustomerRelationshipUpdate( null, null);
-        assertStatusCodes(updateEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationship.getId(), update),
-                                       SC_UNPROCESSABLE_ENTITY,
-                                       CC_SEMANTIC_ERRORS);
     }
 
     @Test
