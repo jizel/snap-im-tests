@@ -7,7 +7,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.OWNER;
-import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
@@ -41,6 +40,7 @@ import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipCrea
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserType;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.io.IOException;

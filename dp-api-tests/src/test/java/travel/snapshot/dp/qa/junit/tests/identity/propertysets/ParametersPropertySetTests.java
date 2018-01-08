@@ -27,7 +27,7 @@ import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserType;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
@@ -167,13 +167,13 @@ public class ParametersPropertySetTests extends CommonTest {
         String returned,
         String filter
     ) throws Exception {
-        List<UserUpdateDto.UserType> types = Arrays.asList(
-                UserUpdateDto.UserType.CUSTOMER,
-                UserUpdateDto.UserType.CUSTOMER,
-                UserUpdateDto.UserType.GUEST,
-                UserUpdateDto.UserType.CUSTOMER,
-                UserUpdateDto.UserType.PARTNER,
-                UserUpdateDto.UserType.CUSTOMER
+        List<UserType> types = Arrays.asList(
+                UserType.CUSTOMER,
+                UserType.CUSTOMER,
+                UserType.GUEST,
+                UserType.CUSTOMER,
+                UserType.PARTNER,
+                UserType.CUSTOMER
         );
         UUID psId = entityIsCreated(testPropertySet1);
         IntStream.range(0, 5).forEachOrdered(n -> {

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import org.junit.Before;
 import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.api.identity.model.UserUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserType;
 import travel.snapshot.dp.api.model.EntityDto;
 import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
 
@@ -34,7 +34,7 @@ public class UserValidations extends CommonValidationTests {
     private Class<UserDto[]> dtoArrayType = UserDto[].class;
     private UUID createdCustomerId;
 
-    private static final List<UserUpdateDto.UserType> USER_TYPES = asList(UserUpdateDto.UserType.values());
+    private static final List<UserType> USER_TYPES = asList(UserType.values());
 
     @Override
     @Before
@@ -42,7 +42,7 @@ public class UserValidations extends CommonValidationTests {
         super.setUp();
         testEntity = testUser1;
         createdCustomerId = entityIsCreated(testCustomer1);
-        UserUpdateDto.UserType randomUserType = USER_TYPES.get(random.nextInt(USER_TYPES.size()));
+        UserType randomUserType = USER_TYPES.get(random.nextInt(USER_TYPES.size()));
 
         attributesBoundaries = new ArrayList<>(asList(
                 ObjectField.of(
@@ -73,7 +73,7 @@ public class UserValidations extends CommonValidationTests {
                         "/user_customer_relationship", JSON, true, String.format("{\"is_primary\":false,\"customer_id\":\"%s\"}", createdCustomerId), "{\"invalid\":\"relationship\"}", null)
         ));
         // Other than customer type users do not support user_customer_relationship
-        if (randomUserType == UserUpdateDto.UserType.CUSTOMER) {
+        if (randomUserType.equals(UserType.CUSTOMER)) {
             attributesBoundaries.add(ObjectField.of(
                     "/user_customer_relationship", JSON, true, String.format("{\"is_primary\":false,\"customer_id\":\"%s\"}", createdCustomerId), "{\"invalid\":\"relationship\"}", null)
             );

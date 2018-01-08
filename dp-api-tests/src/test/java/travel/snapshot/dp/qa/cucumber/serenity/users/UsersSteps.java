@@ -7,7 +7,7 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
-import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.CUSTOMER;
+import static travel.snapshot.dp.api.identity.model.UserType.CUSTOMER;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
@@ -28,7 +28,6 @@ import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.util.HashMap;

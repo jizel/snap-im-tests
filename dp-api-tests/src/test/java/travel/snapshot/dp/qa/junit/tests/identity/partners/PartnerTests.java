@@ -43,7 +43,7 @@ import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipCreateDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipCreateDto;
-import travel.snapshot.dp.api.identity.model.UserUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserType;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class PartnerTests extends CommonTest{
     public void setUp() {
         super.setUp();
         createdPartner1Id = entityIsCreated(testPartner1);
-        testUser1.setType(UserUpdateDto.UserType.PARTNER);
+        testUser1.setType(UserType.PARTNER);
         testUser1.setUserCustomerRelationship(null);
         createdUserId = entityIsCreated(testUser1);
     }
