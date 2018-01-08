@@ -92,7 +92,7 @@ public class DbUtilsSteps {
     static final String ADD_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (id, application_id, platform_operation_id) VALUES (?, ?, ?);";
     static final String SELECT_PERMISSION_ID = "SELECT id FROM platformoperation where uri_template = ? AND http_method = ?;";
     static final String SET_USER_PASSWORD = "UPDATE public.user SET password = ? where id = ?;";
-
+    static final String POPULATE_ROLE_PERMISSION = "INSERT INTO rolepermission (id, application_id, role_id, platform_operation_id) SELECT uuid_generate_v4(), ?, ?, id FROM platformoperation;";
     static final String TTI_SCHEMA_NAME = "tti";
     static final String IDENTITY_SCHEMA_NAME = "identity";
 
@@ -100,6 +100,10 @@ public class DbUtilsSteps {
 
     public void setUserPassword(UUID userId, String passwordHash) {
         dbHelper.identityDb().update(SET_USER_PASSWORD, passwordHash, userId);
+    }
+
+    public void populateRolePermissionsForRole(UUID applicationId, UUID roleId) {
+        dbHelper.identityDb().update(POPULATE_ROLE_PERMISSION, applicationId, roleId);
     }
 
     public void deleteAllPropertyCustomersFromDb(UUID customerId, UUID propertyId) {

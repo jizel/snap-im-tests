@@ -2,7 +2,6 @@ package travel.snapshot.dp.qa.junit.tests.identity.access_checks.ByUser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Arrays;
 import java.util.List;

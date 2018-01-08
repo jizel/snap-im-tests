@@ -32,16 +32,16 @@ public class CommonAccessCheckByUserTest extends CommonTest {
 
     // CREATE
 
-    <CDTO> void createEntityFails(UUID requestorId, CDTO entity) {
-        createEntity(requestorId, entity)
+    <CDTO> Response createEntityFails(UUID requestorId, CDTO entity) {
+        return createEntity(requestorId, entity)
                 .then().statusCode(SC_UNPROCESSABLE_ENTITY)
                 .assertThat()
-                .body(RESPONSE_CODE, is(CC_NON_EXISTING_REFERENCE));
+                .body(RESPONSE_CODE, is(CC_NON_EXISTING_REFERENCE)).extract().response();
     }
 
-    <CDTO> void createEntitySucceeds(UUID requestorId, CDTO entity) {
-        createEntity(requestorId, entity)
-                .then().statusCode(SC_CREATED);
+    <CDTO> Response createEntitySucceeds(UUID requestorId, CDTO entity) {
+        return createEntity(requestorId, entity)
+                .then().statusCode(SC_CREATED).extract().response();
     }
 
     private <CDTO> Response createEntity(UUID requestorId, CDTO entity) {
