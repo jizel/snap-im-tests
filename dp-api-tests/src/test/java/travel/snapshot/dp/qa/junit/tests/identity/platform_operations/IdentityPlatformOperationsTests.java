@@ -47,12 +47,13 @@ public class IdentityPlatformOperationsTests extends CommonPlatformOperationTest
     public void identityPermissionCannotBeUpdatedOrDeleted() {
         List<PlatformOperationDto> allIdentityPlatformOperations = getEntitiesAsType(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class,
                 buildQueryParamMapForPaging(null, null, "uri_template==/identity/*", "uri_template", null, null));
+        PlatformOperationUpdateDto platformOperationUpdate = new PlatformOperationUpdateDto();
+        platformOperationUpdate.setUriTemplate("/updated/uri");
 
         allIdentityPlatformOperations.forEach(po -> {
-            updateEntity(PLATFORM_OPERATIONS_PATH, po.getId(), new PlatformOperationUpdateDto());
-            responseCodeIs(SC_FORBIDDEN);
-            deleteEntity(PLATFORM_OPERATIONS_PATH, po.getId());
-            responseCodeIs(SC_FORBIDDEN);
+            updateEntity(PLATFORM_OPERATIONS_PATH, po.getId(), new PlatformOperationUpdateDto()).then().statusCode((SC_FORBIDDEN));
+            updateEntity(PLATFORM_OPERATIONS_PATH, po.getId(), platformOperationUpdate).then().statusCode((SC_FORBIDDEN));
+            deleteEntity(PLATFORM_OPERATIONS_PATH, po.getId()).then().statusCode(SC_FORBIDDEN);
         });
     }
 

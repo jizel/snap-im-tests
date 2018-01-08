@@ -96,9 +96,9 @@ public class AllEndpointsTests extends CommonTest {
     @ParameterizedTest
     @MethodSource("endpointStream")
     @Jira("DPIM-214")
-    public void sendEmptyJsonPatchTest(String endpoint) {
+    void sendEmptyJsonPatchTest(String endpoint) {
                 updateEntity(endpoint, ENDPOINTS_WITH_IDS_MAP.get(endpoint), emptyUpdate)
-                        .then().statusCode(SC_UNPROCESSABLE_ENTITY);
+                        .then().statusCode(SC_OK);
     }
 
     @Test
