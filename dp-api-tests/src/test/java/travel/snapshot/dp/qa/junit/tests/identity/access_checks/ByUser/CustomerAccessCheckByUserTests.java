@@ -200,15 +200,11 @@ public class CustomerAccessCheckByUserTests extends CommonAccessCheckByUserTest 
     @Test
     void userPropertyCRUDWithAccessChecks() {
         UUID createdUserId = entityIsCreated(testUser3);
-        createEntityByUserForApplication(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertyRelationshipDto(createdUserId, DEFAULT_PROPERTY_ID, true))
-                .then().statusCode(SC_CREATED);
+        createEntitySucceeds(requestorId, constructUserPropertyRelationshipDto(createdUserId, DEFAULT_PROPERTY_ID, true));
         Map<String, String> params = QueryParams.builder().filter(String.format("user_id==%s", String.valueOf(createdUserId))).build();
         UUID relationId = getEntitiesAsType(USER_PROPERTY_RELATIONSHIPS_PATH, UserPropertyRelationshipDto.class, params)
                 .get(0).getId();
-        createEntityByUserForApplication(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true))
-                .then().statusCode(SC_UNPROCESSABLE_ENTITY)
-                .assertThat()
-                .body(RESPONSE_CODE, is(CC_NON_EXISTING_REFERENCE));
+        createEntityFails(requestorId, constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true));
         updateEntityFails(userId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
         updateEntitySucceeds(requestorId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId, INACTIVATE_RELATION);
         deleteEntityFails(userId, USER_PROPERTY_RELATIONSHIPS_PATH, relationId, SC_NOT_FOUND);
@@ -218,8 +214,7 @@ public class CustomerAccessCheckByUserTests extends CommonAccessCheckByUserTest 
     @Test
     void userPropertySetCRUDWithAccessChecks() {
         UUID createdUserId = entityIsCreated(testUser3);
-        createEntityByUserForApplication(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, constructUserPropertySetRelationshipDto(createdUserId, propertySetId1, true))
-                .then().statusCode(SC_CREATED);
+        createEntitySucceeds(requestorId, constructUserPropertySetRelationshipDto(createdUserId, propertySetId1, true));
         Map<String, String> params = QueryParams.builder().filter(String.format("user_id==%s", String.valueOf(createdUserId))).build();
         UUID relationId = getEntitiesAsType(USER_PROPERTY_SET_RELATIONSHIPS_PATH, UserPropertySetRelationshipDto.class, params)
                 .get(0).getId();
