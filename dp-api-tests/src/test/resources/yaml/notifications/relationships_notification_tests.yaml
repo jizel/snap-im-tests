@@ -1,6 +1,5 @@
 general_notification: &NOTIFICATION
   application_version_id: 04000000-0000-4444-8888-000000000000
-  user_id: 0b000000-0000-4444-8888-000000000000
   entity_type: User
 
 
