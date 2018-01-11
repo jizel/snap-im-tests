@@ -105,20 +105,4 @@ public abstract class CommonAccessChecksByApplicationTest extends CommonTest {
                 .then()
                 .statusCode(expectedCode);
     }
-
-    public static void activateUserCustomerRelation(UUID userId, UUID customerId) {
-        Map<String, String> params = QueryParams.builder()
-                .filter(String.format("user_id==%s and customer_id==%s", userId, customerId))
-                .build();
-        UUID relationId = getEntitiesAsType(USER_CUSTOMER_RELATIONSHIPS_PATH, UserCustomerRelationshipDto.class, params).get(0).getId();
-        entityIsUpdated(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId, ACTIVATE_RELATION);
-    }
-
-    public static void activateUserPropertyRelation(UUID userId, UUID propertyId) {
-        Map<String, String> params = QueryParams.builder()
-                .filter(String.format("user_id==%s and property_id==%s", userId, propertyId))
-                .build();
-        UUID relationId = getEntitiesAsType(USER_PROPERTY_RELATIONSHIPS_PATH, UserPropertyRelationshipDto.class, params).get(0).getId();
-        entityIsUpdated(USER_PROPERTY_RELATIONSHIPS_PATH, relationId, ACTIVATE_RELATION);
-    }
 }
