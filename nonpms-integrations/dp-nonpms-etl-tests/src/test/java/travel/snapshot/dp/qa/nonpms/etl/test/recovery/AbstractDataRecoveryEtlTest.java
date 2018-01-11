@@ -1,6 +1,9 @@
 package travel.snapshot.dp.qa.nonpms.etl.test.recovery;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.qa.nonpms.etl.util.DateUtils.toDateId;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.extractLocalDate;
+import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.extractTimestamp;
 import static travel.snapshot.dp.qa.nonpms.etl.util.Helpers.getCurrentDate;
 
 import org.junit.Before;
@@ -31,6 +34,7 @@ public abstract class AbstractDataRecoveryEtlTest extends AbstractEtlTest {
     static final Instant IGNORED_FIRE_TIME = Instant.parse("2017-01-01T00:00:00Z");
 
     protected abstract IntegrationDwhDao getIntegrationDwhDao();
+
     protected abstract String getTimezone();
 
     LocalDate DAY1, DAY2, DAY3, DAY4, DAY5;
@@ -72,9 +76,10 @@ public abstract class AbstractDataRecoveryEtlTest extends AbstractEtlTest {
         });
     }
 
-    // TODO workaround for DPNP-152
     protected void validateData(Map<String, Object> data, LocalDate day, LocalDateTime timestamp) {
-
+        assertThat(extractLocalDate(data, "date_id")).isEqualTo(day);
+        assertThat(extractTimestamp(data, "inserted_time_stamp")).isAfter(timestamp);
+        assertThat((data.get("is_amended"))).isEqualTo(true);
     }
 
 }
