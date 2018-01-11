@@ -2,7 +2,7 @@ def serenityVersion = "1.1.26"
 def apiVersion = "1.40.11"
 
 def junit4Version        = '4.12'
-def junitVintageVersion  = '4.12.1'
+def junitVintageVersion  = '4.12.2'
 def junitJupiterVersion  = '5.0.2'
 
 repositories {

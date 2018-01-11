@@ -20,7 +20,7 @@ import java.util.UUID;
  * Validations for IM Applications - boundary values testing
  */
 @Getter
-public class ApplicationValidations extends CommonValidationTests {
+public class ApplicationValidationsTests extends CommonValidationTests {
 
     private List<ObjectField> attributesBoundaries;
     private String path = APPLICATIONS_PATH;

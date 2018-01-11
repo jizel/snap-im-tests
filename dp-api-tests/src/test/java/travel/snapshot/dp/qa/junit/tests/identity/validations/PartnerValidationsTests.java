@@ -17,7 +17,7 @@ import java.util.List;
  * Validations for IM Partners - boundary values testing
  */
 @Getter
-public class PartnerValidations extends CommonValidationTests {
+public class PartnerValidationsTests extends CommonValidationTests {
 
     private List<ObjectField> attributesBoundaries;
     private String path = PARTNERS_PATH;

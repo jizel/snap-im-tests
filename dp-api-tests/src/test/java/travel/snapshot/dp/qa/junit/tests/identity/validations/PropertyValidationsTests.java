@@ -24,7 +24,7 @@ import java.util.UUID;
  */
 @Slf4j
 @Getter
-public class PropertyValidations extends CommonValidationTests{
+public class PropertyValidationsTests extends CommonValidationTests{
     private List<ObjectField> attributesBoundaries;
     private String path = PROPERTIES_PATH;
     private EntityDto testEntity;

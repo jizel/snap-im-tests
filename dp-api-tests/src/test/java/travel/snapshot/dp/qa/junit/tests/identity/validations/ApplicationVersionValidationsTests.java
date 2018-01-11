@@ -26,7 +26,7 @@ import java.util.UUID;
  */
 @Ignore
 @Getter
-public class ApplicationVersionValidations extends CommonValidationTests {
+public class ApplicationVersionValidationsTests extends CommonValidationTests {
 
     private List<ObjectField> attributesBoundaries;
     private String path = APPLICATION_VERSIONS_PATH;
