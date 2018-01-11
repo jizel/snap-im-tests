@@ -59,6 +59,6 @@ public class RoleNotificationsTests extends CommonTest{
 
         entityIsDeleted(ROLES_PATH, roleId);
         receivedDeleteNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        verifyNotification(expectedCreateNotification, receivedDeleteNotification);
+        verifyNotification(expectedDeleteNotification, receivedDeleteNotification);
     }
 }

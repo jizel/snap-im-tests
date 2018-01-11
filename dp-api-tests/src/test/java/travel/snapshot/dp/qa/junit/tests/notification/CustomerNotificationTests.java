@@ -95,7 +95,8 @@ public class CustomerNotificationTests extends CommonTest {
     @Test
     public void addAndRemoveCustomerUser() throws Exception{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "addAndRemoveCustomerUser");
-        UUID testUserId = entityIsCreated(testSnapshotUser1);
+        UUID testUserId = entityIsCreated(testUser1);
+        userHelpers.deleteUserCustomerRelationshipIfExists(testUserId);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         customerHelpers.addUserToCustomer(testUserId, createdCustomerId, true, true);
         Map<String, Object> receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);

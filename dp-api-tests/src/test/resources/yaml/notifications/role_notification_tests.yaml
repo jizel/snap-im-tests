@@ -1,8 +1,6 @@
 general_notification: &NOTIFICATION
   application_version_id: 04000000-0000-4444-8888-000000000000
-  user_id: 0b000000-0000-4444-8888-000000000000
-  entity_type: CustomerRole
-  entity_id: 0a000000-0000-4444-8888-000000000001
+  entity_type: Role
 
 createRoleNotificationTest:
   <<: *NOTIFICATION
