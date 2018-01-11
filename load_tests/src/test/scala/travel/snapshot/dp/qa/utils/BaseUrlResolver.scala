@@ -14,6 +14,7 @@ object LoadTestEnvironment extends Enumeration {
   val VM12 = Value("vm12")
   val STABLE = Value("stable")
   val STAGING = Value("staging")
+  val SANDBOX = Value("sandbox")
 }
 
 object LoadTestContext extends Enumeration {
@@ -107,6 +108,14 @@ trait SystemPropertiesGatherer {
     System.getProperty("port", "8080"),
     resolveScenario
   )
+  val SandboxEnvironmentProperties = Tuple5[String, String, String, String, LoadTestContext.LoadTestContextValue](
+    System.getProperty("protocol", "https"),
+    System.getProperty("host", "europewest-api-sandbox.snapshot.technology"),
+    System.getProperty("version", "v1"),
+    System.getProperty("port", "8080"),
+    resolveScenario
+  )
+
   
   private def resolveScenario: LoadTestContext.LoadTestContextValue = {
     val gatlingScenario: String = System.getProperty("gatling.simulationClass")
@@ -234,6 +243,19 @@ object StagingUrlResolver extends SystemPropertiesGatherer {
   }
 }
 
+object SandboxUrlResolver extends SystemPropertiesGatherer {
+
+  val (protocol, host, version, port, scenario) = SandboxEnvironmentProperties
+
+  def apply(): String = {
+    s"$protocol://$host/$version/"
+  }
+
+  def resolveOauthUrl(): String = {
+    s"$protocol://$host/oauth/token/"
+  }
+}
+
 object BaseUrlResolver {
 
   def apply(): String = {
@@ -247,6 +269,7 @@ object BaseUrlResolver {
       case LoadTestEnvironment.VM12 => VM12UrlResolver()
       case LoadTestEnvironment.STABLE => StableUrlResolver()
       case LoadTestEnvironment.STAGING => StagingUrlResolver()
+      case LoadTestEnvironment.SANDBOX => SandboxUrlResolver()
     }
   }
 }
@@ -259,6 +282,7 @@ object OAuthUrlResolver {
       case LoadTestEnvironment.TESTING => TestingUrlResolver.resolveOauthUrl()
       case LoadTestEnvironment.STABLE => StableUrlResolver.resolveOauthUrl()
       case LoadTestEnvironment.STAGING => StagingUrlResolver.resolveOauthUrl()
+      case LoadTestEnvironment.SANDBOX => SandboxUrlResolver.resolveOauthUrl()
 //      case LoadTestEnvironment.PRODUCTION => ProductionUrlResolver().resolveOauthUrl()
       case LoadTestEnvironment.LOCAL => "no_oauth"
       case LoadTestEnvironment.VM12 => "no_oauth"
