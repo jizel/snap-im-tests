@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @Getter
-public class CustomerValidations extends CommonValidationTests {
+public class CustomerValidationsTests extends CommonValidationTests {
 
     private List<ObjectField> attributesBoundaries;
     private String path = CUSTOMERS_PATH;

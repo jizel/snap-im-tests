@@ -26,7 +26,7 @@ import java.util.UUID;
  * Validations for IM Users - boundary values testing
  */
 @Getter
-public class UserValidations extends CommonValidationTests {
+public class UserValidationsTests extends CommonValidationTests {
     private List<ObjectField> attributesBoundaries;
     private String path = USERS_PATH;
     private EntityDto testEntity;

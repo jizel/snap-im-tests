@@ -22,7 +22,7 @@ import java.util.UUID;
  * Validations for IM Property Sets - boundary values testing
  */
 @Getter
-public class PropertySetValidations extends CommonValidationTests {
+public class PropertySetValidationsTests extends CommonValidationTests {
 
     private List<ObjectField> attributesBoundaries;
     private String path = PROPERTY_SETS_PATH;
