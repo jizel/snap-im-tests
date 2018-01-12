@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -358,7 +359,8 @@ public class ConfigurationSteps extends BasicSteps {
 
     private Response deleteConfigurationEntityWithEtag(String identifier) {
         Response response = given().spec(spec)
-                .header(HEADER_IF_MATCH, getConfigurationEntityEtag(identifier))
+                .header(HEADER_IF_MATCH, Optional.ofNullable(getConfigurationEntityEtag(identifier)).orElse(DEFAULT_SNAPSHOT_ETAG))
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .when()
                 .delete("/{id}", identifier);
         setSessionResponse(response);
@@ -406,6 +408,7 @@ public class ConfigurationSteps extends BasicSteps {
         }
         return given().spec(spec)
                 .header(HEADER_IF_MATCH, etag)
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .body(data)
                 .when()
                 .post("/{id}", entityId);
