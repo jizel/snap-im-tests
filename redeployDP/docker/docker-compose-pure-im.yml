@@ -42,7 +42,7 @@ services:
     activemq:
         image: rmohr/activemq:5.14.3
         ports:
-          - 61617:61616
+          - 61616:61616
           - 8162:8161
         networks:
             - main
