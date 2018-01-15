@@ -5,7 +5,7 @@ import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.Tag;
-import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
+import travel.snapshot.dp.qa.junit.helpers.AuthorizationHelpers;
 
 /**
  * Non destructive smoke tests.
@@ -16,7 +16,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
 @Tag(AUTHORIZATION_TEST)
 public class CommonProductionTest extends CommonTest {
 
-    private final AuthorizationSteps authorizationSteps = new AuthorizationSteps();
+    protected final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
     private String clientId = propertiesHelper.getProperty("client.id");
     private String clientSecret = propertiesHelper.getProperty("client.secret");
     private String userName = propertiesHelper.getProperty("user.name");
@@ -25,7 +25,7 @@ public class CommonProductionTest extends CommonTest {
 
     @Before
     public void setUp() {
-        authorizationSteps.getToken(userName, userPassword, clientId, clientSecret);
+        authorizationHelpers.getToken(userName, userPassword, clientId, clientSecret);
     }
 
     @After

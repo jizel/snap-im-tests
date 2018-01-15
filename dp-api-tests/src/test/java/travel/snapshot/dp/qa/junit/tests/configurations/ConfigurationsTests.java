@@ -7,8 +7,8 @@ import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static travel.snapshot.dp.api.configuration.model.ValueType.STRING;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.sendBlankPost;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadYamlTables;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.selectExamplesForTestFromTable;
 
@@ -39,7 +39,7 @@ public class ConfigurationsTests extends CommonTest {
         ConfigurationTypeDto testConfigurationType1 = new ConfigurationTypeDto();
         testConfigurationType1.setIdentifier(CONF_TYPE_IDENTIFIER);
         testConfigurationType1.setDescription("Notification Test Configuration Type Description");
-        configurationSteps.followingConfigurationTypeIsCreated(testConfigurationType1);
+        configurationHelpers.followingConfigurationTypeIsCreated(testConfigurationType1);
         testConfigurationRecord1 = new ConfigurationRecordDto();
         testConfigurationRecord1.setKey("notificationKey1");
         testConfigurationRecord1.setType(STRING);

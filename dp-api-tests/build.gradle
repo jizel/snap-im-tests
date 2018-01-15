@@ -58,7 +58,6 @@ dependencies {
         exclude module: 'lombok'
     }
     compile 'org.json:json:20150729'
-    compile 'com.google.code.gson:gson:2.4'
     compile 'org.apache.commons:commons-csv:1.4'
 
     compile group: 'travel.snapshot.dp.api', name: 'api-commons', version: "$apiVersion"

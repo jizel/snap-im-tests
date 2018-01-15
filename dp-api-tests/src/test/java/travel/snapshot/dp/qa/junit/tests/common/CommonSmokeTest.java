@@ -19,8 +19,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_NAME;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_PASSWORD;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_USER_NAME;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENTITIES_TO_DELETE;
 import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
 
@@ -28,7 +28,7 @@ import net.serenitybdd.core.Serenity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
-import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
+import travel.snapshot.dp.qa.junit.helpers.AuthorizationHelpers;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ import java.util.UUID;
 @Tag(AUTHORIZATION_TEST)
 public class CommonSmokeTest extends CommonTest {
 
-    protected final AuthorizationSteps authorizationSteps = new AuthorizationSteps();
+    protected final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
     protected String clientId = null;
     protected String clientSecret = null;
     protected EntitiesLoader loader;
@@ -55,8 +55,8 @@ public class CommonSmokeTest extends CommonTest {
     @BeforeEach
     public void setUp() {
         // To clean after normal tests we first remove all test entities
-        dbStepDefs.defaultEntitiesAreDeleted();
-        dbStepDefs.defaultEntitiesAreCreated();
+        dbHelpers.defaultEntitiesAreDeleted();
+        dbHelpers.defaultEntitiesAreCreated();
         loader = EntitiesLoader.getInstance();
         loadDefaultTestEntities();
         Map<String, Object> testClient1 = loader.getClients().get("client1");
@@ -67,7 +67,7 @@ public class CommonSmokeTest extends CommonTest {
         }
         clientId = testClient1.get("clientId").toString();
         clientSecret = testClient1.get("secret").toString();
-        authorizationSteps.getToken(DEFAULT_SNAPSHOT_USER_NAME, DEFAULT_PASSWORD, clientId, clientSecret);
+        authorizationHelpers.getToken(DEFAULT_SNAPSHOT_USER_NAME, DEFAULT_PASSWORD, clientId, clientSecret);
         Map<String, List<String>> thingsToDelete = new HashMap<>();
         Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(thingsToDelete);
     }
@@ -75,7 +75,7 @@ public class CommonSmokeTest extends CommonTest {
     @AfterEach
     public void cleanUp() throws Throwable {
         removeCreatedEntities(Serenity.sessionVariableCalled(ENTITIES_TO_DELETE));
-        dbStepDefs.defaultEntitiesAreDeleted();
+        dbHelpers.defaultEntitiesAreDeleted();
     }
 
 

@@ -2,7 +2,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.all_endpoints;
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_OK;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.buildQueryParamMapForPaging;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 import static travel.snapshot.dp.qa.junit.tests.Tags.SLOW_TEST;
 import static travel.snapshot.dp.qa.junit.utils.DpEndpoints.ALL_ENDPOINTS;

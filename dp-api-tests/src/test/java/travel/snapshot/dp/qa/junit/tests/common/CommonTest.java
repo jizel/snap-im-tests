@@ -24,16 +24,14 @@ import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.RoleCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupCreateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.configuration.ConfigurationSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.jms.JmsSteps;
-import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
+import travel.snapshot.dp.qa.junit.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.junit.helpers.BasicSteps;
+import travel.snapshot.dp.qa.junit.helpers.DbHelpers;
+import travel.snapshot.dp.qa.junit.helpers.ConfigurationHelpers;
+import travel.snapshot.dp.qa.junit.helpers.JmsHelpers;
 import travel.snapshot.dp.qa.junit.helpers.AuthorizationHelpers;
 import travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers;
 import travel.snapshot.dp.qa.junit.helpers.CommonHelpers;
-import travel.snapshot.dp.qa.junit.helpers.ConfigurationHelpers;
 import travel.snapshot.dp.qa.junit.helpers.CustomerHelpers;
 import travel.snapshot.dp.qa.junit.helpers.KeycloakHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PlatformOperationHelpers;
@@ -68,10 +66,9 @@ public abstract class CommonTest {
     protected static EntitiesLoader entitiesLoader;
 
     //    Steps
-    protected DbStepDefs dbStepDefs = new DbStepDefs();
-    protected final JmsSteps jmsSteps = new JmsSteps();
-    protected final ConfigurationSteps configurationSteps = new ConfigurationSteps();
-    protected final DbUtilsSteps dbSteps = new DbUtilsSteps();
+    protected DbHelpers dbHelpers = new DbHelpers();
+    protected final JmsHelpers jmsHelpers = new JmsHelpers();
+    protected final DbHelpers dbSteps = new DbHelpers();
 
     private final BasicSteps basicSteps = new BasicSteps();
 
@@ -167,7 +164,7 @@ public abstract class CommonTest {
     @Before
     @BeforeEach
     public void setUp() {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        dbHelpers.databaseIsCleanedAndEntitiesAreCreated();
         loadDefaultTestEntities();
     }
 
@@ -295,8 +292,8 @@ public abstract class CommonTest {
     }
 
     public static void cleanDbAndLoadDefaultEntities(){
-        DbStepDefs dbStepDefs = new DbStepDefs();
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        DbHelpers dbHelpers = new DbHelpers();
+        dbHelpers.databaseIsCleanedAndEntitiesAreCreated();
         loadDefaultTestEntities();
     }
 

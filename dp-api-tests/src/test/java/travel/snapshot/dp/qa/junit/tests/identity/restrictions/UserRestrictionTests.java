@@ -10,11 +10,13 @@ import static travel.snapshot.dp.api.type.HttpMethod.DELETE;
 import static travel.snapshot.dp.api.type.HttpMethod.GET;
 import static travel.snapshot.dp.api.type.HttpMethod.PATCH;
 import static travel.snapshot.dp.api.type.HttpMethod.POST;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntityByUserForApp;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreatedAs;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
@@ -43,10 +45,10 @@ public class UserRestrictionTests extends CommonRestrictionTest {
 
     @Test
     public void getUserRestrictionTest() {
-        userHelpers.listOfUsersIsGotByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), "5", "0", "user_name==defaultSnapshotUser", "user_name", null);
+        getEntitiesByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), USERS_PATH, emptyQueryParams());
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_ALL_USERS_ENDPOINT, GET);
-        userHelpers.listOfUsersIsGotByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), "5", "0", "user_name==defaultSnapshotUser", "user_name", null);
+        getEntitiesByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), USERS_PATH, emptyQueryParams());
         responseCodeIs(SC_OK);
 
         getEntityByUserForApplication(createdUserWithRelationshipsId, createdAppVersion.getId(), USERS_PATH, createdUserId);

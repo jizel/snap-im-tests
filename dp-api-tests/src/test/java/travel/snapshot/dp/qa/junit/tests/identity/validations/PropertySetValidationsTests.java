@@ -2,10 +2,10 @@ package travel.snapshot.dp.qa.junit.tests.identity.validations;
 
 import static java.util.Arrays.asList;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
-import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.BOOL;
-import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.ENUM;
-import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.ID;
-import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.STRING;
+import static travel.snapshot.dp.qa.junit.helpers.FieldType.BOOL;
+import static travel.snapshot.dp.qa.junit.helpers.FieldType.ENUM;
+import static travel.snapshot.dp.qa.junit.helpers.FieldType.ID;
+import static travel.snapshot.dp.qa.junit.helpers.FieldType.STRING;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 
 import lombok.Getter;
@@ -13,7 +13,7 @@ import org.junit.Before;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.model.EntityDto;
-import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
+import travel.snapshot.dp.qa.junit.helpers.ObjectField;
 
 import java.util.List;
 import java.util.UUID;

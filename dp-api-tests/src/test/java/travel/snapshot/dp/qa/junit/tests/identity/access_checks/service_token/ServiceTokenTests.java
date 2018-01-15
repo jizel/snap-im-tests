@@ -9,9 +9,9 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUPS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.commercialSubscriptionIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
@@ -33,7 +33,7 @@ import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
-import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
+import travel.snapshot.dp.qa.junit.helpers.DbHelpers;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.List;
@@ -168,8 +168,8 @@ public class ServiceTokenTests extends CommonTest {
 
     private static void createExternalAppAndItsEntities() {
         UUID createdAppId = entityIsCreated(testApplication3);
-        DbUtilsSteps dbUtilsSteps = new DbUtilsSteps();
-        dbUtilsSteps.populateApplicationPermissionsTableForApplication(createdAppId);
+        DbHelpers dbHelpers = new DbHelpers();
+        dbHelpers.populateApplicationPermissionsTableForApplication(createdAppId);
         testAppVersion1.setApplicationId(createdAppId);
         createdAppVersionId = entityIsCreated(testAppVersion1);
         createdCustomer2 = entityIsCreatedAs(CustomerDto.class, testCustomer2);

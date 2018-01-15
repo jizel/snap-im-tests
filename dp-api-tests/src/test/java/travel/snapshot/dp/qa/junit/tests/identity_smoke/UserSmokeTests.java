@@ -4,8 +4,8 @@ import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ENCRYPTED_PASSWORD;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_ENCRYPTED_PASSWORD;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_PASSWORD;
 import static travel.snapshot.dp.qa.junit.tests.Tags.AUTHORIZATION_TEST;
 
 import org.junit.Test;
@@ -51,7 +51,7 @@ public class UserSmokeTests extends CommonSmokeTest {
         testUser1.setUsername(username);
         userId = userHelpers.userIsCreatedWithAuth(testUser1);
         dbSteps.setUserPassword(userId, DEFAULT_ENCRYPTED_PASSWORD);
-        authorizationSteps.getToken(username, DEFAULT_PASSWORD, clientId, clientSecret)
+        authorizationHelpers.getToken(username, DEFAULT_PASSWORD, clientId, clientSecret)
                 .then()
                 .statusCode(SC_OK);
     }

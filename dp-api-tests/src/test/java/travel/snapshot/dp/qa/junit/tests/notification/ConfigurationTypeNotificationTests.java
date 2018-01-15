@@ -32,36 +32,36 @@ public class ConfigurationTypeNotificationTests extends CommonTest {
     @After
     public void cleanUp() throws Throwable {
         super.cleanUp();
-        jmsSteps.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        configurationSteps.tryDeleteConfigurationType(testConfigurationType1.getIdentifier());
+        jmsHelpers.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        configurationHelpers.tryDeleteConfigurationType(testConfigurationType1.getIdentifier());
     }
 
     @Test
     public void createConfigurationTypeNotificationTest() throws Exception{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createConfigurationTypeNotificationTest");
-        jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        configurationSteps.followingConfigurationTypeIsCreated(testConfigurationType1);
-        receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        jmsHelpers.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        configurationHelpers.followingConfigurationTypeIsCreated(testConfigurationType1);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyConfigurationNotification(expectedCreateNotification, receivedNotification);
     }
 
     @Test
     public void updateConfigurationTypeNotificationTest() throws Exception{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "updateConfigurationTypeNotificationTest");
-        configurationSteps.followingConfigurationTypeIsCreated(testConfigurationType1);
-        jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        configurationSteps.updateConfigurationTypeDescription(testConfigurationType1.getIdentifier(), "Updated description");
-        receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        configurationHelpers.followingConfigurationTypeIsCreated(testConfigurationType1);
+        jmsHelpers.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        configurationHelpers.updateConfigurationTypeDescription(testConfigurationType1.getIdentifier(), "Updated description");
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyConfigurationNotification(expectedCreateNotification, receivedNotification);
     }
 
     @Test
     public void deleteConfigurationTypeNotificationTest() throws Exception{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "deleteConfigurationTypeNotificationTest");
-        configurationSteps.followingConfigurationTypeIsCreated(testConfigurationType1);
-        jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        configurationSteps.tryDeleteConfigurationType(testConfigurationType1.getIdentifier());
-        receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        configurationHelpers.followingConfigurationTypeIsCreated(testConfigurationType1);
+        jmsHelpers.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        configurationHelpers.tryDeleteConfigurationType(testConfigurationType1.getIdentifier());
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyConfigurationNotification(expectedCreateNotification, receivedNotification);
     }
 }

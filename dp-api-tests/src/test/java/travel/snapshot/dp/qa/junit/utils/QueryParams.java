@@ -1,6 +1,6 @@
 package travel.snapshot.dp.qa.junit.utils;
 
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.buildQueryParamMapForPaging;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
