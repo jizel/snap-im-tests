@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.jms;
+package travel.snapshot.dp.qa.serenity.jms;
 
 import static org.junit.Assert.*;
 
@@ -7,7 +7,7 @@ import com.jayway.restassured.path.json.JsonPath;
 import lombok.NoArgsConstructor;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.nio.charset.Charset;
 import java.util.Map;

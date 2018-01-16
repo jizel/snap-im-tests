@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.review;
+package travel.snapshot.dp.qa.serenity.review;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
@@ -7,7 +7,7 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import travel.snapshot.dp.api.review.model.LocationDto;
 import travel.snapshot.dp.api.review.model.LocationPropertyDto;
-import travel.snapshot.dp.qa.cucumber.serenity.analytics.AnalyticsBaseSteps;
+import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 
 import java.util.List;
 import java.util.UUID;

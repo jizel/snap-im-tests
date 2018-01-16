@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.applications;
+package travel.snapshot.dp.qa.serenity.applications;
 
 import static java.util.Arrays.stream;
 import static org.hamcrest.Matchers.is;
@@ -12,7 +12,7 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionUpdateDto;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.List;
 import java.util.Map;

@@ -1,12 +1,12 @@
-package travel.snapshot.dp.qa.cucumber.steps.authorization;
+package travel.snapshot.dp.qa.steps.authorization;
 
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CLIENT_SECRET;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_CLIENT_SECRET;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
+import travel.snapshot.dp.qa.serenity.authorization.AuthorizationSteps;
 
 public class AuthorizationStepdefs {
 

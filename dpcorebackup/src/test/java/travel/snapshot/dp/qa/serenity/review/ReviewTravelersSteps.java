@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.review;
+package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;

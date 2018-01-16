@@ -1,14 +1,14 @@
-package travel.snapshot.dp.qa.cucumber.steps.identity.properties;
+package travel.snapshot.dp.qa.steps.identity.properties;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.bodyContainsEntityWith;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.bodyContainsEntityWith;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.numberOfEntitiesInResponse;
 
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
@@ -29,13 +29,13 @@ import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpda
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationVersionsSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
-import travel.snapshot.dp.qa.cucumber.serenity.property_sets.PropertySetSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
+import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
+import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
+import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,8 +1,8 @@
-package travel.snapshot.dp.qa.cucumber.helpers;
+package travel.snapshot.dp.qa.helpers;
 
 import static travel.snapshot.dp.api.identity.model.CustomerType.HOTEL;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_SALESFORCE_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_SALESFORCE_ID;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;

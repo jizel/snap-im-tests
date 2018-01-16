@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.analytics;
+package travel.snapshot.dp.qa.serenity.analytics;
 
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
@@ -11,7 +11,7 @@ import travel.snapshot.dp.api.analytics.model.GlobalStatsDto;
 import travel.snapshot.dp.api.analytics.model.MetricDto;
 import travel.snapshot.dp.api.analytics.model.MetricName;
 import travel.snapshot.dp.api.analytics.model.RecordDto;
-import travel.snapshot.dp.qa.cucumber.helpers.MetricNameDeserializer;
+import travel.snapshot.dp.qa.helpers.MetricNameDeserializer;
 
 
 import java.io.IOException;

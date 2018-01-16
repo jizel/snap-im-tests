@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.properties;
+package travel.snapshot.dp.qa.serenity.properties;
 
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.stream;
@@ -34,8 +34,8 @@ import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.type.SalesforceId;
-import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.helpers.AddressUtils;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.IOException;
 import java.util.List;

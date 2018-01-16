@@ -1,0 +1,117 @@
+def serenityVersion = "1.1.26"
+def apiVersion = "1.40.11"
+
+def junit4Version        = '4.12'
+def junitVintageVersion  = '4.12.2'
+def junitJupiterVersion  = '5.0.2'
+
+repositories {
+    mavenLocal()
+    jcenter()
+    maven {
+        url "https://nexus.snapshot.travel/content/groups/public/"
+        credentials {
+            username nexusUser
+            password nexusPassword
+        }
+    }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'groovy'
+
+version = '1.0-SNAPSHOT'
+
+test {
+    systemProperties['serenity.outputDirectory'] = System.getProperty("serenity.outputDirectory")
+    systemProperties['dpcorebackup'] = System.getProperty("dpcorebackup")
+    systemProperty "file.encoding", "utf-8"
+    testLogging {
+        showStandardStreams = true
+    }
+}
+
+dependencies {
+    // Groovy library for groovy building!
+    compile 'org.codehaus.groovy:groovy-all:2.4.4'
+    compile group: 'io.swagger', name: 'swagger-core', version: '1.5.3'
+    compile group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: '2.9.0.pr3'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.0.pr3'
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
+    compile (group: 'travel.snapshot.dp', name: 'Json', version: '1.1') {
+        exclude module: 'lombok'
+    }
+    compile 'org.json:json:20150729'
+    compile 'org.apache.commons:commons-csv:1.4'
+
+    compile group: 'travel.snapshot.dp.api', name: 'api-commons', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'review-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'identity-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'social-media-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'configuration-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'rate-shopper-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'web-performance-api', version: "$apiVersion"
+
+    compile group: 'org.postgresql', name: 'postgresql', version:  '42.1.1'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.5.0'
+
+    testCompile 'org.apache.activemq:activemq-client:5.12.1'
+    testCompile 'javax.jms:jms:1.1'
+    testCompile "net.serenity-bdd:serenity-cucumber:1.1.5"
+    testCompile "org.yaml:snakeyaml:1.18"
+    testCompile "link.bek.tools:issue-keeper-junit:4.12.4"
+    testCompile 'log4j:log4j:1.2.17'
+    testCompile 'org.slf4j:slf4j-log4j12:1.7.25'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'
+    testCompile 'com.github.mifmif:generex:0.0.4'
+    testCompile 'org.apache.commons:commons-lang3:3.4'
+    testCompile 'org.springframework:spring-jdbc:4.2.2.RELEASE'
+    testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.9.0'
+
+    // JUnit Jupiter - API, TestEngine and parametrized test implementation
+    testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
+    testCompile("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
+
+    testCompile("org.junit.platform:junit-platform-runner:1.0.2")
+    // Support JUnit 3 and JUnit 4 tests
+    testCompile("junit:junit:${junit4Version}")
+    // To avoid compiler warnings about @API annotations in JUnit code.
+    compile('org.apiguardian:apiguardian-api:1.0.0')
+    testRuntime(
+            "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion",
+            "org.junit.vintage:junit-vintage-engine:$junitVintageVersion",
+            "org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion",
+            "org.junit.platform:junit-platform-launcher:1.0.2"
+    )
+
+    testRuntime 'mysql:mysql-connector-java:5.1.37'
+
+}
+
+configurations {
+    all*.exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
+    all*.exclude group: 'ch.qos.logback', module :'logback-classic'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.3'
+}
+
+gradle.startParameter.continueOnFailure = true

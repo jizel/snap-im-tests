@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.commercial_subscription;
+package travel.snapshot.dp.qa.serenity.commercial_subscription;
 
 import static java.util.Arrays.stream;
 import static org.junit.Assert.*;
@@ -11,7 +11,7 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.List;
 import java.util.UUID;

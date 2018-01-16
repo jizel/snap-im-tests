@@ -1,9 +1,9 @@
-package travel.snapshot.dp.qa.cucumber.serenity.analytics;
+package travel.snapshot.dp.qa.serenity.analytics;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
-import static travel.snapshot.dp.qa.cucumber.helpers.StringUtil.parseDate;
+import static travel.snapshot.dp.qa.helpers.StringUtil.parseDate;
 
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;

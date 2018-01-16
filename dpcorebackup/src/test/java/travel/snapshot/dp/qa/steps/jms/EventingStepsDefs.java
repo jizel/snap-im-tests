@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.steps.jms;
+package travel.snapshot.dp.qa.steps.jms;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -14,13 +14,13 @@ import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.jms.JmsSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.partners.PartnerSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
-import travel.snapshot.dp.qa.cucumber.serenity.property_sets.PropertySetSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
+import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
+import travel.snapshot.dp.qa.serenity.jms.JmsSteps;
+import travel.snapshot.dp.qa.serenity.partners.PartnerSteps;
+import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
+import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
+import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.UUID;
 

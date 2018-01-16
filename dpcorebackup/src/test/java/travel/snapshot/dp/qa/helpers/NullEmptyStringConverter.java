@@ -1,6 +1,6 @@
-package travel.snapshot.dp.qa.cucumber.helpers;
+package travel.snapshot.dp.qa.helpers;
 
-import cucumber.api.Transformer;
+import cucumber.api.Transformer;import cucumber.api.Transformer;
 
 public class NullEmptyStringConverter extends Transformer<String> {
 

@@ -1,12 +1,12 @@
-package travel.snapshot.dp.qa.cucumber.serenity;
+package travel.snapshot.dp.qa.serenity;
 
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Fail.fail;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.ADDRESS_LINE1_PATTERN;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ENCRYPTED_PASSWORD;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.ADDRESS_LINE1_PATTERN;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_ENCRYPTED_PASSWORD;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
@@ -16,7 +16,7 @@ import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.type.HttpMethod;
-import travel.snapshot.dp.qa.cucumber.helpers.DbHelper;
+import travel.snapshot.dp.qa.helpers.DbHelper;
 
 import java.util.List;
 import java.util.Map;

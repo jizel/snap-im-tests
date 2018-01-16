@@ -1,10 +1,10 @@
-package travel.snapshot.dp.qa.cucumber.serenity.review;
+package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.qa.cucumber.serenity.analytics.AnalyticsBaseSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.property_sets.PropertySetSteps;
+import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
+import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
 
 import java.util.UUID;
 

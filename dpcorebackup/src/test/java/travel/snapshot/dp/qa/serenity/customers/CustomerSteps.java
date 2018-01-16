@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.customers;
+package travel.snapshot.dp.qa.serenity.customers;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
@@ -35,10 +35,10 @@ import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.api.type.SalesforceId;
-import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
+import travel.snapshot.dp.qa.helpers.AddressUtils;
 
-import travel.snapshot.dp.qa.cucumber.helpers.RegexValueConverter;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.helpers.RegexValueConverter;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.InputStream;
 import java.time.LocalDate;

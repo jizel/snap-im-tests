@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.helpers;
+package travel.snapshot.dp.qa.helpers;
 
 /**
  * Created by zelezny on 2/23/2017.

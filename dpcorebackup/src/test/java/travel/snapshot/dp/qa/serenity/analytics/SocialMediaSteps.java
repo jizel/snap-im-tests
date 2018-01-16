@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.analytics;
+package travel.snapshot.dp.qa.serenity.analytics;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
@@ -11,7 +11,7 @@ import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
 
-import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

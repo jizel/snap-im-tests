@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.helpers.review;
+package travel.snapshot.dp.qa.helpers.review;
 
 /**
  * Following enum has to be in certain casing (lower/upper case) referring to object properties used

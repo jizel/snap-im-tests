@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.helpers;
+package travel.snapshot.dp.qa.helpers;
 
 
 import org.springframework.jdbc.core.JdbcTemplate;

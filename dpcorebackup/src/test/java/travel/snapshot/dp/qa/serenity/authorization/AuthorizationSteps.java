@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.authorization;
+package travel.snapshot.dp.qa.serenity.authorization;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -6,7 +6,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import lombok.extern.java.Log;
 import net.serenitybdd.core.Serenity;
 
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_OK;

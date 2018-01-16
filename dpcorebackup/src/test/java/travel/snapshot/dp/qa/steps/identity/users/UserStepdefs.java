@@ -1,14 +1,14 @@
-package travel.snapshot.dp.qa.cucumber.steps.identity.users;
+package travel.snapshot.dp.qa.steps.identity.users;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static travel.snapshot.dp.api.identity.model.UserType.PARTNER;
 import static travel.snapshot.dp.api.identity.model.UserType.SNAPSHOT;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.REQUESTOR_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.TARGET_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
@@ -27,17 +27,17 @@ import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.cucumber.helpers.Resolvers;
-import travel.snapshot.dp.qa.cucumber.helpers.RoleType;
-import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationVersionsSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.partners.PartnerSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
-import travel.snapshot.dp.qa.cucumber.serenity.property_sets.PropertySetSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.users.UserRolesSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.helpers.Resolvers;
+import travel.snapshot.dp.qa.helpers.RoleType;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
+import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
+import travel.snapshot.dp.qa.serenity.partners.PartnerSteps;
+import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
+import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
+import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
+import travel.snapshot.dp.qa.serenity.users.UserRolesSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.List;
 import java.util.Map;

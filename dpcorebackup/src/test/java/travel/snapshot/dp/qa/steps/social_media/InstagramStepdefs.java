@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.steps.social_media;
+package travel.snapshot.dp.qa.steps.social_media;
 
 
 import cucumber.api.Transform;
@@ -6,8 +6,8 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.cucumber.serenity.analytics.InstagramSteps;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.analytics.InstagramSteps;
 
 import java.util.List;
 import java.util.UUID;

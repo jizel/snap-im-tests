@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.helpers;
+package travel.snapshot.dp.qa.helpers;
 
 import org.apache.commons.lang3.RandomStringUtils;
 

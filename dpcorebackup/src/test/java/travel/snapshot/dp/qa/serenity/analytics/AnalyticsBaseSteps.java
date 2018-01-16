@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.analytics;
+package travel.snapshot.dp.qa.serenity.analytics;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
@@ -9,8 +9,8 @@ import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
-import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.helpers.StringUtil;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.InputStream;
 import java.time.DayOfWeek;

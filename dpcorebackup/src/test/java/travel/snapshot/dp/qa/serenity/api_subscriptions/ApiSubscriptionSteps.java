@@ -1,7 +1,7 @@
-package travel.snapshot.dp.qa.cucumber.serenity.api_subscriptions;
+package travel.snapshot.dp.qa.serenity.api_subscriptions;
 
 import com.jayway.restassured.response.Response;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.UUID;
 

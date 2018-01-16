@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.helpers;
+package travel.snapshot.dp.qa.helpers;
 
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertyRoleDto;

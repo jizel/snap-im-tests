@@ -1,9 +1,9 @@
-package travel.snapshot.dp.qa.cucumber.steps.identity.oauth;
+package travel.snapshot.dp.qa.steps.identity.oauth;
 
 import net.thucydides.core.annotations.Steps;
 
 import cucumber.api.java.en.When;
-import travel.snapshot.dp.qa.cucumber.serenity.oauth.OAuthSteps;
+import travel.snapshot.dp.qa.serenity.oauth.OAuthSteps;
 
 /**
  * Created by vlcek on 2/9/2016.
