@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity;
+package travel.snapshot.dp.qa.junit.helpers;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -34,10 +34,6 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.api.validation.UUIDValidator;
-import travel.snapshot.dp.qa.helpers.NullStringObjectValueConverter;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.helpers.SalesforceIdStdSerializer;
-import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -104,7 +100,6 @@ public class BasicSteps {
     public static final String LIMIT_TO_ALL = "200";
     public static final String LIMIT_TO_ONE = "1";
     public static final String CURSOR_FROM_FIRST = "0";
-    public static final String SECOND_LEVEL_OBJECT_API_SUBSCRIPTION = "api_subscriptions";
     public static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     public static final String HEADER_ETAG = "ETag";
     public static final String CURLY_BRACES_EMPTY = "{}";
@@ -123,11 +118,9 @@ public class BasicSteps {
     public static final String VALID_TO = "valid_to";
     public static final String VALID_FROM_VALUE = "2017-06-01";
     public static final String VALID_TO_VALUE = "2100-06-01";
-    public static final String SNAPSHOT_PHONE = "+420530514301";
     public static final String DEFAULT_PASSWORD = "P@ssw0rd";
     public static final String DEFAULT_ENCRYPTED_PASSWORD = "$2a$10$vNTgpUAsWvhJQmJR2DkuYOTN5EgJQhMOqQ5xd0DmJOHdck4Sa2orq";
     public static final String WRONG_ENCRYPTED_PASSWORD = "$2a$10$iIuyGtO./6izEUk0iOZdy.5moBMuhTj0dU6sQMoiVYswO2QSd1jnO";
-    public static final String DEFAULT_CLIENT_SECRET = "a4000000-0000-4444-8888-000000000000";
     public static final String PARTNERS_RESOURCE = "partners";
     public static final String ADDRESS_LINE1_PATTERN = "CoreQA";
     public static final String EXAMPLE_NULL = "/null";
