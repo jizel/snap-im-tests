@@ -30,16 +30,16 @@ TABLES = [
     },
 
     {
-        'table': 'dp.FactFacebookPageStats',
+        'table': 'dp.Fact_facebook_cumulative',
         'special': False,
         'multiply': dates,
         'columns': [
-            lambda data: data['property_id'],       # dim_property_id
-            lambda data: data['iter'],              # dim_date_id
-            lambda data: increment(data, 2),        # impressions
-            lambda data: increment(data, 3),        # engagements
-            lambda data: increment(data, 4),        # followers
-            lambda data: increment(data, 5),        # number_of_posts
+            lambda data: data['property_id'],       # property_id
+            lambda data: data['iter'],              # date_id
+            lambda data: increment(data, 2),        # followers
+            lambda data: increment(data, 3),        # number_of_posts
+            lambda data: increment(data, 4),        # engagements
+            lambda data: increment(data, 5),        # impressions
             lambda data: increment(data, 6),        # reach
             lambda data: increment(data, 7),        # likes
             lambda data: increment(data, 8),        # unlikes
@@ -53,7 +53,7 @@ TABLES = [
         'special': False,
         'multiply': range(500),
         'columns': [
-            lambda data: data['property_id'],                                                    # dim_property_id
+            lambda data: data['property_id'],                                                    # property_id
             lambda data: datetime.now() - timedelta(days=random.randint(data['iter'], 600)),     # post_date_time_added
             lambda data: data['iter'],                                                           # post_id
             lambda data: 'Post %d - %d' % (data['property_id'], data['iter']),                   # content
@@ -84,8 +84,8 @@ TABLES = [
         'special': False,
         'multiply': dates,
         'columns': [
-            lambda data: data['property_id'],   # dim_property_id
-            lambda data: data['iter'],          # dim_date_id
+            lambda data: data['property_id'],   # property_id
+            lambda data: data['iter'],          # date_id
             lambda data: increment(data, 2),    # impressions
             lambda data: increment(data, 3),    # engagements
             lambda data: increment(data, 4),    # followers
@@ -104,7 +104,7 @@ TABLES = [
         'special': False,
         'multiply': range(0, 100),
         'columns': [
-            lambda data: data['property_id'],               # dim_property_id
+            lambda data: data['property_id'],               # property_id
             lambda data: data['iter'],                      # tweet_id
             lambda data: datetime.now(),                    # date_time_added
             lambda data: "tweet %s" % data['property_id'],  # content
@@ -218,146 +218,5 @@ TABLES = [
             lambda data: increment(data, 5),                                                         # revenue
             lambda data: datetime.now(),                                                             # inserted_time_stamp
         ]
-    },
-    {
-        'table': 'OTA_STG.stg_D_country',
-        'special': True,
-        'multiply': thousand_range,
-        'columns': [
-            lambda data: data['iter'],                 # id
-            lambda data: 'Country %d' % data['iter'],  # name
-        ]
-    },
-    {
-        'table': 'OTA_STG.stg_D_region',
-        'special': True,
-        'multiply': thousand_range,
-        'columns': [
-            lambda data: data['iter'],                # id
-            lambda data: 'Region %d' % data['iter'],  # name
-        ]
-    },
-
-    {
-        'table': 'OTA_STG.stg_D_city',
-        'special': True,
-        'multiply': thousand_range,
-        'columns': [
-            lambda data: data['iter'],                  # id
-            lambda data: 0,                             # city_load_id
-            lambda data: random.randint(0, 15),         # d_country
-            lambda data: random.randint(0, 15),         # d_region
-            lambda data: 'City %d' % data['iter'],      # city_name
-            lambda data: data['currency'],              # currency
-        ]
-    },
-
-    {
-        'table': 'OTA_STG.stg_D_hotel',
-        'special': True,
-        'multiply': thousand_range,
-        'columns': [
-            lambda data: data['iter'],                   # id
-            lambda data: data['iter'],                   # tti_id
-            lambda data: random.randint(0, 10),          # d_city
-            lambda data: random.randint(3, 5),           # stars
-            lambda data: 'District %d' % data['iter'],   # district_name
-            lambda data: 'Hotel %d' % data['iter'],      # hotel_name
-            lambda data: datetime.now(),                 # date_loaded
-        ]
-    },
-
-    {
-        'table': 'OTA_DM.F_min_rate',
-        'special': False,
-        'multiply': dates,
-        'columns': [
-            lambda data: 0,                                                                     # city_load_id
-            lambda data: data['property_id'],                                                   # hotel_id
-            lambda data: data['iter'],                                                          # d_date
-            lambda data: random.randint(data['property_id'] + 1, 5 * data['property_id'] + 1),  # price
-        ]
-    },
-    {
-        'table': 'OTA_STG.hotel',
-        'special': True,
-        'multiply': thousand_range,
-        'columns': [
-            lambda data: data['iter'],                      # hotel_load_id
-            lambda data: 0,                                 # city_load_id
-            lambda data: data['iter'],                      # hotel_id
-            lambda data: 'Hotel %d' % data['iter'],         # hotel_name
-            lambda data: 'url',                             # thumburl
-            lambda data: random.randint(0, 10),             # rating_guest
-            lambda data: 44.4,                              # longitude
-            lambda data: 55.5,                              # latitude
-            lambda data: 'url',                             # detailurl
-            lambda data: 'True',                            # ispreferred
-            lambda data: 'None',                            # stars
-            lambda data: 'District %d' % data['iter'],      # district_name
-            lambda data: random.randint(1, 1000),           # nrooms
-            lambda data: datetime.now(),                    # date_loaded
-        ]
-    },
-
-    {
-        'table': 'OTA_STG.city',
-        'special': True,
-        'multiply': thousand_range,
-        'columns': [
-            lambda data: data['iter'],                          # city_load_id
-            lambda data: data['iter'],                          # city_id
-            lambda data: datetime.now() - timedelta(days=10),   # date_loaded
-            lambda data: random.randint(1, 10000),              # total_hotels
-            lambda data: 'City name %d' % data['iter'],         # city_name
-            lambda data: 'Region name %d' % data['iter'],       # region_name
-            lambda data: 'Country name %d' % data['iter'],      # country_name
-            lambda data: datetime.now(),                        # date_loaded
-            lambda data: 'DONE',                                # status
-            lambda data: data['currency'],                      # currency
-        ]
-    },
-
-    {
-        'table': 'OTA_STG.hotel',
-        'multiply': thousand_range,
-        'columns': [
-            lambda data: data['iter'],                  # hotel_load_id
-            lambda data: data['iter'],                  # city_load_id
-            lambda data: data['iter'],                  # hotel_id
-            lambda data: 'Hotel %d' % data['iter'],     # hotel_name
-            lambda data: 'url',                         # thumburl
-            lambda data: random.randint(0, 10),         # rating_guest
-            lambda data: 44.4,                          # longitude
-            lambda data: 55.5,                          # latitude
-            lambda data: 'url',                         # detailurl
-            lambda data: 'True',                        # ispreferred
-            lambda data: 'None',                        # stars
-            lambda data: 'District %d' % data['iter'],  # district_name
-            lambda data: random.randint(1, 1000),       # nrooms
-            lambda data: datetime.now(),                # date_loaded
-        ]
-    },
-
-    {
-        'table': 'OTA_STG.city',
-        'multiply': thousand_range,
-        'columns': [
-            lambda data: data['iter'],                          # city_load_id
-            lambda data: data['iter'],                          # city_id
-            lambda data: datetime.now() - timedelta(days=10),   # date_loaded
-            lambda data: random.randint(1, 10000),              # total_hotels
-            lambda data: 'City name %d' % data['iter'],         # city_name
-            lambda data: 'Region name %d' % data['iter'],       # region_name
-            lambda data: 'Country name %d' % data['iter'],      # country_name
-            lambda data: datetime.now(),                        # date_loaded
-            lambda data: 'DONE',                                # status
-            lambda data: data['currency'],                      # currency
-        ]
-    },
-]
-
-FILES = [
-    'sql/ota_main.sql',
-    'sql/ota_market_snap.sql',
+    }
 ]
