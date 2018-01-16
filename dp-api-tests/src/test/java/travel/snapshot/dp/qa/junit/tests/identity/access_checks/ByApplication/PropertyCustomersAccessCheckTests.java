@@ -16,7 +16,7 @@ import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.CHAIN;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.getSessionResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.commercialSubscriptionIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.INACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUserForApplication;

@@ -4,12 +4,12 @@ import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.PROPERTY_CODE;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.PROPERTY_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntity;
 
-import com.google.gson.Gson;
+import io.swagger.util.Json;
 import org.apache.commons.collections.map.SingletonMap;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -57,8 +57,7 @@ public class PropertyCodeTests extends CommonTest{
         UUID createdPropertyId = entityIsCreated(testProperty1);
         PropertyUpdateDto update = new PropertyUpdateDto();
         SingletonMap map = new SingletonMap("property_code", "BRQ1234567");
-        Gson gsone = new Gson();
-        updateEntity(PROPERTIES_PATH, createdPropertyId, gsone.toJson(map));
+        updateEntity(PROPERTIES_PATH, createdPropertyId, Json.pretty(map));
         responseIsUnprocessableEntity();
     }
 }

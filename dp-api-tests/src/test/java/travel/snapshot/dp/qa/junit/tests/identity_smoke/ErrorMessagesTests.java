@@ -15,10 +15,10 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERC
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLE_PERMISSIONS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ENCRYPTED_PASSWORD;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.WRONG_ENCRYPTED_PASSWORD;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_ENCRYPTED_PASSWORD;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_PASSWORD;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.WRONG_ENCRYPTED_PASSWORD;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.constructCommercialSubscriptionDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipPartialDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
@@ -64,7 +64,7 @@ public class ErrorMessagesTests extends CommonSmokeTest {
     @Test
     public void testErrorMessages() {
         // missing role
-        authorizationSteps.getToken(testUser1.getUsername(), DEFAULT_PASSWORD, clientId, clientSecret)
+        authorizationHelpers.getToken(testUser1.getUsername(), DEFAULT_PASSWORD, clientId, clientSecret)
                 .then()
                 .statusCode(SC_UNAUTHORIZED)
                 .assertThat()
@@ -74,7 +74,7 @@ public class ErrorMessagesTests extends CommonSmokeTest {
         authorizationHelpers.entityIsDeleted(ROLE_PERMISSIONS_PATH, permissionId);
         authorizationHelpers.entityIsDeleted(ROLES_PATH, roleId);
         authorizationHelpers.entityIsDeleted(COMMERCIAL_SUBSCRIPTIONS_PATH, subscriptionId);
-        authorizationSteps.getToken(testUser1.getUsername(), DEFAULT_PASSWORD, clientId, clientSecret)
+        authorizationHelpers.getToken(testUser1.getUsername(), DEFAULT_PASSWORD, clientId, clientSecret)
                 .then()
                 .statusCode(SC_UNAUTHORIZED)
                 .assertThat()
@@ -83,7 +83,7 @@ public class ErrorMessagesTests extends CommonSmokeTest {
         // wrong password
         subscriptionId = authorizationHelpers.entityIsCreated(constructCommercialSubscriptionDto(appId, customerId, DEFAULT_PROPERTY_ID));
         dbSteps.setUserPassword(userId, WRONG_ENCRYPTED_PASSWORD);
-        authorizationSteps.getToken(testUser1.getUsername(), DEFAULT_PASSWORD, clientId, clientSecret)
+        authorizationHelpers.getToken(testUser1.getUsername(), DEFAULT_PASSWORD, clientId, clientSecret)
                 .then()
                 .statusCode(SC_UNAUTHORIZED)
                 .assertThat()

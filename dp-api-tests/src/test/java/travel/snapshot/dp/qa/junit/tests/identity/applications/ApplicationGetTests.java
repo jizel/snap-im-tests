@@ -13,9 +13,9 @@ import java.util.Map;
 import static java.util.stream.IntStream.range;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.headerContains;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.headerIs;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 

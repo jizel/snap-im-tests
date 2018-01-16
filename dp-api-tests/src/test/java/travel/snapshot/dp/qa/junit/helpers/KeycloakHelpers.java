@@ -6,16 +6,15 @@ import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.junit.Assert.*;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.KEYCLOAK_TOKEN;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.KEYCLOAK_TOKEN;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.responseCodeIs;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.setSessionResponse;
 
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import org.codehaus.jackson.map.ObjectMapper;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 
 /**
  * Created by ofayans on 7/23/17.

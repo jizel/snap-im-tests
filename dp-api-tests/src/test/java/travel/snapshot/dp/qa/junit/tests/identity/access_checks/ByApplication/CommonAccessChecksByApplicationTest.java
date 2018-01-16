@@ -5,16 +5,11 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.commercialSubscriptionIsCreated;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.RESPONSE_CODE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesByPatternByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityEtag;
@@ -24,10 +19,7 @@ import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.construct
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
 import java.util.HashMap;
 import java.util.Map;

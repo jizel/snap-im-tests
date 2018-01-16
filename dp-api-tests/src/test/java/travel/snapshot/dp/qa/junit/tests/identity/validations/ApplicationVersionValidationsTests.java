@@ -2,10 +2,10 @@ package travel.snapshot.dp.qa.junit.tests.identity.validations;
 
 import static java.util.Arrays.asList;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
-import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.BOOL;
-import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.ENUM;
-import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.ID;
-import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.STRING;
+import static travel.snapshot.dp.qa.junit.helpers.FieldType.BOOL;
+import static travel.snapshot.dp.qa.junit.helpers.FieldType.ENUM;
+import static travel.snapshot.dp.qa.junit.helpers.FieldType.ID;
+import static travel.snapshot.dp.qa.junit.helpers.FieldType.STRING;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -15,7 +15,7 @@ import org.junit.Ignore;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionStatus;
 import travel.snapshot.dp.api.model.EntityDto;
-import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
+import travel.snapshot.dp.qa.junit.helpers.ObjectField;
 
 import java.time.LocalDate;
 import java.util.List;

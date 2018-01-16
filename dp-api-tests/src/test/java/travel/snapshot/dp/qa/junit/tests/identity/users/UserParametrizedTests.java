@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
+import travel.snapshot.dp.qa.junit.helpers.DbHelpers;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 import travel.snapshot.dp.qa.junit.utils.QueryParams;
 
@@ -33,8 +33,8 @@ class UserParametrizedTests extends CommonTest {
 
     @BeforeAll
     static void setUpTestUsers() {
-        DbStepDefs dbStepDefs = new DbStepDefs();
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        DbHelpers dbHelpers = new DbHelpers();
+        dbHelpers.databaseIsCleanedAndEntitiesAreCreated();
         loadDefaultTestEntities();
 
         range(0, 58).forEachOrdered(n -> {

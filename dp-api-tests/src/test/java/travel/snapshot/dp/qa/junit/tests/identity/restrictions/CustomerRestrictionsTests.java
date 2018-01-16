@@ -9,8 +9,8 @@ import static travel.snapshot.dp.api.type.HttpMethod.DELETE;
 import static travel.snapshot.dp.api.type.HttpMethod.GET;
 import static travel.snapshot.dp.api.type.HttpMethod.PATCH;
 import static travel.snapshot.dp.api.type.HttpMethod.POST;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers.constructCommercialSubscriptionDto;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.deleteEntityByUserForApp;
@@ -18,6 +18,8 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.emptyQueryParams
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsType;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesByUserForApp;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserCustomerRelationshipDto;
 
@@ -35,16 +37,16 @@ public class CustomerRestrictionsTests extends CommonRestrictionTest {
 
     @Test
     public void getCustomerRestrictionTest(){
-        customerHelpers.listOfCustomersIsGotByUserForAppVersionWith(createdUserWithRelationshipsId, createdAppVersion.getId(), null, null, null, null, null);
+        getEntitiesByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), CUSTOMERS_PATH, emptyQueryParams());
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_ALL_CUSTOMERS_ENDPOINT, GET);
-        customerHelpers.listOfCustomersIsGotByUserForAppVersionWith(createdUserWithRelationshipsId, createdAppVersion.getId(), null, null, null, null, null);
+        getEntitiesByUserForApp(createdUserWithRelationshipsId, createdAppVersion.getId(), CUSTOMERS_PATH, emptyQueryParams());
         responseCodeIs(SC_OK);
 
-        customerHelpers.customerWithIdIsGotByUserForApplication(createdUserWithRelationshipsId, createdAppVersion.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID);
+        getEntityByUserForApplication(createdUserWithRelationshipsId, createdAppVersion.getId(), CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID);
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_SINGLE_CUSTOMER_ENDPOINT, GET);
-        customerHelpers.customerWithIdIsGotByUserForApplication(createdUserWithRelationshipsId, createdAppVersion.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID);
+        getEntityByUserForApplication(createdUserWithRelationshipsId, createdAppVersion.getId(), CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID);
         responseCodeIs(SC_OK);
     }
 

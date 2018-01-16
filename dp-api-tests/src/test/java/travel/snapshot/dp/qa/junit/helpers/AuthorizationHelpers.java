@@ -5,28 +5,35 @@ import static net.serenitybdd.core.Serenity.sessionVariableCalled;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.*;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_AUTHORIZATION;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_ETAG;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.HEADER_IF_MATCH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SESSION_TOKEN;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.AUTHORIZATION_BASE_URI;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.CONFIGURATION_NGINX_BASE_URI;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.HEADER_AUTHORIZATION;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.HEADER_ETAG;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.HEADER_IF_MATCH;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.IDENTITY_NGINX_BASE_URI;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.SESSION_RESPONSE;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.SESSION_TOKEN;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.getSessionResponse;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.setSessionResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENTITIES_TO_DELETE;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getCreateBasePath;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getDtoFromResponse;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
 import static travel.snapshot.dp.qa.junit.utils.RestAssuredConfig.setupRequestDefaults;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+import lombok.extern.java.Log;
 import net.serenitybdd.core.Serenity;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Log
 public class AuthorizationHelpers {
 
     private final CommonHelpers commonHelpers = new CommonHelpers();
@@ -37,7 +44,28 @@ public class AuthorizationHelpers {
         spec = setupRequestDefaults();
     }
 
-    public void updateRegistryOfDeletables(String basePath, UUID id) {
+    public Response getToken(String username, String password, String clientId, String clientSecret) {
+        RequestSpecification requestSpecification = given()
+                .baseUri(propertiesHelper.getProperty(AUTHORIZATION_BASE_URI))
+                .parameter("client_id", clientId)
+                .parameter("client_secret", clientSecret)
+                .parameter("grant_type", "password")
+                .parameter("username", username)
+                .parameter("password", password)
+                .relaxedHTTPSValidation()
+                .log().all();
+        Response response = requestSpecification.post("/oauth/token");
+        setSessionResponse(response);
+        if (response.getStatusCode() == SC_OK) {
+            String token = response.path("access_token");
+            Serenity.setSessionVariable(SESSION_TOKEN).to(token);
+        } else {
+            log.warning("Failed to receive oauth token");
+        }
+        return response;
+    }
+
+    void updateRegistryOfDeletables(String basePath, UUID id) {
         // Retrieve the map from serenity session variable
         Map<String, List<UUID>> registry = Serenity.sessionVariableCalled(ENTITIES_TO_DELETE);
         // Retrieve the array of ids of the certain entity type
@@ -101,7 +129,7 @@ public class AuthorizationHelpers {
             .then().statusCode(SC_CREATED);
         UUID result = null;
         try {
-            result = commonHelpers.getDtoFromResponse(getSessionResponse(), basePath).getId();
+            result = getDtoFromResponse(getSessionResponse(), basePath).getId();
         } catch (Exception e) {
             fail(e.getMessage());
         }

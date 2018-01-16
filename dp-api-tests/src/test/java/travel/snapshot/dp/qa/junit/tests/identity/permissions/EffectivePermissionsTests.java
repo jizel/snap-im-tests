@@ -8,14 +8,17 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.EFFECTIVE_PERMISSIONS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
 import static travel.snapshot.dp.api.type.HttpMethod.GET;
 import static travel.snapshot.dp.api.type.HttpMethod.POST;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ACTIVATE_RELATION;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntity;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntities;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.getEntitiesAsTypeByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.PermissionHelpers.constructAppPermission;
@@ -109,7 +112,7 @@ public class EffectivePermissionsTests extends CommonRestrictionTest {
                 .containsOnly(RESTRICTIONS_EFFECTIVE_PERMISSIONS, RESTRICTIONS_ALL_USERS_ENDPOINT);
 
         //        Get permissions as user - with active role
-        roleHelpers.setRoleIsActive(createdRoleId, true);
+        entityIsUpdated(ROLES_PATH, createdRoleId, ACTIVATE_RELATION);
         effectivePermissions = getEffectivePermissionsByUserForApp(createdUserId, createdAppVersion.getId(), pathParams);
         assertThat(effectivePermissions)
                 .hasSize(1)

@@ -37,26 +37,26 @@ public class UserNotificationTest extends CommonTest {
     @After
     public void cleanUp() throws Throwable {
         super.cleanUp();
-        jmsSteps.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        jmsHelpers.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
     }
 
     @Test
     public void createUserNotificationTest() throws Exception {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createUserNotificationTest");
-        jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        jmsHelpers.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         entityIsCreated(testUser2);
-        receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
 
     @Test
     public void updateUserNotificationTest() throws Exception {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "updateUserNotificationTest");
-        jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        jmsHelpers.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         UserUpdateDto userUpdate = new UserUpdateDto();
         userUpdate.setUsername("Updated Username");
         entityIsUpdated(USERS_PATH, createdUserId, userUpdate);
-        receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
 
@@ -65,9 +65,9 @@ public class UserNotificationTest extends CommonTest {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "deleteUserNotificationTest");
 //        Customer type user cannot be deleted because it references customer and vice versa
         UUID snapshotUserId = entityIsCreated(testSnapshotUser1);
-        jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        jmsHelpers.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         entityIsDeleted(USERS_PATH, snapshotUserId);
-        receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
 
@@ -80,12 +80,12 @@ public class UserNotificationTest extends CommonTest {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "addRoleToUserNotificationTest");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "deleteRoleFromUserNotificationTest");
         UUID roleId = entityIsCreated(testRole1);
-        jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        jmsHelpers.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         UUID assignmentId = entityIsCreated(constructRoleAssignment(roleId, createdUserId));
-        receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
         entityIsDeleted(ROLE_ASSIGNMENTS_PATH, assignmentId);
-        receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
 }

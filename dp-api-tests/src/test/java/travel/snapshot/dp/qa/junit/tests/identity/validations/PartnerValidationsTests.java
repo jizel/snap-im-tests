@@ -2,14 +2,14 @@ package travel.snapshot.dp.qa.junit.tests.identity.validations;
 
 import static java.util.Arrays.asList;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
-import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.BOOL;
-import static travel.snapshot.dp.qa.cucumber.helpers.FieldType.STRING;
+import static travel.snapshot.dp.qa.junit.helpers.FieldType.BOOL;
+import static travel.snapshot.dp.qa.junit.helpers.FieldType.STRING;
 
 import lombok.Getter;
 import org.junit.Before;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.model.EntityDto;
-import travel.snapshot.dp.qa.cucumber.helpers.ObjectField;
+import travel.snapshot.dp.qa.junit.helpers.ObjectField;
 
 import java.util.List;
 

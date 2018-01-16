@@ -29,9 +29,6 @@ import static travel.snapshot.dp.api.webperformance.resources.WebPerformanceDefa
 import static travel.snapshot.dp.api.webperformance.resources.WebPerformanceDefaults.VISITS_UNIQUE;
 
 import com.google.common.collect.ImmutableMap;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jxl.StringFormulaCell;
-import lombok.AllArgsConstructor;
 import travel.snapshot.dp.api.configuration.resources.ConfigurationDefaults;
 import travel.snapshot.dp.api.rateshopper.resources.RateShopperDefaults;
 import travel.snapshot.dp.api.review.resources.ReviewDefaults;
@@ -39,7 +36,6 @@ import travel.snapshot.dp.api.socialmedia.resources.FacebookMetric;
 import travel.snapshot.dp.api.socialmedia.resources.InstagramMetric;
 import travel.snapshot.dp.api.socialmedia.resources.SocialMediaDefaults;
 import travel.snapshot.dp.api.webperformance.resources.WebPerformanceDefaults;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 
 public class AnalyticsHelpers {
 
