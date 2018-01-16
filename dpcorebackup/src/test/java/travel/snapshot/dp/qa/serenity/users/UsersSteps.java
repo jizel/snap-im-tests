@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.users;
+package travel.snapshot.dp.qa.serenity.users;
 
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.stream;
@@ -28,7 +28,7 @@ import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.HashMap;
 import java.util.List;

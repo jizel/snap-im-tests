@@ -1,6 +1,6 @@
-package travel.snapshot.dp.qa.cucumber.steps.commercial_subscription;
+package travel.snapshot.dp.qa.steps.commercial_subscription;
 
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
@@ -10,10 +10,10 @@ import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationVersionsSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.commercial_subscription.CommercialSubscriptionSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
+import travel.snapshot.dp.qa.serenity.commercial_subscription.CommercialSubscriptionSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.List;
 import java.util.UUID;

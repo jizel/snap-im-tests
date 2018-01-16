@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.analytics;
+package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
 

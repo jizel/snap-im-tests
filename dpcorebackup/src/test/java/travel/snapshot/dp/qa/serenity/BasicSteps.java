@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity;
+package travel.snapshot.dp.qa.serenity;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -17,14 +17,14 @@ import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.stripSlash;
-import static travel.snapshot.dp.qa.junit.utils.RestAssuredConfig.setupRequestDefaults;
+import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
+import static travel.snapshot.dp.qa.helpers.RestAssuredConfig.setupRequestDefaults;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -137,6 +137,21 @@ public class BasicSteps {
     public BasicSteps() {
         spec = setupRequestDefaults();
     }
+
+    public static String stripSlash(String string) {
+        return (string.startsWith("/")) ? string.substring(1) : string;
+    }
+
+    public static <DTO> List<DTO> parseResponseAsListOfObjects(Class<DTO> clazz) {
+        Response response = getSessionResponse();
+        try {
+            return OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+        return null;
+    }
+
 
     public void setAccessTokenParamFromSession() {
         String token = getSessionVariable(OAUTH_PARAMETER_NAME);

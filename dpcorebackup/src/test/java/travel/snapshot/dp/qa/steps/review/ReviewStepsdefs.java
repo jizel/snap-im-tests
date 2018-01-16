@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.steps.review;
+package travel.snapshot.dp.qa.steps.review;
 
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -25,14 +25,14 @@ import travel.snapshot.dp.api.review.model.TravellersAspectsOfBusinessStatsDto;
 import travel.snapshot.dp.api.review.model.TravellersNumberOfReviewsStatsDto;
 import travel.snapshot.dp.api.review.model.TravellersOverallBubbleRatingStatsDto;
 import travel.snapshot.dp.api.review.model.TravellersOverallStatisticsDto;
-import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.cucumber.helpers.review.ReviewAnalyticsEnum;
-import travel.snapshot.dp.qa.cucumber.serenity.review.ReviewLocationSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.review.ReviewMultipropertyCustomerSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.review.ReviewMultipropertyPropertySetSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.review.ReviewMultipropertySinglePropertySteps;
-import travel.snapshot.dp.qa.cucumber.serenity.review.ReviewSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.review.ReviewTravelersSteps;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.helpers.review.ReviewAnalyticsEnum;
+import travel.snapshot.dp.qa.serenity.review.ReviewLocationSteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyCustomerSteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyPropertySetSteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertySinglePropertySteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewSteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewTravelersSteps;
 
 import java.util.Collections;
 import java.util.List;

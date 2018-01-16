@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.partners;
+package travel.snapshot.dp.qa.serenity.partners;
 
 
 import static java.util.Arrays.stream;
@@ -17,7 +17,7 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PartnerUpdateDto;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.List;
 import java.util.UUID;

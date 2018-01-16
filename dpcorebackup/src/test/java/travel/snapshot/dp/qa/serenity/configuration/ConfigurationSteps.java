@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.configuration;
+package travel.snapshot.dp.qa.serenity.configuration;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
@@ -22,7 +22,7 @@ import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
 import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
 
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.IOException;
 import java.time.LocalDate;

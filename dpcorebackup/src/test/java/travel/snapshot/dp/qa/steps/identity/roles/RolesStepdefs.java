@@ -1,10 +1,10 @@
-package travel.snapshot.dp.qa.cucumber.steps.identity.roles;
+package travel.snapshot.dp.qa.steps.identity.roles;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps.getRoleBaseType;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps.getRoleBaseType;
 
 import cucumber.api.DataTable;
 import cucumber.api.Transform;
@@ -17,8 +17,8 @@ import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
 import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
 
 import java.util.List;
 import java.util.Map;

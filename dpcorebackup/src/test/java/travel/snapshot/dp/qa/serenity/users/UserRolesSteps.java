@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.users;
+package travel.snapshot.dp.qa.serenity.users;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.is;

@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.analytics;
+package travel.snapshot.dp.qa.serenity.analytics;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.*;
@@ -16,8 +16,8 @@ import travel.snapshot.dp.api.analytics.model.RecordDto;
 import travel.snapshot.dp.api.analytics.model.SingleStatsDto;
 import travel.snapshot.dp.api.webperformance.model.PeriodAverageStatsDto;
 import travel.snapshot.dp.api.webperformance.model.ReferralStatsDto;
-import travel.snapshot.dp.qa.cucumber.helpers.LegacyReferralStatsDto;
-import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
+import travel.snapshot.dp.qa.helpers.LegacyReferralStatsDto;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

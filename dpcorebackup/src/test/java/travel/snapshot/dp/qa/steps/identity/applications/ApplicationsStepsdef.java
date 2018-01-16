@@ -1,9 +1,9 @@
-package travel.snapshot.dp.qa.cucumber.steps.identity.applications;
+package travel.snapshot.dp.qa.steps.identity.applications;
 
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
@@ -17,10 +17,10 @@ import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationUpdateDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
-import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationVersionsSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationsSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.List;
 import java.util.UUID;

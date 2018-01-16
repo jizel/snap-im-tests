@@ -1,12 +1,12 @@
-package travel.snapshot.dp.qa.cucumber.steps.rate_shopper;
+package travel.snapshot.dp.qa.steps.rate_shopper;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.cucumber.serenity.analytics.RateShopperSteps;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.analytics.RateShopperSteps;
 
 import java.util.UUID;
 

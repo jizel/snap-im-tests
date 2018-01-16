@@ -1,16 +1,16 @@
-package travel.snapshot.dp.qa.cucumber.steps;
+package travel.snapshot.dp.qa.steps;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.seleniumhq.jetty9.util.StringUtil.isNotBlank;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.bodyContainsEntityWith;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.bodyIsEmpty;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.contentTypeIs;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.customCodeIs;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendPostWithBody;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.bodyContainsEntityWith;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.bodyIsEmpty;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.contentTypeIs;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.customCodeIs;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.responseCodeIs;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.sendBlankPost;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.sendPostWithBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.DataTable;
@@ -20,9 +20,9 @@ import cucumber.api.java.en.When;
 import gherkin.formatter.model.DataTableRow;
 import net.thucydides.core.annotations.Steps;
 import org.apache.commons.lang3.StringUtils;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationVersionsSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.HashMap;
 import java.util.UUID;

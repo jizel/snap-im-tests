@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.helpers;
+package travel.snapshot.dp.qa.helpers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

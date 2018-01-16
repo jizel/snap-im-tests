@@ -1,12 +1,12 @@
-package travel.snapshot.dp.qa.cucumber.helpers;
+package travel.snapshot.dp.qa.helpers;
 
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
-import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationsSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
-import travel.snapshot.dp.qa.cucumber.serenity.property_sets.PropertySetSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
+import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
+import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
+import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.UUID;
 

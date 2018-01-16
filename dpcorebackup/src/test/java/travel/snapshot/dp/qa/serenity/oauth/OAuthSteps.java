@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.oauth;
+package travel.snapshot.dp.qa.serenity.oauth;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -8,7 +8,7 @@ import net.thucydides.core.annotations.Step;
 import java.util.HashMap;
 import java.util.Map;
 
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 

@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.steps.web_performance;
+package travel.snapshot.dp.qa.steps.web_performance;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
@@ -6,9 +6,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.qa.cucumber.helpers.ClassStringConverter;
-import travel.snapshot.dp.qa.cucumber.helpers.Converters;
-import travel.snapshot.dp.qa.cucumber.serenity.analytics.WebPerformanceSteps;
+import travel.snapshot.dp.qa.helpers.ClassStringConverter;
+import travel.snapshot.dp.qa.helpers.Converters;
+import travel.snapshot.dp.qa.serenity.analytics.WebPerformanceSteps;
 
 import java.util.UUID;
 

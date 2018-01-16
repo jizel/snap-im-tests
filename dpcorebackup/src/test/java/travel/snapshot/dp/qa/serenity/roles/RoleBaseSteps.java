@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.cucumber.serenity.roles;
+package travel.snapshot.dp.qa.serenity.roles;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
@@ -6,8 +6,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
-import static travel.snapshot.dp.qa.cucumber.helpers.RoleType.CUSTOMER;
-import static travel.snapshot.dp.qa.cucumber.helpers.RoleType.PROPERTY;
+import static travel.snapshot.dp.qa.helpers.RoleType.CUSTOMER;
+import static travel.snapshot.dp.qa.helpers.RoleType.PROPERTY;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -20,8 +20,8 @@ import travel.snapshot.dp.api.identity.model.RoleBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleCreateBaseDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
-import travel.snapshot.dp.qa.cucumber.helpers.RoleType;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.helpers.RoleType;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.Arrays;
 import java.util.List;
