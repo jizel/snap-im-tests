@@ -25,6 +25,7 @@ tti.db.password=${TTI_DB_PASSWORD}
 broker.url=${BROKER_URL}
 broker.user=${BROKER_USER}
 broker.password=${BROKER_PASSWORD}
+notificationCrud.topic=${NOTIFICATION_TOPIC}
 keyCloakURI=${KEYCLOAK_URI}
 keyCloakUsername=${KEYCLOAK_USER}
 keyCloakPassword=${KEYCLOAK_PASSWORD}
