@@ -47,6 +47,7 @@ import java.util.UUID;
 public class DbHelpers {
 
     static final String DELETE_SINGLE_USER = "delete from public.User where id = '%s';";
+    static final String DELETE_SINGLE_USER_GROUP = "delete from usergroup where id = '%s';";
     static final String DELETE_SINGLE_PROPERTY = "delete from Property where id = '%s';";
     static final String DELETE_SINGLE_PROPERTYSET = "delete from Propertyset where id = '%s';";
     static final String DELETE_SINGLE_PROPERTYSET_PROPERTY = "delete from Propertyset_Property where id = '%s';";
@@ -139,6 +140,10 @@ public class DbHelpers {
 
     private void deleteDbUser(UUID userId) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER, userId));
+    }
+
+    public void deleteUserGroup(UUID userGroupId) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER_GROUP, userGroupId));
     }
 
     private void deleteDbAddress(UUID id) {

@@ -58,10 +58,6 @@ import java.util.Map;
  * This class is declared abstract and there should never be a good reason to instantiate it.
  */
 public abstract class CommonTest {
-    public static final String YAML_DATA_PATH = "src/test/resources/yaml/%s";
-    public static final String NOTIFICATION_CRUD_TOPIC = "Notifications.crud";
-    public static final String JMS_SUBSCRIPTION_NAME = "Test";
-    public static final String TOTAL_COUNT_HEADER = "X-Total-Count";
 
     protected static EntitiesLoader entitiesLoader;
 
@@ -83,7 +79,7 @@ public abstract class CommonTest {
     protected final KeycloakHelpers keycloakHelpers = new KeycloakHelpers();
     protected final CommonHelpers commonHelpers = new CommonHelpers();
     protected final PlatformOperationHelpers platformOperationHelpers = new PlatformOperationHelpers();
-    protected final PropertiesHelper propertiesHelper = new PropertiesHelper();
+    protected static final PropertiesHelper propertiesHelper = new PropertiesHelper();
 
     //    Custom codes
     public static final int CC_INSUFFICIENT_PERMISSIONS = 40301;
@@ -146,6 +142,12 @@ public abstract class CommonTest {
     protected static ApplicationVersionCreateDto testAppVersion3;
     public static LocalDate validFrom = LocalDate.now();
     public static LocalDate validTo = LocalDate.now().plusYears(1).plusMonths(2).plusDays(3);
+
+    // shared variables
+    public static final String YAML_DATA_PATH = "src/test/resources/yaml/%s";
+    public static final String NOTIFICATION_CRUD_TOPIC = propertiesHelper.getProperty("notificationCrud.topic");
+    public static final String JMS_SUBSCRIPTION_NAME = "Test";
+    public static final String TOTAL_COUNT_HEADER = "X-Total-Count";
 
     @Rule
     public IKeeperJUnitConnector issueKeeper = new IKeeperJUnitConnector(

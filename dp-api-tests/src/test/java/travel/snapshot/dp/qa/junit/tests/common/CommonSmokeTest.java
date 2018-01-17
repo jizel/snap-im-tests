@@ -112,7 +112,7 @@ public class CommonSmokeTest extends CommonTest {
             commercialSubscriptionIds.forEach(dbSteps::deleteCommercialSubscription);
             appVersionIds.forEach(dbSteps::deleteAppVersion);
             applicationIds.forEach(dbSteps::deleteApplication);
-            userGroupIds.forEach(dbSteps::deleteUserPropertySet);
+            userGroupIds.forEach(dbSteps::deleteUserGroup);
             userPropertySetIds.forEach(dbSteps::deleteUserPropertySet);
             userPropertyIds.forEach(dbSteps::deleteUserProperty);
             propertySetPropertyIds.forEach(dbSteps::deletePropertySetProperty);

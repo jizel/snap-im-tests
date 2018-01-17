@@ -141,7 +141,7 @@ public class AuthorizationHelpers {
     public void entityIsUpdated(String basePath, UUID entityId, Object data) {
         updateEntity(basePath, entityId, data)
                 .then()
-                .statusCode(SC_NO_CONTENT);
+                .statusCode(SC_OK);
     }
 
     public Response updateEntity(String basePath, UUID entityId, Object data) {
@@ -150,7 +150,7 @@ public class AuthorizationHelpers {
         Response response = specification
                 .body(data)
                 .when()
-                .post("/{id}", entityId);
+                .patch("/{id}", entityId);
         setSessionResponse(response);
         return response;
     }
