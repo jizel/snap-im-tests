@@ -46,6 +46,7 @@ public class ErrorMessagesTests extends CommonSmokeTest {
         authorizationHelpers.entityIsCreated(constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true));
         // Create keycloak secret for created app version
         Map<String, Object> testClient2 = loader.getClients().get("client2");
+        testClient2.put("clientId", String.valueOf(appVersionId));
         try {
             keycloakHelpers.createClient(testClient2);
         } catch (Exception e) {
