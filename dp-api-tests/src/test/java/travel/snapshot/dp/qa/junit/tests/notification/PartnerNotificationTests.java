@@ -1,9 +1,15 @@
 package travel.snapshot.dp.qa.junit.tests.notification;
 
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
@@ -61,4 +67,21 @@ public class PartnerNotificationTests extends CommonTest{
         receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }
+
+    @Test
+    public void CreateUpdatePartnerByCustomerUserNotificationTest() throws Exception{
+        UUID createdUserId = entityIsCreated(testUser1);
+        jmsHelpers.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+
+        createEntityByUserForApplication(createdUserId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,  testPartner2).then().statusCode(SC_CREATED);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        verifyNotification(getSingleTestData(notificationTestsData, "createPartnerByCustomerUserNotificationTest"), receivedNotification);
+
+        PartnerUpdateDto PartnerUpdateDto = new PartnerUpdateDto();
+        PartnerUpdateDto.setName("Updated Partner Name");
+        updateEntityByUserForApp(createdUserId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, PARTNERS_PATH, DEFAULT_SNAPSHOT_PARTNER_ID, PartnerUpdateDto).then().statusCode(SC_OK);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        verifyNotification(getSingleTestData(notificationTestsData, "updatePartnerByCustomerUserNotificationTest"), receivedNotification);
+    }
+
 }

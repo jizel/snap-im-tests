@@ -1,10 +1,15 @@
 package travel.snapshot.dp.qa.junit.tests.notification;
 
 
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUserForApplication;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.helpers.RoleHelpers.getRoleBaseType;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
@@ -60,5 +65,22 @@ public class RoleNotificationsTests extends CommonTest{
         entityIsDeleted(ROLES_PATH, roleId);
         receivedDeleteNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedDeleteNotification);
+    }
+
+    @Test
+    public void CreateUpdateRoleByCustomerUserNotificationTest() throws Exception{
+        UUID createdRoleId = entityIsCreated(testRole1);
+        UUID createdUserId = entityIsCreated(testUser1);
+        jmsHelpers.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+
+        createEntityByUserForApplication(createdUserId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,  testRole2).then().statusCode(SC_CREATED);
+        Map<String, Object> receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        verifyNotification(getSingleTestData(notificationTestsData, "createRoleByCustomerUserNotificationTest"), receivedNotification);
+
+        RoleUpdateDto RoleUpdateDto = new RoleUpdateDto();
+        RoleUpdateDto.setName("Updated Role Name");
+        updateEntityByUserForApp(createdUserId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, ROLES_PATH, createdRoleId, RoleUpdateDto).then().statusCode(SC_OK);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        verifyNotification(getSingleTestData(notificationTestsData, "updateRoleByCustomerUserNotificationTest"), receivedNotification);
     }
 }

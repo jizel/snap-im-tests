@@ -31,3 +31,13 @@ addAndRemoveCustomerUser:
   <<: *NOTIFICATION
   operation: create
   entity_type: UserCustomerRelationship
+
+createCustomerByCustomerUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+  user_id: 0b000000-0000-4444-8888-000000000001
+
+updateCustomerByCustomerUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: update
+  user_id: 0b000000-0000-4444-8888-000000000001

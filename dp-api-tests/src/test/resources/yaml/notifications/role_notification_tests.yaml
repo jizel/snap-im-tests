@@ -13,3 +13,13 @@ updateRoleNotificationTest:
 deleteRoleNotificationTest:
   <<: *NOTIFICATION
   operation: delete
+
+createRoleByCustomerUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+  user_id: 0b000000-0000-4444-8888-000000000001
+
+updateRoleByCustomerUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: update
+  user_id: 0b000000-0000-4444-8888-000000000001

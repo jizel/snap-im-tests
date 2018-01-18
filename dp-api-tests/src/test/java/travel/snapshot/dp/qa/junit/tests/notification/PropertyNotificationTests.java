@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.junit.tests.notification;
 
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.CHAIN;
 import static travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType.OWNER;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
@@ -10,6 +12,7 @@ import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.createEntityByUs
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsCreated;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsDeleted;
 import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.entityIsUpdated;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.updateEntityByUserForApp;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructCustomerPropertyRelationshipDto;
 import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.constructUserPropertyRelationshipDto;
@@ -66,13 +69,21 @@ public class PropertyNotificationTests extends CommonTest{
 
 //    DP-1728
     @Test
-    public void createPropertyByCustomerUserNotificationTest() throws Exception{
-        Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createPropertyByCustomerUserNotificationTest");
+    public void CreateUpdatePropertyByCustomerUserNotificationTest() throws Exception{
         createdUserId = entityIsCreated(testUser1);
         jmsHelpers.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        createEntityByUserForApplication(createdUserId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,  testProperty2);
+
+        createEntityByUserForApplication(createdUserId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,  testProperty2).then().statusCode(SC_CREATED);
         receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        verifyNotification(expectedCreateNotification, receivedNotification);
+        verifyNotification(getSingleTestData(notificationTestsData, "createPropertyByCustomerUserNotificationTest"), receivedNotification);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        verifyNotification(getSingleTestData(notificationTestsData, "createUserPropertyRelationshipNotificationTest"), receivedNotification);
+
+        PropertyUpdateDto propertyUpdateDto = new PropertyUpdateDto();
+        propertyUpdateDto.setName("Updated Property Name");
+        updateEntityByUserForApp(createdUserId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, PROPERTIES_PATH, testProperty2.getId(), propertyUpdateDto).then().statusCode(SC_OK);
+        receivedNotification = jmsHelpers.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
+        verifyNotification(getSingleTestData(notificationTestsData, "updatePropertyByCustomerUserNotificationTest"), receivedNotification);
     }
 
     @Test
