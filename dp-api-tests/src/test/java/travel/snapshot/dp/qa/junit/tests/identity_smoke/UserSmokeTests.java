@@ -17,7 +17,6 @@ import java.util.UUID;
 
 @Tag(AUTHORIZATION_TEST)
 public class UserSmokeTests extends CommonSmokeTest {
-    protected UUID userId;
     protected UUID userCustomerRelationId;
 
 
@@ -48,8 +47,9 @@ public class UserSmokeTests extends CommonSmokeTest {
     @Test
     public void loginWithPlus() {
         String username = "test+1@snapshot.travel";
+        testUser1.setId(null);
         testUser1.setUsername(username);
-        userId = userHelpers.userIsCreatedWithAuth(testUser1);
+        UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         dbSteps.setUserPassword(userId, DEFAULT_ENCRYPTED_PASSWORD);
         authorizationHelpers.getToken(username, DEFAULT_PASSWORD, clientId, clientSecret)
                 .then()
