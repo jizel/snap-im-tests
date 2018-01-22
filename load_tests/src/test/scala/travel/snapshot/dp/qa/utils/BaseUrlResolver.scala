@@ -15,6 +15,7 @@ object LoadTestEnvironment extends Enumeration {
   val STABLE = Value("stable")
   val STAGING = Value("staging")
   val SANDBOX = Value("sandbox")
+  val DEV2 = Value("dev2")
 }
 
 object LoadTestContext extends Enumeration {
@@ -115,6 +116,12 @@ trait SystemPropertiesGatherer {
     System.getProperty("port", "8080"),
     resolveScenario
   )
+  val Dev2EnvironmentProperties = Tuple4[String, String, String, LoadTestContext.LoadTestContextValue](
+    System.getProperty("protocol", "http"),
+    System.getProperty("host", "europewest-api-dev2.snapshot.technology"),
+    System.getProperty("version", "v1"),
+    resolveScenario
+  )
 
   
   private def resolveScenario: LoadTestContext.LoadTestContextValue = {
@@ -170,6 +177,19 @@ object DevelopmentUrlResolver extends SystemPropertiesGatherer {
 object TestingUrlResolver extends SystemPropertiesGatherer {
 
   val (protocol, host, port, version, scenario) = testEnvironmentProperties
+
+  def apply(): String = {
+    s"$protocol://$host/$version/"
+  }
+
+  def resolveOauthUrl(): String = {
+    s"$protocol://$host/oauth/token"
+  }
+}
+
+object Dev2UrlResolver extends SystemPropertiesGatherer {
+
+  val (protocol, host, version, scenario) = Dev2EnvironmentProperties
 
   def apply(): String = {
     s"$protocol://$host/$version/"
@@ -263,6 +283,7 @@ object BaseUrlResolver {
       case LoadTestEnvironment.LOCAL => LocalUrlResolver()
       case LoadTestEnvironment.DEVELOPMENT => DevelopmentUrlResolver()
       case LoadTestEnvironment.TESTING => TestingUrlResolver()
+      case LoadTestEnvironment.DEV2 => Dev2UrlResolver()
       case LoadTestEnvironment.PRODUCTION => ProductionUrlResolver()
       case LoadTestEnvironment.DOCKER => DockerUrlResolver()
       case LoadTestEnvironment.NGINX => NginxUrlResolver()
@@ -280,6 +301,7 @@ object OAuthUrlResolver {
     LoadTestEnvironment.withName(System.getProperty("environment", "local")) match {
       case LoadTestEnvironment.DEVELOPMENT => DevelopmentUrlResolver.resolveOauthUrl()
       case LoadTestEnvironment.TESTING => TestingUrlResolver.resolveOauthUrl()
+      case LoadTestEnvironment.DEV2 => Dev2UrlResolver.resolveOauthUrl()
       case LoadTestEnvironment.STABLE => StableUrlResolver.resolveOauthUrl()
       case LoadTestEnvironment.STAGING => StagingUrlResolver.resolveOauthUrl()
       case LoadTestEnvironment.SANDBOX => SandboxUrlResolver.resolveOauthUrl()
