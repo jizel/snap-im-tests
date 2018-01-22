@@ -1,16 +1,15 @@
 general_notification: &NOTIFICATION
   application_version_id: 04000000-0000-4444-8888-000000000000
   entity_type: Property
+  entity_id: 08000000-0000-4444-8888-000000000003
 
 createPropertyNotificationTest:
   <<: *NOTIFICATION
   operation: create
-  entity_id: 08000000-0000-4444-8888-000000000003
 
 createPropertyByCustomerUserNotificationTest:
   <<: *NOTIFICATION
   operation: create
-  entity_id: 08000000-0000-4444-8888-000000000003
   user_id: 0b000000-0000-4444-8888-000000000001
 
 updatePropertyNotificationTest:
@@ -24,17 +23,33 @@ deletePropertyNotificationTest:
   entity_id: 08000000-0000-4444-8888-000000000002
 
 addRemovePropertyUserNotificationTest:
-  -  <<: *NOTIFICATION
-     operation: create
+  -  operation: create
      entity_type: UserPropertyRelationship
-  -  <<: *NOTIFICATION
-     operation: delete
+     application_version_id: 04000000-0000-4444-8888-000000000000
+  -  operation: delete
      entity_type: UserPropertyRelationship
+     application_version_id: 04000000-0000-4444-8888-000000000000
 
 updateRemovePropertyCustomerNotificationTest:
-  -  <<: *NOTIFICATION
-     operation: update
+  -  operation: update
      entity_type: CustomerPropertyRelationship
-  -  <<: *NOTIFICATION
-     operation: delete
+     application_version_id: 04000000-0000-4444-8888-000000000000
+  -  operation: delete
      entity_type: CustomerPropertyRelationship
+     application_version_id: 04000000-0000-4444-8888-000000000000
+
+updatePropertyByCustomerUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: update
+  user_id: 0b000000-0000-4444-8888-000000000001
+
+deletePropertyByCustomerUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: delete
+  user_id: 0b000000-0000-4444-8888-000000000001
+
+createUserPropertyRelationshipNotificationTest:
+  operation: create
+  user_id: 0b000000-0000-4444-8888-000000000001
+  entity_type: UserPropertyRelationship
+  application_version_id: 04000000-0000-4444-8888-000000000000

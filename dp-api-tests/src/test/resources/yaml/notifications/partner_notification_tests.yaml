@@ -14,3 +14,15 @@ updatePartnerNotificationTest:
 deletePartnerNotificationTest:
   <<: *NOTIFICATION
   operation: delete
+
+createPartnerByCustomerUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+  user_id: 0b000000-0000-4444-8888-000000000001
+
+updatePartnerByCustomerUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: update
+  user_id: 0b000000-0000-4444-8888-000000000001
+  entity_id: 07000000-0000-4444-8888-000000000002
+
