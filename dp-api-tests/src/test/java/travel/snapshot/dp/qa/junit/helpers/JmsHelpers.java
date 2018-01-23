@@ -2,7 +2,6 @@ package travel.snapshot.dp.qa.junit.helpers;
 
 import static org.junit.Assert.*;
 
-import com.google.gson.Gson;
 import com.jayway.restassured.path.json.JsonPath;
 import lombok.NoArgsConstructor;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -10,7 +9,6 @@ import org.apache.activemq.command.ActiveMQTopic;
 
 import java.nio.charset.Charset;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
@@ -26,17 +24,15 @@ import javax.jms.Topic;
 @NoArgsConstructor
 public class JmsHelpers extends BasicSteps {
 
-    public static final String SESSION_NOTIFICATION = "notification";
-    public static final int JMS_TIMEOUT = 5000;
-    private ConnectionFactory connectionFactory = null;
+    private static final String SESSION_NOTIFICATION = "notification";
+    private static final int JMS_TIMEOUT = 5000;
     private Connection connection = null;
     private Session session = null;
     private MessageConsumer consumer = null;
-    private Gson gson = new Gson();
 
 
-    public void start() throws Exception {
-        connectionFactory = new ActiveMQConnectionFactory(
+    private void start() throws Exception {
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
                 propertiesHelper.getProperty("broker.user"),
                 propertiesHelper.getProperty("broker.password"),
                 propertiesHelper.getProperty("broker.url"));
@@ -46,7 +42,7 @@ public class JmsHelpers extends BasicSteps {
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
-    public void close() throws Exception {
+    private void close() throws Exception {
         session.close();
         connection.close();
     }
@@ -70,9 +66,6 @@ public class JmsHelpers extends BasicSteps {
 
     public void unsubscribe(String destinationName, String subscriptionName) throws Exception {
         start();
-        Topic topic = new ActiveMQTopic(destinationName);
-        consumer = session.createDurableSubscriber(topic, subscriptionName);
-        consumer.close();
         session.unsubscribe(subscriptionName);
         close();
     }
@@ -81,43 +74,7 @@ public class JmsHelpers extends BasicSteps {
         start();
         Topic topic = new ActiveMQTopic(destinationName);
         consumer = session.createDurableSubscriber(topic, subscriptionName);
-        connection.start();
-        consumer.close();
         close();
     }
 
-    public void notificationEntityTypeIs(String entityType) {
-        Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
-        String value = (String) notification.get("entity_type");
-        assertEquals(entityType, value);
-    }
-
-    public void notificationOperationIs(String operation) {
-        Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
-        String value = (String) notification.get("operation");
-        assertEquals(operation, value);
-    }
-
-    public void notificationContainsId(UUID entityId) {
-        Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
-        String value = (String) notification.get("entity_id");
-        assertEquals(entityId, value);
-    }
-
-    public void notificationParentEntityTypeIs(String entityType) {
-        Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
-        String value = (String) notification.get("parent_entity_type");
-        assertEquals(entityType, value);
-    }
-
-    public void notificationContainsParentId(UUID entityId) {
-        Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
-        UUID value = (UUID) notification.get("parent_id");
-        assertEquals(entityId, value);
-    }
-
-    public String getNotificationValue(String key) {
-        Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
-        return (String) notification.get(key);
-    }
 }
