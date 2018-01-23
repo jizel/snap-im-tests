@@ -1,19 +1,21 @@
 package travel.snapshot.dp.qa.junit.tests.configurations;
 
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
+import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.numberOfEntitiesInResponse;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadYamlTables;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.selectExamplesForTestFromTable;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
@@ -45,8 +47,7 @@ public class ConfigurationTypesTests extends CommonTest {
         responseCodeIs(SC_CREATED);
         configurationHelpers.bodyContainsConfigurationType(CONF1_IDENTIFIER, CONF1_DESCRIPTION);
         configurationHelpers.compareHeaderWithIdentifier("Location", CONF1_IDENTIFIER);
-        configurationHelpers.getConfigurationTypeWithId(CONF1_IDENTIFIER);
-        responseCodeIs(SC_OK);
+        configurationHelpers.getConfigurationTypeWithId(CONF1_IDENTIFIER).then().statusCode(SC_OK);
         configurationHelpers.bodyContainsConfigurationType(CONF1_IDENTIFIER, CONF1_DESCRIPTION);
     }
 
@@ -62,14 +63,12 @@ public class ConfigurationTypesTests extends CommonTest {
     @Test
     public void deleteConfigurationTypeTest() {
         configurationHelpers.followingConfigurationTypeIsCreated(testConfigurationType1);
-        configurationHelpers.tryDeleteConfigurationType(CONF1_IDENTIFIER);
-        responseCodeIs(SC_NO_CONTENT);
+        configurationHelpers.tryDeleteConfigurationType(CONF1_IDENTIFIER).then().statusCode(SC_NO_CONTENT);
         configurationHelpers.configurationTypeDoesntExist(CONF1_IDENTIFIER);
     }
 
-    //    DP-2219
     @Test
-    @Ignore
+    @Jira("DP-2219")
     public void filteringConfigurationTypesTest() throws Exception {
         List<Map<String, String>> listOfConfigurationTypes = selectExamplesForTestFromTable(configurationTypesTestsTables, "configurationTypesForFiltering");
         List<Map<String, String>> listOfParams = selectExamplesForTestFromTable(configurationTypesTestsTables, "configurationTypesFilteringData");
@@ -81,7 +80,7 @@ public class ConfigurationTypesTests extends CommonTest {
             configurationHelpers.followingConfigurationTypeIsCreated(configurationType);
         });
 //        Get data
-        for(Map<String, String> params : listOfParams){
+        for (Map<String, String> params : listOfParams) {
             configurationHelpers.listOfConfigurationTypesisGot(params.get("limit"), params.get("cursor"),
                     params.get("filter"), params.get("sort"), params.get("sortDesc"));
             responseCodeIs(SC_OK);
@@ -117,20 +116,28 @@ public class ConfigurationTypesTests extends CommonTest {
         responseCodeIs(SC_NOT_FOUND);
     }
 
-    //    DP-1773
     @Test
-    @Ignore
+    @Jira("DPNP-176")
     public void deleteNonExistentConfigurationTypeTest() {
-        configurationHelpers.tryDeleteConfigurationType(NON_EXISTENT_ID.toString());
-        responseCodeIs(SC_NOT_FOUND);
+        configurationHelpers.tryDeleteConfigurationType(NON_EXISTENT_ID.toString()).then().statusCode(SC_NOT_FOUND);
+    }
+
+    @Test
+    @Jira("DPNP-7")
+    public void deleteConfigurationWithInvalidEtag() {
+        configurationHelpers.followingConfigurationTypeIsCreated(testConfigurationType1);
+        configurationHelpers.deleteConfigurationEntityWithEtag(testConfigurationType1.getIdentifier(), DEFAULT_SNAPSHOT_ETAG)
+                .then()
+                .statusCode(SC_PRECONDITION_FAILED);
+        configurationHelpers.tryDeleteConfigurationType(testConfigurationType1.getIdentifier()).then().statusCode(SC_NO_CONTENT);
     }
 
     @Test
     public void configurationTypesGetErrorCodes() {
         List<Map<String, String>> listOfparams = selectExamplesForTestFromTable(configurationTypesTestsTables, "configurationTypesGetErrorCodes");
         listOfparams.forEach(params -> {
-                configurationHelpers.listOfConfigurationTypesisGot(transformNull(params.get("limit")), transformNull(params.get("cursor")),
-                        transformNull(params.get("filter")), transformNull(params.get("sort")), transformNull(params.get("sort_desc")));
+            configurationHelpers.listOfConfigurationTypesisGot(transformNull(params.get("limit")), transformNull(params.get("cursor")),
+                    transformNull(params.get("filter")), transformNull(params.get("sort")), transformNull(params.get("sort_desc")));
             verifyResponseAndCustomCode(params.get("response_code"), params.get("custom_code"));
         });
     }

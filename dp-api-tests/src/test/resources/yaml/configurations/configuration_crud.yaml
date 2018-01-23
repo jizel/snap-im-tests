@@ -1,0 +1,34 @@
+createConfigurationsKeyValueTest:
+  key:   ['string_test_key1', 'integer_test_key_2', 'long_test_key_2', 'double_test_key_2', 'boolean_test_key_2', 'date_test_key_2', 'datetime_test_key_2', 'object_test_key_3']
+  value: ['textvalue'       , '11'                , '114444'         , '12.34'            , 'true'              , '2015-01-01'     , '2015-01-01T10:10'   , '{"property_1":"value_1","property_2":45}']
+  type:  ['string'          , 'integer'           , 'long'           , 'double'           , 'boolean'           , 'date'           , 'datetime'           , 'object']
+
+checkErrorCodesCreateConfiguration:
+  key:           ['/null'  , ''       , 'test_key_1', 'test_key_2', 'test_key_3', 'test_key_4', 'test_key_5', 'test_key_6', 'test_date_key_1', 'test_datetime_key_1']
+  value:         ['11'     , '11'     , '/null'     , ''          , '/null'     , '/null'     , ''          , ''          , '2015-xxx-11'    , '2015-01-01Taaaa']
+  type:          ['integer', 'integer', 'string'    , 'string'    , 'integer'   , 'object'    , 'date'      , 'datetime'  , 'date'           , 'datetime']
+  response_code: ['422'    , '422'    , '422'       , '422'       , '422'       , '422'       , '422'       , '422'       , '422'            , '422']
+  custom_code:   ['42201'  , '42201'  , '42201'     , '42201'     , '42201'     , '42201'     , '42201'     , '42201'     , '42201'          , '42201']
+
+configurationsForFiltering:
+  key:   ['known_key_1', 'known_key_2', 'known_key_3', 'list_key_4', 'list_key_5', 'list_key_6', 'other_key_7', 'other_key_8', 'other_key_9', 'other_key_10', 'other_key_11', 'other_key_12']
+  value: ['textvalue1' , 'textvalue2' , 'textvalue3' , 'textvalue4', 'same'      , 'same'      , 'textvalue7' , 'textvalue8' , 'textvalue9' , 'special'     , 'textvalue11' , 'textvalue12']
+  type:  ['string'     , 'string'     , 'string'     , 'string'    , 'string'    , 'string'    , 'string'     , 'string'     , 'string'     , 'string'      , 'string'      , 'string']
+
+configurationsFilteringData:
+  limit:         ['5', '5', '5', '5', '/null', '/null', '/null']
+  cursor:        ['0', '0', '2', '2', '/null', '/null', '/null']
+  returned:      ['5', '5', '3', '3', '1', '2', '1']
+  filter:        ["key=='other_key*'", "key=='other_key*'", "key=='other_key*'", "key=='other_key*'", 'key==known_key_3', 'key==list_key_*andvalue==same', 'value==special']
+  sort:          ['key', '', 'user_name', '', '/null', 'key', '/null']
+  sort_desc:     ['', 'key', '', 'user_name', '/null', '/null', '/null']
+  expected_keys: ['other_key_7,other_key_8,other_key_9,other_key_10,other_key_11', 'other_key_11,other_key_10,other_key_9,other_key_8,other_key_7', 'other_key_9,other_key_10,other_key_11', 'other_key_9,other_key_8,other_key_7', 'known_key_3', 'list_key_5,list_key_6', 'other_key_10']
+
+configurationsFilteringErrorData:
+  limit: ['/null', '', '/null', '', '-1', '-1', 'text', 'text', '10', 'text', '10', '10', '10', '10', '10', '10']
+  cursor: ['-1', '-1', 'text', 'text', '', '/null', '', '/null', '-1', '0', 'text', '0', '0', '0', '0', '0']
+  filter: ['/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', 'key==', 'nonexistent==a*']
+  sort: ['/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', 'key', '/null', 'nonexistent', '/null', '/null']
+  sort_desc: ['/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', 'key', 'nonexistent', '/null', '/null', '/null']
+  response_code: ['400', '400', '400', '400', '400', '400', '400', '400', '400', '400', '400', '400', '400', '400', '400', '400']
+  custom_code: ['40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002']
