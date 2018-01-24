@@ -55,14 +55,13 @@ public class AuthorizationHelpers {
                 .relaxedHTTPSValidation()
                 .log().all();
         Response response = requestSpecification.post("/oauth/token");
-        setSessionResponse(response);
         if (response.getStatusCode() == SC_OK) {
             String token = response.path("access_token");
             Serenity.setSessionVariable(SESSION_TOKEN).to(token);
         } else {
             log.warning("Failed to receive oauth token");
         }
-        return response;
+        return setSessionResponse(response);
     }
 
     void updateRegistryOfDeletables(String basePath, UUID id) {
@@ -119,8 +118,7 @@ public class AuthorizationHelpers {
                 .body(entity)
                 .when()
                 .post();
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     public <DTO> UUID entityIsCreated(DTO entity) {
@@ -151,8 +149,7 @@ public class AuthorizationHelpers {
                 .body(data)
                 .when()
                 .patch("/{id}", entityId);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     public Response deleteEntity(String basePath, UUID entityId) {
@@ -160,8 +157,7 @@ public class AuthorizationHelpers {
         Response response = specification
                 .when()
                 .delete("/{id}", entityId);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     public void entityIsDeleted(String basePath, UUID entityId) {
@@ -188,8 +184,7 @@ public class AuthorizationHelpers {
         Response response = specification
                 .when()
                 .get("/{id}", entityId);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     public Response createSecondLevelRelation(String basePath, UUID firstLevelId, String secondLevelName, Object jsonBody) {
@@ -197,8 +192,7 @@ public class AuthorizationHelpers {
         Response response = specification
                 .body(jsonBody)
                 .post("/" + firstLevelId + "/" + secondLevelName);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     public String getSecondLevelEntityEtag(String basePath, UUID firstLevelId, String secondLevelObjectName, UUID secondLevelId) {

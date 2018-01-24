@@ -157,8 +157,7 @@ public class ConfigurationHelpers extends BasicSteps {
             deleteConfigurationEntity(configurationType.getIdentifier());
         }
         Response response = createEntity(configurationType);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     @Step
@@ -191,8 +190,7 @@ public class ConfigurationHelpers extends BasicSteps {
         String value = configurationRecord.getValue() == null ? null : String.valueOf(configurationRecord.getValue());
         String type = configurationRecord.getType() == null ? null : String.valueOf(configurationRecord.getType());
         Response response = createValueForKey(identifier, configurationRecord.getKey(), value, type);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
-        return response;
+        return setSessionResponse(response);
     }
 
     /**
@@ -359,8 +357,7 @@ public class ConfigurationHelpers extends BasicSteps {
                 .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .when()
                 .delete("/{id}", identifier);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
 //    Private help methods
@@ -404,8 +401,7 @@ public class ConfigurationHelpers extends BasicSteps {
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
 
         Response response = given().spec(spec).parameters(params).when().get("{id}/{secondLevelName}", identifier, secondLevelObjectName);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     private Response updateConfigurationEntity(String entityId, Map<String, Object> data, String etag) {
@@ -436,7 +432,6 @@ public class ConfigurationHelpers extends BasicSteps {
 
     public Response createConfigurationType(ConfigurationTypeDto configurationType) {
         Response response = createEntity(configurationType);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 }

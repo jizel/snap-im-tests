@@ -73,9 +73,7 @@ public class CommonHelpers {
         RequestSpecification requestSpecification = givenContext(userId, appId).spec(spec);
         Optional.ofNullable(queryParams).ifPresent(requestSpecification::parameters);
         Response response = requestSpecification.when().get();
-        setSessionResponse(response);
-
-        return response;
+        return setSessionResponse(response);
     }
 
     public static <DTO> List<DTO> getEntitiesAsType(String basePath, Class<DTO> clazz, Map<String, String> queryParams) {
@@ -99,9 +97,7 @@ public class CommonHelpers {
         RequestSpecification requestSpecification = givenContext(userId, applicationId).spec(spec);
         assertNotNull("User ID to be send in request header is null.", userId);
         Response response = requestSpecification.when().get("/{id}", entityId);
-        setSessionResponse(response);
-
-        return response;
+        return setSessionResponse(response);
     }
 
     public static <DTO> DTO getEntityAsType(String basePath, Class<DTO> type, UUID entityId) {
@@ -160,8 +156,7 @@ public class CommonHelpers {
                 .body(entity)
                 .post();
         // Cucumber leftovers. Leaving it for now, will be removed in the future
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     /**
@@ -174,8 +169,7 @@ public class CommonHelpers {
                 .body(entity)
                 .post();
         // Cucumber leftovers. Leaving it for now, will be removed in the future
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
 
@@ -200,9 +194,7 @@ public class CommonHelpers {
                 .body(data)
                 .when()
                 .post("/{id}", entityId);
-        setSessionResponse(response);
-
-        return response;
+        return setSessionResponse(response);
     }
 
     public static void entityIsUpdated(String basePath, UUID entityId, Object data) {
@@ -222,8 +214,7 @@ public class CommonHelpers {
                 .body(data)
                 .when()
                 .patch("/{id}", entityId);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     public static Response updateEntityWithEtagByUserForApp(UUID userId, UUID appId, String basePath, UUID entityId, Object data, String etag) {
@@ -264,9 +255,7 @@ public class CommonHelpers {
                 .spec(spec)
                 .basePath(basePath)
                 .delete("/{id}", entityId);
-        setSessionResponse(response);
-
-        return response;
+        return setSessionResponse(response);
     }
 
 //    Second level entities generic methods - GET
@@ -290,9 +279,7 @@ public class CommonHelpers {
             requestSpecification.parameters(queryParams);
         }
         Response response = requestSpecification.get("{id}/{secondLevelName}", firstLevelEntityId, stripSlash(secondLevelResource));
-        setSessionResponse(response);
-
-        return response;
+        return setSessionResponse(response);
     }
 
 
