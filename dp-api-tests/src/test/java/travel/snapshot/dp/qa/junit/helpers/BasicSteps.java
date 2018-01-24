@@ -194,24 +194,7 @@ public class BasicSteps {
         response.then().body(attributeName, notNullValue());
     }
 
-    public void bodyDoesntContainEntityWith(String attributeName) {
-        Response response = getSessionResponse();
-        response.then().body(attributeName, nullValue());
-    }
-
-    public void isCalledWithoutTokenUsingMethod(String service, String method) {
-        Response response = spec
-                .when()
-                .get(service);
-        setSessionResponse(response);
-    }
-
-    public void etagIsPresent() {
-        Response response = getSessionResponse();
-        response.then().header(HEADER_ETAG, not(isEmptyOrNullString()));
-    }
-
-    public void useFileForSendDataTo(String filename, String method, String url, String module) throws Exception {
+    void useFileForSendDataTo(String filename, String method, String url, String module) throws Exception {
         if (!"POST".equals(method)) {
             throw new Exception("Cannot use this method for other methods than POST");
         }
@@ -231,7 +214,7 @@ public class BasicSteps {
         return response.getBody().jsonPath().get(attributeName).toString();
     }
 
-    public static String getBaseUriForModule(String module) {
+    static String getBaseUriForModule(String module) {
         module = (module == null) ? "" : module;
         String baseUri = "";
         switch (module) {
@@ -299,8 +282,7 @@ public class BasicSteps {
 
     protected Response createEntityByUserForApplication(UUID userId, UUID applicationId, Object entity) {
         Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(entity).when().post();
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     protected Response updateEntity(UUID entityId, Map<String, Object> data, String etag) {
@@ -355,16 +337,14 @@ public class BasicSteps {
                 .body(data)
                 .when()
                 .post("/{id}", entityId);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     // manual delete methods - require explicitly passed etags
 
     public Response deleteEntity(UUID entityId, String etag) {
         Response response = deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     protected Response deleteEntityByUser(UUID userId, UUID entityId, String etag) {
@@ -386,8 +366,7 @@ public class BasicSteps {
         Response response = requestSpecification
                 .when()
                 .delete("/{id}", entityId);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
 
@@ -404,8 +383,7 @@ public class BasicSteps {
     protected Response deleteEntityWithEtagByUserForApp(UUID userId, UUID applicationVersionId, UUID entityId) {
         String etag = getEntityEtag(entityId);
         Response response = deleteEntityByUserForApplication(userId, applicationVersionId, entityId, etag);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     public String getEntityEtag(UUID entityId) {
@@ -452,8 +430,7 @@ public class BasicSteps {
     protected Response createSecondLevelRelationshipByUserForApplication(UUID userId, UUID applicationId, UUID firstLevelId, String secondLevelName, Object jsonBody) {
         RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(jsonBody);
         Response response = requestSpecification.post("/" + firstLevelId + "/" + stripSlash(secondLevelName));
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     public Response createThirdLevelEntity(UUID firstLevelId, String secondLevelType, UUID secondLevelId, String thirdLevelType, Object jsonBody) {
@@ -702,8 +679,7 @@ public class BasicSteps {
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
         requestSpecification.parameters(params);
         Response response = requestSpecification.when().get(url);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     protected Response getEntitiesForUrlWihDates(String url, String limit, String cursor, String since, String until, String granularity, Map<String, String> queryParams) {
@@ -815,8 +791,7 @@ public class BasicSteps {
         requestSpecification.parameters(params);
 
         Response response = requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     protected Response getSecondLevelEntitiesForDates(UUID firstLevelId, String secondLevelObjectName, String limit, String cursor, String since, String until, String granularity, String filter, String sort, String sortDesc) {
@@ -857,24 +832,16 @@ public class BasicSteps {
         return Serenity.<Response>sessionVariableCalled(SESSION_RESPONSE);
     }
 
-    public static void setSessionResponse(Response response) {
+    static Response setSessionResponse(Response response) {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        return response;
     }
 
-
-    public Map<String, Response> getSessionResponseMap() {
-        return Serenity.<Map<String, Response>>sessionVariableCalled(SESSION_RESPONSE_MAP);
-    }
-
-    public void setSessionResponseMap(Map<String, Response> responses) {
-        Serenity.setSessionVariable(SESSION_RESPONSE_MAP).to(responses);
-    }
-
-    public void setSessionVariable(String key, Object value) {
+    void setSessionVariable(String key, Object value) {
         Serenity.setSessionVariable(key).to(value);
     }
 
-    public <T> T getSessionVariable(String key) {
+    <T> T getSessionVariable(String key) {
         return Serenity.<T>sessionVariableCalled(key);
     }
 

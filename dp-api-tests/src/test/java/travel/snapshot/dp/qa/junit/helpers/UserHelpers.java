@@ -52,8 +52,7 @@ public class UserHelpers extends BasicSteps {
                 .header(HEADER_XAUTH_USER_ID, requestorId)
                 .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .body(password).post("{id}/password", userId);
-        setSessionResponse(response);
-        return response;
+        return setSessionResponse(response);
     }
 
     public Response setUserPassword(UUID userId, String password) {
