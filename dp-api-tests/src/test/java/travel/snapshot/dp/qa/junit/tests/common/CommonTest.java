@@ -142,10 +142,10 @@ public abstract class CommonTest {
     protected static ApplicationVersionCreateDto testAppVersion3;
     public static LocalDate validFrom = LocalDate.now();
     public static LocalDate validTo = LocalDate.now().plusYears(1).plusMonths(2).plusDays(3);
+    public static String NOTIFICATION_CRUD_TOPIC = null;
 
     // shared variables
     public static final String YAML_DATA_PATH = "src/test/resources/yaml/%s";
-    public static final String NOTIFICATION_CRUD_TOPIC = propertiesHelper.getProperty("notificationCrud.topic");
     public static final String JMS_SUBSCRIPTION_NAME = "Test";
     public static final String TOTAL_COUNT_HEADER = "X-Total-Count";
 
@@ -226,6 +226,7 @@ public abstract class CommonTest {
         testAppVersion1 = applicationVersionDtos.get("app_version1");
         testAppVersion2 = applicationVersionDtos.get("app_version2");
         testAppVersion3 = applicationVersionDtos.get("app_version3");
+        NOTIFICATION_CRUD_TOPIC = propertiesHelper.getProperty("notificationCrud.topic");
     }
 
 
