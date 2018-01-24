@@ -9,7 +9,6 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static travel.snapshot.dp.qa.junit.helpers.BasicSteps.CONFIGURATION_BASE_URI;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.transformNull;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,9 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
 import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
-
 import travel.snapshot.dp.api.configuration.model.ValueType;
-import travel.snapshot.dp.qa.junit.helpers.BasicSteps;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -140,14 +137,15 @@ public class ConfigurationHelpers extends BasicSteps {
     }
 
     @Step
-    public void tryDeleteConfigurationType(String identifier) {
-        deleteConfigurationEntityWithEtag(identifier);
+    public Response tryDeleteConfigurationType(String identifier) {
+        return deleteConfigurationEntity(identifier);
     }
 
     @Step
-    public void getConfigurationTypeWithId(String configType) {
+    public Response getConfigurationTypeWithId(String configType) {
         Response resp = getConfigurationEntity(configType);
         setSessionResponse(resp);
+        return resp;
     }
 
 
@@ -156,7 +154,7 @@ public class ConfigurationHelpers extends BasicSteps {
         Serenity.setSessionVariable(SESSION_CREATED_CONFIGURATION_TYPE).to(configurationType);
 
         if (isConfigurationTypeExist(configurationType.getIdentifier())) {
-            deleteConfigurationEntityWithEtag(configurationType.getIdentifier());
+            deleteConfigurationEntity(configurationType.getIdentifier());
         }
         Response response = createEntity(configurationType);
         setSessionResponse(response);
@@ -355,20 +353,24 @@ public class ConfigurationHelpers extends BasicSteps {
         }
     }
 
+    public Response deleteConfigurationEntityWithEtag(String identifier, String etag) {
+        Response response = given().spec(spec)
+                .header(HEADER_IF_MATCH, etag)
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
+                .when()
+                .delete("/{id}", identifier);
+        setSessionResponse(response);
+        return response;
+    }
+
 //    Private help methods
 
     private Response getConfigurationEntity(String entityId) {
         return given().spec(spec).when().get("/{id}", entityId);
     }
 
-    private Response deleteConfigurationEntityWithEtag(String identifier) {
-        Response response = given().spec(spec)
-                .header(HEADER_IF_MATCH, Optional.ofNullable(getConfigurationEntityEtag(identifier)).orElse(DEFAULT_SNAPSHOT_ETAG))
-                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
-                .when()
-                .delete("/{id}", identifier);
-        setSessionResponse(response);
-        return response;
+    private Response deleteConfigurationEntity(String identifier) {
+        return deleteConfigurationEntityWithEtag(identifier, Optional.ofNullable(getConfigurationEntityEtag(identifier)).orElse(DEFAULT_SNAPSHOT_ETAG));
     }
 
     private String getConfigurationEntityEtag(String identifier) {
