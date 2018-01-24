@@ -7,7 +7,6 @@ import com.jayway.restassured.path.json.JsonPath;
 import lombok.NoArgsConstructor;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
-import travel.snapshot.dp.qa.junit.helpers.BasicSteps;
 
 import java.nio.charset.Charset;
 import java.util.Map;
